@@ -1070,7 +1070,7 @@ export const KEY_PASSAGES: KeyPassage[] = [
   // ─── Le Rouge et le Noir ──
   {
     id: "kp-rouge-1",
-    bookId: "rouge",
+    bookId: "rouge-noir",
     order: 1,
     title: "La main de Mme de Rênal",
     context:
@@ -1082,7 +1082,7 @@ export const KEY_PASSAGES: KeyPassage[] = [
   },
   {
     id: "kp-rouge-2",
-    bookId: "rouge",
+    bookId: "rouge-noir",
     order: 2,
     title: "Les coups de pistolet à l'église",
     context:
@@ -1094,7 +1094,7 @@ export const KEY_PASSAGES: KeyPassage[] = [
   },
   {
     id: "kp-rouge-3",
-    bookId: "rouge",
+    bookId: "rouge-noir",
     order: 3,
     title: "Le discours au tribunal",
     context:
@@ -1108,7 +1108,7 @@ export const KEY_PASSAGES: KeyPassage[] = [
   // ─── Bel-Ami ──
   {
     id: "kp-belami-1",
-    bookId: "belami",
+    bookId: "bel-ami",
     order: 1,
     title: "Trois francs quarante",
     context:
@@ -1120,7 +1120,7 @@ export const KEY_PASSAGES: KeyPassage[] = [
   },
   {
     id: "kp-belami-2",
-    bookId: "belami",
+    bookId: "bel-ami",
     order: 2,
     title: "L'article de Madeleine",
     context:
@@ -1132,7 +1132,7 @@ export const KEY_PASSAGES: KeyPassage[] = [
   },
   {
     id: "kp-belami-3",
-    bookId: "belami",
+    bookId: "bel-ami",
     order: 3,
     title: "La Madeleine — mariage triomphal",
     context:
@@ -1260,7 +1260,7 @@ export const KEY_PASSAGES: KeyPassage[] = [
   // ─── Le Père Goriot ──
   {
     id: "kp-goriot-1",
-    bookId: "goriot",
+    bookId: "pere-goriot",
     order: 1,
     title: "La pension Vauquer",
     context:
@@ -1272,7 +1272,7 @@ export const KEY_PASSAGES: KeyPassage[] = [
   },
   {
     id: "kp-goriot-2",
-    bookId: "goriot",
+    bookId: "pere-goriot",
     order: 2,
     title: "Vautrin pose le contrat",
     context:
@@ -1284,7 +1284,7 @@ export const KEY_PASSAGES: KeyPassage[] = [
   },
   {
     id: "kp-goriot-3",
-    bookId: "goriot",
+    bookId: "pere-goriot",
     order: 3,
     title: "« À nous deux, Paris ! »",
     context:
@@ -1298,7 +1298,7 @@ export const KEY_PASSAGES: KeyPassage[] = [
   // ─── Les Fleurs du Mal ──
   {
     id: "kp-fleurs-1",
-    bookId: "fleurs",
+    bookId: "fleurs-mal",
     order: 1,
     title: "« Hypocrite lecteur »",
     context:
@@ -1310,7 +1310,7 @@ export const KEY_PASSAGES: KeyPassage[] = [
   },
   {
     id: "kp-fleurs-2",
-    bookId: "fleurs",
+    bookId: "fleurs-mal",
     order: 2,
     title: "L'Albatros",
     context:
@@ -1322,7 +1322,7 @@ export const KEY_PASSAGES: KeyPassage[] = [
   },
   {
     id: "kp-fleurs-3",
-    bookId: "fleurs",
+    bookId: "fleurs-mal",
     order: 3,
     title: "À une passante",
     context:
@@ -1384,7 +1384,7 @@ export const CHARACTERS: Character[] = [
   // ─── Le Père Goriot ──
   {
     id: "ch-goriot-1",
-    bookId: "goriot",
+    bookId: "pere-goriot",
     name: "Eugène de Rastignac",
     role: "protagoniste",
     avatar: "🎩",
@@ -1400,7 +1400,7 @@ export const CHARACTERS: Character[] = [
   },
   {
     id: "ch-goriot-2",
-    bookId: "goriot",
+    bookId: "pere-goriot",
     name: "Jean-Joachim Goriot",
     role: "protagoniste",
     avatar: "👴",
@@ -1415,7 +1415,7 @@ export const CHARACTERS: Character[] = [
   },
   {
     id: "ch-goriot-3",
-    bookId: "goriot",
+    bookId: "pere-goriot",
     name: "Jacques Collin, dit Vautrin",
     role: "antagoniste",
     avatar: "🐍",
@@ -1426,7 +1426,7 @@ export const CHARACTERS: Character[] = [
   },
   {
     id: "ch-goriot-4",
-    bookId: "goriot",
+    bookId: "pere-goriot",
     name: "Anastasie de Restaud",
     role: "secondaire",
     avatar: "💍",
@@ -1436,7 +1436,7 @@ export const CHARACTERS: Character[] = [
   },
   {
     id: "ch-goriot-5",
-    bookId: "goriot",
+    bookId: "pere-goriot",
     name: "Delphine de Nucingen",
     role: "secondaire",
     avatar: "🌹",

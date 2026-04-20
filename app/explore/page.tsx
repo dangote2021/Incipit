@@ -81,14 +81,14 @@ function ThemesTab() {
     <section>
       <div className="bg-gradient-to-br from-bordeaux to-ink text-paper rounded-2xl p-5 mb-5">
         <div className="text-[10px] uppercase tracking-widest text-paper/70 font-bold mb-1">
-          Quiz d'humeur
+          L'envie du jour
         </div>
         <h3 className="font-serif text-xl font-bold leading-tight mb-1">
-          T'es d'humeur à quoi ?
+          Quelle est ton envie du jour ?
         </h3>
         <p className="text-sm text-paper/85 leading-relaxed">
-          Choisis un mood ci-dessous. On te propose 3 livres qui collent à ton
-          état d'esprit, classiques ou pas.
+          Choisis une tonalité ci-dessous. On te propose les livres qui
+          accompagnent le mieux ton état d'esprit.
         </p>
       </div>
 

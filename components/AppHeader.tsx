@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 type Props = {
   title?: string;
@@ -10,17 +11,26 @@ type Props = {
 };
 
 export default function AppHeader({ title, subtitle, back, action }: Props) {
+  const router = useRouter();
   return (
     <header className="sticky top-0 z-30 bg-paper/90 backdrop-blur-md border-b border-ink/5">
       <div className="max-w-xl mx-auto px-5 py-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
           {back && (
-            <Link
-              href=".."
+            <button
+              type="button"
+              onClick={() => {
+                if (typeof window !== "undefined" && window.history.length > 1) {
+                  router.back();
+                } else {
+                  router.push("/");
+                }
+              }}
+              aria-label="Retour"
               className="w-9 h-9 flex items-center justify-center rounded-full bg-ink/5 hover:bg-ink/10 transition text-ink/80"
             >
               ←
-            </Link>
+            </button>
           )}
           <div>
             {title ? (
