@@ -2,6 +2,7 @@ import Link from "next/link";
 import { BOOKS } from "@/lib/mock-data";
 import PitchCard from "@/components/PitchCard";
 import DailyIncipit from "@/components/DailyIncipit";
+import ResumeCard from "@/components/ResumeCard";
 
 export default function HomePage() {
   return (
@@ -29,6 +30,9 @@ export default function HomePage() {
 
       {/* Carrousel vertical de pitches (scroll snap) */}
       <main className="snap-y snap-mandatory overflow-y-scroll h-screen no-scrollbar -mt-0">
+        {/* "Je reprends" — uniquement si un livre est en cours */}
+        <ResumeCard />
+
         {/* Rituel matinal — Incipit du jour */}
         <DailyIncipit />
 

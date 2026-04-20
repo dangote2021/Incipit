@@ -336,18 +336,21 @@ export default function BookPage({
                 </div>
               </button>
             )}
-            <Link
-              href={`/book/${book.id}/read`}
-              className="bg-gold text-ink rounded-2xl p-4 text-left hover:bg-gold/90 transition"
-            >
-              <div className="text-xl mb-1">📖</div>
-              <div className="font-serif font-bold text-base leading-tight">
-                Mode lecture
-              </div>
-              <div className="text-[11px] text-ink/70 mt-0.5">
-                Accès rapide personnages
-              </div>
-            </Link>
+            {passages.length > 0 && (
+              <Link
+                href={`/book/${book.id}/read`}
+                className="bg-gold text-ink rounded-2xl p-4 text-left hover:bg-gold/90 transition"
+              >
+                <div className="text-xl mb-1">📖</div>
+                <div className="font-serif font-bold text-base leading-tight">
+                  Mode lecture
+                </div>
+                <div className="text-[11px] text-ink/70 mt-0.5">
+                  {passages.length} passage{passages.length > 1 ? "s" : ""} clé
+                  {passages.length > 1 ? "s" : ""}
+                </div>
+              </Link>
+            )}
             <button
               onClick={() => setLibrairiesOpen(true)}
               className="bg-bordeaux text-paper rounded-2xl p-4 text-left hover:bg-bordeaux/90 transition"
