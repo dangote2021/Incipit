@@ -17,6 +17,7 @@ import type {
   KeyPassage,
   Character,
   RapPunchline,
+  RapEra,
 } from "./types";
 
 // ─────────────────────────────────────────────────────────────────────────────
