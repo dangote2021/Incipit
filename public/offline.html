@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Incipit — hors ligne</title>
+    <style>
+      :root {
+        --ink: #1a1a2e;
+        --paper: #faf7f0;
+        --bordeaux: #8b1e3f;
+        --cream: #f3e9d2;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font-family: "Inter", system-ui, -apple-system, sans-serif;
+      }
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        text-align: center;
+      }
+      h1 {
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: 32px;
+        margin: 0 0 12px;
+        line-height: 1.1;
+      }
+      p {
+        color: rgba(26, 26, 46, 0.7);
+        line-height: 1.6;
+        max-width: 380px;
+        margin: 0 auto 24px;
+      }
+      .card {
+        background: var(--cream);
+        border: 1px solid rgba(26, 26, 46, 0.1);
+        border-radius: 24px;
+        padding: 28px;
+        max-width: 420px;
+      }
+      .emoji {
+        font-size: 48px;
+        margin-bottom: 12px;
+      }
+      button {
+        background: var(--bordeaux);
+        color: var(--paper);
+        border: 0;
+        font-family: inherit;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        font-size: 12px;
+        padding: 12px 24px;
+        border-radius: 999px;
+        cursor: pointer;
+      }
+      .tip {
+        margin-top: 16px;
+        font-size: 12px;
+        font-style: italic;
+        color: rgba(26, 26, 46, 0.5);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <div class="emoji">📚</div>
+      <h1>Tu es hors ligne.</h1>
+      <p>
+        Pas grave — les livres, eux, n'ont pas besoin de réseau. Reviens à tes
+        pitches dès que tu retrouves une connexion.
+      </p>
+      <button onclick="location.reload()">Réessayer</button>
+      <div class="tip">
+        Incipit garde en cache les pages que tu as déjà visitées.
+      </div>
+    </div>
+  </body>
+</html>

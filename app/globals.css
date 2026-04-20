@@ -1,0 +1,50 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Inter:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body {
+  background: #FAF7F0;
+  color: #1A1A2E;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Playfair Display', Georgia, serif;
+  letter-spacing: -0.02em;
+}
+
+/* Scrollbar discrète */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(26, 26, 46, 0.15);
+  border-radius: 3px;
+}
+
+/* Hide scrollbar for carousel */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Texture papier subtile */
+.paper-texture {
+  background-image:
+    radial-gradient(circle at 20% 50%, rgba(201, 169, 97, 0.04) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(139, 30, 63, 0.03) 0%, transparent 50%);
+}
+
+.ink-drop {
+  text-shadow: 0 1px 0 rgba(26, 26, 46, 0.1);
+}
+
+.book-shadow {
+  box-shadow: 0 10px 30px -10px rgba(26, 26, 46, 0.25), 0 2px 6px -2px rgba(26, 26, 46, 0.1);
+}
