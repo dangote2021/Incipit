@@ -184,7 +184,7 @@ function PunchlineCard({ p }: { p: RapPunchline }) {
               rel="noopener noreferrer"
               className="flex-1 inline-flex items-center justify-center gap-2 bg-gold text-ink text-sm font-bold px-4 py-3 rounded-full hover:bg-gold/90 transition"
             >
-              Écouter le morceau ↗
+              Écouter sur Spotify ↗
             </a>
           )}
         </div>
