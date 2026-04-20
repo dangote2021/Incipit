@@ -214,3 +214,52 @@ export type CaptureResult = {
   text: string;                  // texte "OCRisé"
   status: "processing" | "done";
 };
+
+// ─────────────────────────────────────────────────────────────────────────────
+// RAP & LIT — punchlines de rap analysées littérairement
+// ─────────────────────────────────────────────────────────────────────────────
+
+export type RapEra = "90s" | "00s" | "10s" | "20s";
+
+export type LiteraryDevice =
+  | "métaphore filée"
+  | "allitération"
+  | "assonance"
+  | "anaphore"
+  | "chiasme"
+  | "antithèse"
+  | "oxymore"
+  | "hyperbole"
+  | "paronomase"
+  | "hypotypose"
+  | "synesthésie"
+  | "énumération"
+  | "polyptote"
+  | "calembour"
+  | "personnification";
+
+export type RapPunchline = {
+  id: string;
+  artist: string;         // ex. "Booba"
+  song: string;           // ex. "Ouest Side"
+  album?: string;
+  year: number;
+  era: RapEra;
+  // Description thématique de la punchline (on ne reproduit PAS les paroles,
+  // on en explique la portée — on ramène le lecteur vers l'œuvre).
+  punchlineTheme: string; // 2-3 phrases : ce que dit la punchline, son image centrale
+  devices: LiteraryDevice[];
+  // Analyse Boloss-littéraire : pourquoi c'est du grand travail d'écriture
+  analysis: string;       // 3-4 phrases, ton tranchant mais précis
+  // Pont vers le classique
+  literaryParallel: {
+    author: string;       // ex. "Baudelaire"
+    workTitle?: string;   // ex. "Le Spleen de Paris"
+    bookId?: string;      // lien vers BOOKS si dispo
+    bridge: string;       // 1-2 phrases : ce qui relie les deux
+  };
+  // Lien d'écoute (optionnel — cherche sur Deezer)
+  listenUrl?: string;
+  // Palette / vibe visuelle
+  vibe: "street" | "mélancolique" | "politique" | "virtuose" | "mystique";
+};

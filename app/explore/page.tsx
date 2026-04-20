@@ -79,6 +79,33 @@ function ThemesTab() {
 
   return (
     <section>
+      <Link
+        href="/punchlines"
+        className="block relative overflow-hidden rounded-2xl p-5 mb-5 bg-ink text-paper border border-gold/30 hover:border-gold/60 transition group"
+      >
+        <div
+          className="absolute inset-0 opacity-20 pointer-events-none"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle at 80% 20%, rgba(218,165,32,0.5) 0%, transparent 50%), radial-gradient(circle at 20% 80%, rgba(139,0,0,0.6) 0%, transparent 50%)",
+          }}
+        />
+        <div className="relative">
+          <div className="text-[10px] uppercase tracking-[0.3em] text-gold font-bold mb-1">
+            Nouveau · Rap & Lit
+          </div>
+          <h3 className="font-serif text-xl font-bold leading-tight mb-1">
+            Booba cite Baudelaire. Damso écrit comme Céline.
+          </h3>
+          <p className="text-sm text-paper/85 leading-relaxed">
+            Punchlines de rap français décortiquées : figures de style, parallèles avec les classiques. La littérature est aussi punchy que le rap.
+          </p>
+          <div className="mt-3 inline-flex items-center gap-2 text-xs font-bold text-gold group-hover:underline">
+            Lire les analyses →
+          </div>
+        </div>
+      </Link>
+
       <div className="bg-gradient-to-br from-bordeaux to-ink text-paper rounded-2xl p-5 mb-5">
         <div className="text-[10px] uppercase tracking-widest text-paper/70 font-bold mb-1">
           L'envie du jour

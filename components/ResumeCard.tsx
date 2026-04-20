@@ -25,7 +25,7 @@ export default function ResumeCard() {
   const { book, entry } = resume;
 
   return (
-    <section className="snap-start min-h-[calc(100vh-6rem)] flex items-center justify-center px-6 bg-cream">
+    <section className="snap-start relative min-h-[calc(100vh-6rem)] flex items-center justify-center px-6 bg-cream">
       <Link
         href={`/book/${book.id}/read`}
         className={`group relative w-full max-w-sm rounded-3xl overflow-hidden shadow-xl bg-gradient-to-br ${book.cover} p-6 text-paper block`}

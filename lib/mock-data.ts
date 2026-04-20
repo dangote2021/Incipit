@@ -16,6 +16,7 @@ import type {
   RecapBlock,
   KeyPassage,
   Character,
+  RapPunchline,
 } from "./types";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -1679,6 +1680,192 @@ export const CHARACTERS: Character[] = [
 
 export const getCharactersForBook = (bookId: string) =>
   CHARACTERS.filter((c) => c.bookId === bookId);
+
+// ─────────────────────────────────────────────────────────────────────────────
+// RAP & LIT — punchlines de rap français analysées littérairement
+// On ne reproduit PAS les paroles (copyright) — on décrit l'image, on nomme
+// les figures de style, et on trace le pont vers les classiques. Le lecteur
+// clique pour écouter le morceau et relire l'auteur.
+// ─────────────────────────────────────────────────────────────────────────────
+
+export const RAP_PUNCHLINES: RapPunchline[] = [
+  {
+    id: "p-booba-ouest-side",
+    artist: "Booba",
+    song: "Ouest Side",
+    album: "Ouest Side",
+    year: 2006,
+    era: "00s",
+    punchlineTheme:
+      "Une série de métaphores urbaines où Paris devient à la fois décor, proie et ennemi. L'écriture empile les images lumineuses et sales — parfums de luxe et béton fissuré dans la même phrase.",
+    devices: ["métaphore filée", "allitération", "antithèse"],
+    analysis:
+      "Booba construit sa ville comme Baudelaire la sienne : un organisme vivant qui te bouffe en même temps qu'il te sublime. Les allitérations en dentales frappent comme des coups secs, l'antithèse luxe/misère est la même colonne vertébrale que Le Spleen de Paris. C'est du parnassien en Jordan.",
+    literaryParallel: {
+      author: "Charles Baudelaire",
+      workTitle: "Le Spleen de Paris",
+      bridge:
+        "Même Paris à deux visages : celui qui enivre et celui qui recrache. Baudelaire flâne, Booba roule — mais la rétine est la même.",
+    },
+    listenUrl: "https://www.deezer.com/search/Booba%20Ouest%20Side",
+    vibe: "street",
+  },
+  {
+    id: "p-nekfeu-on-verra",
+    artist: "Nekfeu",
+    song: "On verra",
+    album: "Feu",
+    year: 2015,
+    era: "10s",
+    punchlineTheme:
+      "Un refrain interrogatif qui pose l'avenir comme une énigme ouverte. L'écriture oscille entre aveu d'incertitude et élan vital : on ne sait pas mais on avance.",
+    devices: ["antithèse", "anaphore", "polyptote"],
+    analysis:
+      "Ce doute mis en vers, c'est Rimbaud qui dit « La vraie vie est absente » — sauf qu'au lieu de partir au Harrar, Nekfeu reste dans le RER. L'anaphore du « on verra » est une manière très classique (héritée de Villon) de transformer la peur en posture. Tu rappes ton insécurité, elle devient un refrain — elle ne te contrôle plus.",
+    literaryParallel: {
+      author: "Arthur Rimbaud",
+      workTitle: "Une Saison en enfer",
+      bridge:
+        "Même urgence d'un jeune homme qui interroge sa propre existence à voix haute. Rimbaud a 19 ans, Nekfeu 23 : âge de la question sans réponse.",
+    },
+    listenUrl: "https://www.deezer.com/search/Nekfeu%20On%20verra",
+    vibe: "mélancolique",
+  },
+  {
+    id: "p-damso-smog",
+    artist: "Damso",
+    song: "Smog",
+    album: "Ipséité",
+    year: 2017,
+    era: "10s",
+    punchlineTheme:
+      "Un autoportrait en spirale noire : Damso met en scène la honte, le sexe, la mort avec une précision clinique. Pas de métaphore décorative — l'image est toujours organique.",
+    devices: ["hypotypose", "chiasme", "oxymore"],
+    analysis:
+      "Damso écrit comme Céline : la phrase est courte, cassée, et pourtant musicale. L'hypotypose (cette façon de rendre une scène VISIBLE jusqu'à la gêne) est exactement la technique du Voyage au bout de la nuit. Quand il chiasme « je / moi », c'est Rimbaud qui dit « Je est un autre » — sauf qu'il le prouve dans le beat.",
+    literaryParallel: {
+      author: "Louis-Ferdinand Céline",
+      workTitle: "Voyage au bout de la nuit",
+      bookId: "voyage",
+      bridge:
+        "Même crudité, même musique noire, même refus de la jolie phrase. Céline invente l'argot littéraire, Damso invente le français de studio : deux violences du langage.",
+    },
+    listenUrl: "https://www.deezer.com/search/Damso%20Smog",
+    vibe: "mystique",
+  },
+  {
+    id: "p-orelsan-basique",
+    artist: "Orelsan",
+    song: "Basique",
+    album: "La fête est finie",
+    year: 2017,
+    era: "10s",
+    punchlineTheme:
+      "Un inventaire des lieux communs de la société française, déroulé en énumération massive. Chaque ligne est une vérité évidente — et pourtant l'effet cumulé est chirurgical.",
+    devices: ["anaphore", "énumération", "antithèse"],
+    analysis:
+      "C'est La Bruyère au XXIe : l'art de faire une satire en disant des banalités avec le bon rythme. L'énumération crée un effet de bande transporteuse morale — chaque cliché est un étage du même immeuble. Orelsan ne dit rien de neuf, il dit tout ce qu'on pense et que personne ne nomme. C'est exactement la méthode des Caractères.",
+    literaryParallel: {
+      author: "Jean de La Bruyère",
+      workTitle: "Les Caractères",
+      bridge:
+        "Même ambition : cataloguer les travers d'une époque sans juger, juste en montrant. La Bruyère écrivait pour la cour, Orelsan pour Twitter — même geste.",
+    },
+    listenUrl: "https://www.deezer.com/search/Orelsan%20Basique",
+    vibe: "politique",
+  },
+  {
+    id: "p-kery-banlieusards",
+    artist: "Kery James",
+    song: "Banlieusards",
+    album: "À l'ombre du show business",
+    year: 2008,
+    era: "00s",
+    punchlineTheme:
+      "Un discours qui prend la défense des quartiers populaires en alignant rhétorique classique et colère contenue. Le texte monte comme un plaidoyer d'avocat devant un tribunal qui n'a jamais voulu l'écouter.",
+    devices: ["anaphore", "chiasme", "hyperbole"],
+    analysis:
+      "Kery James fait du Hugo pur jus. « J'ai vu les salles de classe… » c'est une anaphore qu'on pourrait retrouver dans Les Misérables. Il n'y a pas de différence structurelle entre son morceau et un discours de la Chambre : c'est de la rhétorique républicaine, en ADIDAS.",
+    literaryParallel: {
+      author: "Victor Hugo",
+      workTitle: "Les Misérables",
+      bridge:
+        "Même croyance : que la parole peut déplacer les murs. Hugo plaidait pour les miséreux, Kery pour les banlieusards — c'est une seule et même voix française du bas.",
+    },
+    listenUrl: "https://www.deezer.com/search/Kery%20James%20Banlieusards",
+    vibe: "politique",
+  },
+  {
+    id: "p-iam-demain",
+    artist: "IAM",
+    song: "Demain c'est loin",
+    album: "L'École du micro d'argent",
+    year: 1997,
+    era: "90s",
+    punchlineTheme:
+      "Une fresque marseillaise de neuf minutes qui déroule la vie du quartier comme un roman : personnages, rues, trajectoires, drames minuscules. Pas de refrain — un texte fleuve.",
+    devices: ["hypotypose", "énumération", "métaphore filée"],
+    analysis:
+      "C'est Zola en 1997. Akhenaton et Shurik'n font de l'Estaque ce que Zola fait des Rougon : une plongée naturaliste où chaque détail sert le tableau global. Neuf minutes sans refrain, c'est le choix du roman contre la chanson. Tu écoutes, tu vois, tu comprends un territoire — c'est de la littérature de terrain.",
+    literaryParallel: {
+      author: "Émile Zola",
+      workTitle: "Germinal",
+      bookId: "germinal",
+      bridge:
+        "Même méthode : descendre dans un quartier, noter, restituer sans jolir. Zola dans les mines du Nord, IAM dans les cités de Marseille — l'ambition documentaire est identique.",
+    },
+    listenUrl: "https://www.deezer.com/search/IAM%20Demain%20c%27est%20loin",
+    vibe: "street",
+  },
+  {
+    id: "p-lomepal-palpal",
+    artist: "Lomepal",
+    song: "Yeux disent",
+    album: "Flip",
+    year: 2017,
+    era: "10s",
+    punchlineTheme:
+      "Une écriture amoureuse où les sensations passent par le regard plutôt que par la parole. Le texte glisse du physique au métaphysique sans prévenir — comme un rêve qui change de pièce.",
+    devices: ["synesthésie", "oxymore", "métaphore filée"],
+    analysis:
+      "Lomepal rappe comme Verlaine écrit : de la musique avant toute chose. La synesthésie (voir un son, entendre un regard) est exactement ce que Verlaine appelait « la chose envolée ». L'oxymore (« triste joie », « douce violence ») est la grammaire du Romantisme tardif. C'est du symbolisme en adidas.",
+    literaryParallel: {
+      author: "Paul Verlaine",
+      workTitle: "Romances sans paroles",
+      bridge:
+        "Même art de ne PAS dire les choses frontalement. Verlaine murmure, Lomepal aussi — le texte passe par l'évocation, jamais la déclaration.",
+    },
+    listenUrl: "https://www.deezer.com/search/Lomepal%20Yeux%20disent",
+    vibe: "mélancolique",
+  },
+  {
+    id: "p-mc-solaar-caroline",
+    artist: "MC Solaar",
+    song: "Caroline",
+    album: "Qui sème le vent récolte le tempo",
+    year: 1991,
+    era: "90s",
+    punchlineTheme:
+      "Un jeu de mots filé sur un prénom féminin, où chaque rime devient une petite surprise phonétique. L'écriture est élégante, cursive, presque dansante.",
+    devices: ["paronomase", "calembour", "assonance"],
+    analysis:
+      "MC Solaar reprend exactement la technique des Grands Rhétoriqueurs (XVe siècle) : faire rimer les sons pour faire rimer les idées. La paronomase (mots proches qui ne disent pas la même chose) est sa signature — c'est du Desnos rapé. Quand il joue « Caroline / carabine », c'est Raymond Queneau qui applaudirait depuis le café de Flore.",
+    literaryParallel: {
+      author: "Raymond Queneau",
+      workTitle: "Exercices de style",
+      bridge:
+        "Même plaisir fou de la langue qu'on fait tourner dans tous les sens. Queneau invente 99 façons de raconter la même scène, Solaar invente 16 façons de rimer un prénom. Le jeu littéraire est identique.",
+    },
+    listenUrl: "https://www.deezer.com/search/MC%20Solaar%20Caroline",
+    vibe: "virtuose",
+  },
+];
+
+export const getPunchlinesByEra = (era: RapEra) =>
+  RAP_PUNCHLINES.filter((p) => p.era === era);
+
+export const getPunchline = (id: string) =>
+  RAP_PUNCHLINES.find((p) => p.id === id);
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Helpers

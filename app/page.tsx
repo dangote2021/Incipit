@@ -1,8 +1,10 @@
+import { Fragment } from "react";
 import Link from "next/link";
 import { BOOKS } from "@/lib/mock-data";
 import PitchCard from "@/components/PitchCard";
 import DailyIncipit from "@/components/DailyIncipit";
 import ResumeCard from "@/components/ResumeCard";
+import RapLitTeaser from "@/components/RapLitTeaser";
 
 export default function HomePage() {
   return (
@@ -36,8 +38,13 @@ export default function HomePage() {
         {/* Rituel matinal — Incipit du jour */}
         <DailyIncipit />
 
-        {BOOKS.map((b) => (
-          <PitchCard key={b.id} book={b} />
+        {BOOKS.map((b, i) => (
+          <Fragment key={b.id}>
+            <PitchCard book={b} />
+            {/* On glisse l'interlude Rap & Lit après le 4e pitch pour casser le
+                rythme et surprendre. */}
+            {i === 3 && <RapLitTeaser />}
+          </Fragment>
         ))}
 
         {/* Fin de feed */}
