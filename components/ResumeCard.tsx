@@ -28,9 +28,16 @@ export default function ResumeCard() {
     <section className="snap-start relative min-h-[calc(100vh-6rem)] flex items-center justify-center px-6 bg-cream">
       <Link
         href={`/book/${book.id}/read`}
-        className={`group relative w-full max-w-sm rounded-3xl overflow-hidden shadow-xl bg-gradient-to-br ${book.cover} p-6 text-paper block`}
+        className="group relative w-full max-w-sm rounded-3xl overflow-hidden shadow-xl bg-gradient-to-br from-ink via-ink to-bordeaux p-6 text-paper block"
       >
-        <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/20 to-transparent" />
+        {/* Halo subtil pour signer la couleur du livre sans l'écraser */}
+        <div
+          className="absolute inset-0 opacity-40 pointer-events-none"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle at 85% 15%, rgba(201,169,97,0.35) 0%, transparent 55%), radial-gradient(circle at 15% 95%, rgba(139,30,63,0.45) 0%, transparent 55%)",
+          }}
+        />
 
         <div className="relative">
           <div className="text-[10px] uppercase tracking-[0.3em] font-bold text-paper/80 mb-3">

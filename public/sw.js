@@ -2,7 +2,7 @@
 // Stratégie : cache-first pour les assets statiques, network-first pour le HTML.
 // Objectif MVP : permettre la relecture offline des pages déjà visitées.
 
-const CACHE_VERSION = "incipit-v1";
+const CACHE_VERSION = "incipit-v3";
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 
@@ -43,6 +43,9 @@ self.addEventListener("fetch", (event) => {
   // Ne pas toucher aux routes API ou aux requêtes croisées
   if (url.origin !== self.location.origin) return;
   if (url.pathname.startsWith("/api/")) return;
+  // Bundles Next.js : pairés avec le HTML, surtout ne pas cache-first —
+  // sinon on sert un vieux chunk incompatible après un deploy.
+  if (url.pathname.startsWith("/_next/")) return;
 
   // HTML : network-first, fallback cache, fallback page offline
   if (request.headers.get("accept")?.includes("text/html")) {
