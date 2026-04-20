@@ -1709,6 +1709,7 @@ export const RAP_PUNCHLINES: RapPunchline[] = [
         "Même Paris à deux visages : celui qui enivre et celui qui recrache. Baudelaire flâne, Booba roule — mais la rétine est la même.",
     },
     listenUrl: "https://open.spotify.com/search/Booba%20Ouest%20Side",
+    geniusUrl: "https://genius.com/Booba-ouest-side-lyrics",
     vibe: "street",
   },
   {
@@ -1730,6 +1731,7 @@ export const RAP_PUNCHLINES: RapPunchline[] = [
         "Même urgence d'un jeune homme qui interroge sa propre existence à voix haute. Rimbaud a 19 ans, Nekfeu 23 : âge de la question sans réponse.",
     },
     listenUrl: "https://open.spotify.com/search/Nekfeu%20On%20verra",
+    geniusUrl: "https://genius.com/Nekfeu-on-verra-lyrics",
     vibe: "mélancolique",
   },
   {
@@ -1752,6 +1754,7 @@ export const RAP_PUNCHLINES: RapPunchline[] = [
         "Même crudité, même musique noire, même refus de la jolie phrase. Céline invente l'argot littéraire, Damso invente le français de studio : deux violences du langage.",
     },
     listenUrl: "https://open.spotify.com/search/Damso%20Smog",
+    geniusUrl: "https://genius.com/Damso-smog-lyrics",
     vibe: "mystique",
   },
   {
@@ -1773,6 +1776,7 @@ export const RAP_PUNCHLINES: RapPunchline[] = [
         "Même ambition : cataloguer les travers d'une époque sans juger, juste en montrant. La Bruyère écrivait pour la cour, Orelsan pour Twitter — même geste.",
     },
     listenUrl: "https://open.spotify.com/search/Orelsan%20Basique",
+    geniusUrl: "https://genius.com/Orelsan-basique-lyrics",
     vibe: "politique",
   },
   {
@@ -1794,6 +1798,7 @@ export const RAP_PUNCHLINES: RapPunchline[] = [
         "Même croyance : que la parole peut déplacer les murs. Hugo plaidait pour les miséreux, Kery pour les banlieusards — c'est une seule et même voix française du bas.",
     },
     listenUrl: "https://open.spotify.com/search/Kery%20James%20Banlieusards",
+    geniusUrl: "https://genius.com/Kery-james-banlieusards-lyrics",
     vibe: "politique",
   },
   {
@@ -1816,6 +1821,7 @@ export const RAP_PUNCHLINES: RapPunchline[] = [
         "Même méthode : descendre dans un quartier, noter, restituer sans jolir. Zola dans les mines du Nord, IAM dans les cités de Marseille — l'ambition documentaire est identique.",
     },
     listenUrl: "https://open.spotify.com/search/IAM%20Demain%20c%27est%20loin",
+    geniusUrl: "https://genius.com/Iam-demain-cest-loin-lyrics",
     vibe: "street",
   },
   {
@@ -1837,6 +1843,7 @@ export const RAP_PUNCHLINES: RapPunchline[] = [
         "Même art de ne PAS dire les choses frontalement. Verlaine murmure, Lomepal aussi — le texte passe par l'évocation, jamais la déclaration.",
     },
     listenUrl: "https://open.spotify.com/search/Lomepal%20Yeux%20disent",
+    geniusUrl: "https://genius.com/Lomepal-yeux-disent-lyrics",
     vibe: "mélancolique",
   },
   {
@@ -1858,6 +1865,7 @@ export const RAP_PUNCHLINES: RapPunchline[] = [
         "Même plaisir fou de la langue qu'on fait tourner dans tous les sens. Queneau invente 99 façons de raconter la même scène, Solaar invente 16 façons de rimer un prénom. Le jeu littéraire est identique.",
     },
     listenUrl: "https://open.spotify.com/search/MC%20Solaar%20Caroline",
+    geniusUrl: "https://genius.com/Mc-solaar-caroline-lyrics",
     vibe: "virtuose",
   },
 ];

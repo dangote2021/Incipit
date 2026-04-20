@@ -258,8 +258,11 @@ export type RapPunchline = {
     bookId?: string;      // lien vers BOOKS si dispo
     bridge: string;       // 1-2 phrases : ce qui relie les deux
   };
-  // Lien d'écoute (optionnel — cherche sur Deezer)
+  // Lien d'écoute (Spotify)
   listenUrl?: string;
+  // Lien vers les paroles annotées (Genius) — on ne reproduit pas les paroles
+  // dans l'app, on envoie vers la source sous licence.
+  geniusUrl?: string;
   // Palette / vibe visuelle
   vibe: "street" | "mélancolique" | "politique" | "virtuose" | "mystique";
 };

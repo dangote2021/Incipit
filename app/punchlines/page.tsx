@@ -176,17 +176,37 @@ function PunchlineCard({ p }: { p: RapPunchline }) {
         </div>
 
         {/* Actions */}
-        <div className="flex gap-2 pt-1">
-          {p.listenUrl && (
-            <a
-              href={p.listenUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex-1 inline-flex items-center justify-center gap-2 bg-gold text-ink text-sm font-bold px-4 py-3 rounded-full hover:bg-gold/90 transition"
-            >
-              Écouter sur Spotify ↗
-            </a>
+        <div className="flex flex-col gap-2 pt-1">
+          {p.geniusUrl && (
+            <div className="rounded-2xl bg-paper/5 border border-paper/10 p-3">
+              <div className="text-[10px] uppercase tracking-[0.25em] text-paper/50 font-bold mb-1.5">
+                Les paroles
+              </div>
+              <p className="text-[13px] text-paper/75 leading-relaxed mb-3">
+                On ne reproduit pas les paroles ici — droits d'auteur oblige. Mais Genius les annote ligne par ligne, avec les références que les fans décryptent depuis des années.
+              </p>
+              <a
+                href={p.geniusUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-[12px] font-bold text-gold hover:underline"
+              >
+                Lire les paroles annotées sur Genius ↗
+              </a>
+            </div>
           )}
+          <div className="flex gap-2">
+            {p.listenUrl && (
+              <a
+                href={p.listenUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 inline-flex items-center justify-center gap-2 bg-gold text-ink text-sm font-bold px-4 py-3 rounded-full hover:bg-gold/90 transition"
+              >
+                Écouter sur Spotify ↗
+              </a>
+            )}
+          </div>
         </div>
       </div>
     </article>
