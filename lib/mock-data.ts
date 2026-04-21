@@ -2134,6 +2134,28 @@ export const RAP_PUNCHLINES: RapPunchline[] = [
     geniusUrl: "https://genius.com/Mc-solaar-caroline-lyrics",
     vibe: "virtuose",
   },
+  {
+    id: "p-sch-julius",
+    artist: "SCH",
+    song: "Cabo",
+    album: "JVLIVS",
+    year: 2018,
+    era: "10s",
+    punchlineTheme:
+      "Un opéra mafieux qui transpose la mythologie marseillaise en épopée solaire et noire. Le narrateur avance dans une lumière dorée et une violence rentrée — il raconte la famille, la trahison, le port, le Sud.",
+    devices: ["métaphore filée", "énumération", "hypotypose"],
+    analysis:
+      "SCH ne rappe pas une histoire : il écrit un roman-feuilleton en musique. JVLIVS, c'est Le Comte de Monte-Cristo version trap : un héros marqué par une blessure originelle, un retour méthodique, un décor méditerranéen chargé de signes. L'hypotypose (faire voir une scène) est sa signature — chaque couplet est un plan-séquence, chaque refrain une bascule de chapitre. Dumas écrivait pour le feuilleton ; SCH sort ses albums comme des saisons, avec prolepses et arcs narratifs tenus sur 45 minutes.",
+    literaryParallel: {
+      author: "Alexandre Dumas",
+      workTitle: "Le Comte de Monte-Cristo",
+      bridge:
+        "Même matrice : un héros du Sud, blessé par la trahison, qui revient régler ses comptes dans une langue à la fois populaire et opératique. Dumas publiait en feuilleton pour tenir le lecteur d'épisode en épisode ; SCH tient ses auditeurs d'album en album avec le même art du cliffhanger.",
+    },
+    listenUrl: "https://open.spotify.com/search/SCH%20Cabo%20JVLIVS",
+    geniusUrl: "https://genius.com/Sch-cabo-lyrics",
+    vibe: "mystique",
+  },
 ];
 
 export const getPunchlinesByEra = (era: RapEra) =>

@@ -154,19 +154,19 @@ function Intro({ onStart }: { onStart: () => void }) {
 
       <section className="px-6 py-10 space-y-4">
         <RuleRow
-          emoji="📖"
+          kicker="01"
           title="8 incipits"
-          body="Tirés au hasard à chaque partie. Impossible de connaître la suite."
+          body="Tirés au hasard à chaque partie. Impossible de tricher d'une partie à l'autre."
         />
         <RuleRow
-          emoji="⚡"
-          title="Streak bonus"
-          body="Les bonnes réponses consécutives te valent un badge de lecteur·rice affûté·e."
+          kicker="02"
+          title="4 choix, pas de pénalité"
+          body="Tu réponds, on corrige, on t'explique. Pas de score de niveau, pas de badge — juste un verdict honnête."
         />
         <RuleRow
-          emoji="📤"
-          title="Partageable"
-          body="Ton score final en screenshot-ready, style Wordle."
+          kicker="03"
+          title="Partageable si tu veux"
+          body="Ton résultat final en grille façon Wordle. À partager, ou à garder pour toi."
         />
       </section>
 
@@ -189,17 +189,19 @@ function Intro({ onStart }: { onStart: () => void }) {
 }
 
 function RuleRow({
-  emoji,
+  kicker,
   title,
   body,
 }: {
-  emoji: string;
+  kicker: string;
   title: string;
   body: string;
 }) {
   return (
     <div className="flex items-start gap-4">
-      <div className="text-3xl leading-none shrink-0 mt-0.5">{emoji}</div>
+      <div className="font-serif text-2xl font-black text-bordeaux leading-none shrink-0 mt-0.5 w-10">
+        {kicker}
+      </div>
       <div>
         <h3 className="font-serif text-lg font-bold text-ink mb-1">{title}</h3>
         <p className="text-sm text-ink/65 leading-relaxed">{body}</p>
@@ -232,9 +234,9 @@ function Playing({
         title={`Question ${index + 1} / ${total}`}
         subtitle={
           streak >= 3
-            ? `Streak ${streak} 🔥`
+            ? `${streak} d'affilée`
             : score > 0
-              ? `Score ${score}`
+              ? `${score} / ${index}`
               : "À toi de jouer"
         }
         back
