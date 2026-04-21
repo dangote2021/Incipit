@@ -1,4 +1,4 @@
-# Incipit — V1.1
+# Incipit — V1.2
 
 > L'app qui te fait kiffer Balzac comme TikTok t'a fait kiffer la danse.
 
@@ -51,19 +51,26 @@ Pitches 100 % originaux, incipits et passages clés en droit de courte citation 
 
 ```
 incipit/
-├── /                              → Feed de pitches en carrousel vertical
-├── /onboarding                    → Choix genres + ton
+├── /                              → Feed de pitches en carrousel vertical + bannière contextuelle
+├── /onboarding                    → Choix genres + ton (persistés localement)
 ├── /explore                       → 4 onglets : Thèmes / Citations / Passages clés / Défis
+├── /punchlines                    → Rap & Lit : 8 punchlines annotées littérairement + lien Genius
+├── /domaine-public                → Catalogue des 10 livres libres + liens Gutenberg / Wikisource / Gallica
 ├── /library                       → Bibliothèque perso
 ├── /book/[id]                     → Fiche livre (pitch, incipit, passages clés, reco, annotations,
-│                                    compagnon IA, libraires, buddy, mode "je reprends")
+│                                    compagnon IA, libraires, buddy, mode "je reprends",
+│                                    connecteurs Audible / Kindle / Kobo / Apple Books / Google Play
+│                                    et lecture intégrale si domaine public)
 ├── /book/[id]/read                → Mode lecture : passages clés + tailles de typo + fiches perso
 ├── /buddy/[bookId]                → Lecture partagée avec spoiler-guard
 ├── /scan                          → Incipit Lens : OCR livre papier (couverture ou passage)
 ├── /clubs                         → Liste des book clubs
 ├── /clubs/[id]                    → Détail club : livre du mois + discussions
 ├── /feed                          → Feed social (activités de la communauté)
-└── /profile                       → Profil : stats intimes, badges, étagère 3D, annotations
+├── /profile                       → Profil : stats intimes, badges, étagère 3D, annotations
+├── /about                         → Manifeste + crédits + mentions légales
+├── /robots.txt                    → Indexation autorisée
+└── /sitemap.xml                   → 11 routes statiques + livres + clubs + buddies
 ```
 
 ## Features V1
@@ -88,10 +95,19 @@ incipit/
 - **Étagère 3D** : vitrine des livres lus.
 
 ### Paquet 3 — V1.1 : lecture immersive + partage + scan + indés
-- **Fiches personnages** : drawer bottom-sheet accessible en un clic pendant la lecture. Pitch d'une phrase, description sans spoiler, citation-signature, relations. 22 fiches déjà écrites pour les 6 romans majeurs (Goriot, Bovary, Notre-Dame, Swann, Liaisons, Germinal).
+- **Fiches personnages** : drawer bottom-sheet accessible en un clic pendant la lecture. Pitch d'une phrase, description sans spoiler, citation-signature, relations. 38 fiches écrites pour les 12 classiques (y compris figures poétiques pour les Fleurs du Mal).
 - **Cartes citations Stories** : chaque citation se transforme en image 1080×1920 en un tap. Gradient du livre, Playfair Display, wordmark Incipit, URL watermark. Téléchargement PNG + `navigator.share` natif si supporté.
 - **Incipit Lens (OCR)** : scanner via `/scan`. Photo de couverture → reconnaissance + fiche livre. Photo de passage → extraction + sauvegarde dans les annotations. Flow complet avec state `idle` / `processing` (barre de progression + scan-line animée) / `book-found` / `passage-found`.
 - **Placedeslibraires.fr en priorité** : modale "Chez ton libraire" refondue. Bannière bordeaux-gold CTA principal qui envoie vers placedeslibraires.fr (2 800 libraires indés). Liste des librairies proches avec deep-links vers le réseau. Autres plateformes éthiques (Lalibrairie.com, Leslibraires.fr, Mollat) repliées dans `<details>`. **Aucun lien Amazon, aucun lien Fnac.**
+
+### Paquet 4 — V1.2 : hub d'inspiration + SEO + persistance
+- **Rap & Lit** : 8 punchlines analysées à travers figures de style, avec lien direct vers les paroles annotées sur Genius. On ne reproduit pas les paroles (copyright).
+- **Connecteurs de lecture** : chaque fiche livre renvoie vers Audible, Kindle, Kobo, Apple Books, Google Play Books et les libraires indépendants. Pour les œuvres du domaine public, bloc dédié "Lecture intégrale · gratuite" avec Project Gutenberg, Wikisource et Gallica.
+- **Domaine public** : page `/domaine-public` dédiée aux 10 classiques libres (Bovary, Germinal, Les Liaisons, Rouge et Noir, Bel-Ami, Notre-Dame, Candide, Père Goriot, Fleurs du Mal, Du côté de chez Swann). Manifeste lecture libre + 3 sources officielles.
+- **SEO & crawl** : `generateMetadata` dynamique par livre et par club (OpenGraph book, Twitter summary). `robots.ts` + `sitemap.ts` générant 39+ URLs priorisées.
+- **Persistance onboarding** : préférences stockées en `localStorage` (jamais envoyées côté serveur). Bannière d'accueil contextuelle : nouveau visiteur → CTA calibrer ; retour → message adapté à l'écart de jours.
+- **Pages d'erreur éditorialisées** : `not-found.tsx` ton Proust, `error.tsx` ton Camus, `loading.tsx` pulsé.
+- **Page À propos** : manifeste, 6 principes, crédits Gutenberg/Wikisource/Gallica/Genius/Placedeslibraires, mentions légales RGPD-friendly.
 
 ## Design system
 
