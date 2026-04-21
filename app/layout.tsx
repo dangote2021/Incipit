@@ -4,7 +4,7 @@ import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://incipit-git-main-guillaumecoulon1-6957s-projects.vercel.app"),
+  metadataBase: new URL("https://incipit-navy.vercel.app"),
   title: {
     default: "Incipit — Les premières lignes qui donnent envie",
     template: "%s · Incipit",

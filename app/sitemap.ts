@@ -1,8 +1,7 @@
 import type { MetadataRoute } from "next";
 import { BOOKS, CLUBS, RAP_PUNCHLINES, CHALLENGES } from "@/lib/mock-data";
 
-const BASE_URL =
-  "https://incipit-git-main-guillaumecoulon1-6957s-projects.vercel.app";
+const BASE_URL = "https://incipit-navy.vercel.app";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
