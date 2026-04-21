@@ -1,16 +1,34 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { GENRES } from "@/lib/mock-data";
 import type { Genre } from "@/lib/types";
+import { completeOnboarding, getPrefs } from "@/lib/prefs";
 
 export default function OnboardingPage() {
+  const router = useRouter();
   const [selected, setSelected] = useState<Set<Genre>>(new Set());
   const [step, setStep] = useState<
     "name" | "welcome" | "genres" | "tone"
   >("name");
   const [tone, setTone] = useState<"boloss" | "neutre">("boloss");
+
+  // Pré-remplit avec les prefs existantes si l'utilisateur revient
+  // modifier ses choix.
+  useEffect(() => {
+    const prefs = getPrefs();
+    if (prefs.onboarded) {
+      setSelected(new Set(prefs.genres));
+      setTone(prefs.tone);
+    }
+  }, []);
+
+  const finish = () => {
+    completeOnboarding({ genres: Array.from(selected), tone });
+    router.push("/");
+  };
 
   const toggle = (g: Genre) => {
     setSelected((s) => {
@@ -225,12 +243,13 @@ export default function OnboardingPage() {
         </button>
       </div>
 
-      <Link
-        href="/"
+      <button
+        type="button"
+        onClick={finish}
         className="mt-8 bg-ink text-paper py-4 rounded-full text-sm font-bold uppercase tracking-widest text-center hover:bg-bordeaux transition"
       >
         Entrer dans Incipit →
-      </Link>
+      </button>
     </div>
   );
 }

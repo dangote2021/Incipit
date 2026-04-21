@@ -5,6 +5,7 @@ import PitchCard from "@/components/PitchCard";
 import DailyIncipit from "@/components/DailyIncipit";
 import ResumeCard from "@/components/ResumeCard";
 import RapLitTeaser from "@/components/RapLitTeaser";
+import WelcomeBanner from "@/components/WelcomeBanner";
 
 export default function HomePage() {
   return (
@@ -32,6 +33,9 @@ export default function HomePage() {
 
       {/* Carrousel vertical de pitches (scroll snap) */}
       <main className="snap-y snap-mandatory overflow-y-scroll h-screen no-scrollbar -mt-0">
+        {/* Message d'accueil contextuel (nouveau vs retour) */}
+        <WelcomeBanner />
+
         {/* "Je reprends" — uniquement si un livre est en cours */}
         <ResumeCard />
 
