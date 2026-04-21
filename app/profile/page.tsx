@@ -355,6 +355,12 @@ export default function ProfilePage() {
           >
             Préférences de lecture
           </Link>
+          <Link
+            href="/about"
+            className="block text-center text-xs uppercase tracking-widest font-bold text-ink/60 py-3 border border-ink/10 rounded-full"
+          >
+            À propos & mentions
+          </Link>
         </section>
       </main>
     </>
