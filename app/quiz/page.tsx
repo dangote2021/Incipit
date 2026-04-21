@@ -4,14 +4,25 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import AppHeader from "@/components/AppHeader";
 import { BOOKS } from "@/lib/mock-data";
-import type { Book } from "@/lib/types";
+import {
+  QUIZ_INCIPITS,
+  BY_LEVEL,
+  LEVEL_LABELS,
+  type QuizIncipit,
+  type QuizLevel,
+} from "@/lib/quiz-incipits";
 
 type Question = {
-  book: Book;
-  options: Book[];
+  book: QuizIncipit;
+  options: QuizIncipit[];
 };
 
 const ROUND_SIZE = 8;
+
+// Les 12 fiches Incipit : seuls ces ids ont une /book/[id] dédiée.
+// Utilisé dans le corrigé pour n'afficher le lien "Ouvrir la fiche" que quand
+// on a vraiment quelque chose à montrer.
+const FICHE_IDS = new Set(BOOKS.map((b) => b.id));
 
 function shuffle<T>(arr: T[]): T[] {
   const copy = [...arr];
@@ -22,27 +33,32 @@ function shuffle<T>(arr: T[]): T[] {
   return copy;
 }
 
-function makeRound(): Question[] {
-  const pool = shuffle(BOOKS).slice(0, ROUND_SIZE);
-  return pool.map((book) => {
-    const distractors = shuffle(BOOKS.filter((b) => b.id !== book.id)).slice(
-      0,
-      3
-    );
+function makeRound(level: QuizLevel | "all"): Question[] {
+  const pool = level === "all" ? QUIZ_INCIPITS : BY_LEVEL[level];
+  const picked = shuffle(pool).slice(0, Math.min(ROUND_SIZE, pool.length));
+  // Les distracteurs viennent du même niveau si possible, sinon on élargit.
+  const distractorPool =
+    pool.length >= 4 ? pool : QUIZ_INCIPITS;
+  return picked.map((book) => {
+    const distractors = shuffle(
+      distractorPool.filter((b) => b.id !== book.id)
+    ).slice(0, 3);
     const options = shuffle([book, ...distractors]);
     return { book, options };
   });
 }
 
-function firstLines(book: Book): string {
+function firstLines(book: QuizIncipit): string {
   const sentences = book.openingLines.split(/\. |\n/).filter(Boolean);
-  return sentences.slice(0, 2).join(". ").replace(/\.*$/, "") + ".";
+  const out = sentences.slice(0, 2).join(". ").replace(/\.*$/, "");
+  return out + ".";
 }
 
 type State =
   | { phase: "intro" }
   | {
       phase: "playing";
+      level: QuizLevel | "all";
       questions: Question[];
       index: number;
       picked: string | null;
@@ -53,6 +69,7 @@ type State =
     }
   | {
       phase: "done";
+      level: QuizLevel | "all";
       questions: Question[];
       score: number;
       bestStreak: number;
@@ -62,10 +79,11 @@ type State =
 export default function QuizPage() {
   const [state, setState] = useState<State>({ phase: "intro" });
 
-  const start = () => {
-    const questions = makeRound();
+  const start = (level: QuizLevel | "all") => {
+    const questions = makeRound(level);
     setState({
       phase: "playing",
+      level,
       questions,
       index: 0,
       picked: null,
@@ -76,7 +94,7 @@ export default function QuizPage() {
     });
   };
 
-  const pick = (opt: Book) => {
+  const pick = (opt: QuizIncipit) => {
     if (state.phase !== "playing" || state.picked) return;
     const current = state.questions[state.index];
     const correct = opt.id === current.book.id;
@@ -102,6 +120,7 @@ export default function QuizPage() {
     if (isLast) {
       setState({
         phase: "done",
+        level: state.level,
         questions: state.questions,
         score: state.score,
         bestStreak: state.bestStreak,
@@ -116,11 +135,13 @@ export default function QuizPage() {
   if (state.phase === "done")
     return (
       <Done
+        level={state.level}
         questions={state.questions}
         score={state.score}
         bestStreak={state.bestStreak}
         answers={state.answers}
-        onReplay={start}
+        onReplay={() => start(state.level)}
+        onPickLevel={() => setState({ phase: "intro" })}
       />
     );
 
@@ -131,7 +152,7 @@ export default function QuizPage() {
 
 // ─────────────────────────────────────────────────────────────────────────────
 
-function Intro({ onStart }: { onStart: () => void }) {
+function Intro({ onStart }: { onStart: (level: QuizLevel | "all") => void }) {
   return (
     <div className="min-h-screen">
       <AppHeader title="Devine l'incipit" subtitle="Jeu littéraire" back />
@@ -145,41 +166,57 @@ function Intro({ onStart }: { onStart: () => void }) {
           <span className="text-bordeaux">Tu devines le livre.</span>
         </h2>
         <p className="text-ink/70 text-[15px] leading-relaxed">
-          {ROUND_SIZE} incipits tirés au sort parmi nos 12 classiques. Quatre
-          propositions par question. Tu valides, on te dit si tu as eu l'œil.
-          Un bon score ? Tu partages. Un mauvais ? On te donne 12 pitches pour
-          rattraper.
+          {ROUND_SIZE} incipits tirés au sort dans un corpus de {QUIZ_INCIPITS.length}.
+          Quatre propositions par question. Tu valides, on te dit si tu as eu
+          l'œil. Un bon score ? Tu partages. Un mauvais ? On te donne 12 pitches
+          pour rattraper.
         </p>
       </section>
 
-      <section className="px-6 py-10 space-y-4">
-        <RuleRow
-          kicker="01"
-          title="8 incipits"
-          body="Tirés au hasard à chaque partie. Impossible de tricher d'une partie à l'autre."
-        />
-        <RuleRow
-          kicker="02"
-          title="4 choix, pas de pénalité"
-          body="Tu réponds, on corrige, on t'explique. Pas de score de niveau, pas de badge — juste un verdict honnête."
-        />
-        <RuleRow
-          kicker="03"
-          title="Partageable si tu veux"
-          body="Ton résultat final en grille façon Wordle. À partager, ou à garder pour toi."
-        />
+      <section className="px-6 py-8">
+        <div className="text-[10px] uppercase tracking-[0.3em] text-ink/50 font-bold mb-4">
+          Choisis ton niveau
+        </div>
+        <div className="space-y-3">
+          <LevelCard
+            kicker="01"
+            level="easy"
+            count={BY_LEVEL.easy.length}
+            onStart={onStart}
+          />
+          <LevelCard
+            kicker="02"
+            level="medium"
+            count={BY_LEVEL.medium.length}
+            onStart={onStart}
+          />
+          <LevelCard
+            kicker="03"
+            level="hard"
+            count={BY_LEVEL.hard.length}
+            onStart={onStart}
+          />
+          <button
+            onClick={() => onStart("all")}
+            className="w-full text-left bg-ink text-paper rounded-2xl p-4 hover:bg-bordeaux transition"
+          >
+            <div className="text-[10px] uppercase tracking-widest font-bold text-gold mb-1">
+              Mode libre
+            </div>
+            <div className="font-serif font-bold text-lg leading-tight">
+              Tout le corpus mélangé
+            </div>
+            <div className="text-xs text-paper/70 mt-1">
+              {QUIZ_INCIPITS.length} incipits, tirage au hasard, tous niveaux confondus.
+            </div>
+          </button>
+        </div>
       </section>
 
       <section className="px-6 pb-12">
-        <button
-          onClick={onStart}
-          className="w-full py-5 rounded-2xl bg-ink text-paper font-serif text-lg font-bold hover:bg-bordeaux transition shadow-lg"
-        >
-          Commencer la partie →
-        </button>
         <Link
           href="/explore"
-          className="block text-center mt-4 text-xs uppercase tracking-widest text-ink/50 font-semibold"
+          className="block text-center mt-2 text-xs uppercase tracking-widest text-ink/50 font-semibold"
         >
           Pas prêt·e ? Va explorer les pitches
         </Link>
@@ -188,25 +225,39 @@ function Intro({ onStart }: { onStart: () => void }) {
   );
 }
 
-function RuleRow({
+function LevelCard({
   kicker,
-  title,
-  body,
+  level,
+  count,
+  onStart,
 }: {
   kicker: string;
-  title: string;
-  body: string;
+  level: QuizLevel;
+  count: number;
+  onStart: (level: QuizLevel) => void;
 }) {
+  const meta = LEVEL_LABELS[level];
   return (
-    <div className="flex items-start gap-4">
+    <button
+      onClick={() => onStart(level)}
+      className="w-full text-left bg-paper border-2 border-ink/10 hover:border-bordeaux rounded-2xl p-4 transition flex items-start gap-4"
+    >
       <div className="font-serif text-2xl font-black text-bordeaux leading-none shrink-0 mt-0.5 w-10">
         {kicker}
       </div>
-      <div>
-        <h3 className="font-serif text-lg font-bold text-ink mb-1">{title}</h3>
-        <p className="text-sm text-ink/65 leading-relaxed">{body}</p>
+      <div className="flex-1 min-w-0">
+        <div className="font-serif text-lg font-bold text-ink">
+          {meta.title}
+        </div>
+        <div className="text-sm text-ink/65 leading-snug mt-0.5">
+          {meta.sub}
+        </div>
+        <div className="text-[10px] uppercase tracking-widest text-ink/45 font-bold mt-2">
+          {count} incipits
+        </div>
       </div>
-    </div>
+      <span className="text-ink/30 text-xl shrink-0 mt-1">→</span>
+    </button>
   );
 }
 
@@ -219,7 +270,7 @@ function Playing({
   total,
 }: {
   state: Extract<State, { phase: "playing" }>;
-  onPick: (b: Book) => void;
+  onPick: (b: QuizIncipit) => void;
   onNext: () => void;
   total: number;
 }) {
@@ -242,7 +293,6 @@ function Playing({
         back
       />
 
-      {/* Progression */}
       <div className="h-1 bg-ink/5">
         <div
           className="h-full bg-bordeaux transition-all duration-500"
@@ -250,7 +300,6 @@ function Playing({
         />
       </div>
 
-      {/* Incipit */}
       <section className="flex-1 px-6 pt-8 pb-6 bg-gradient-to-b from-paper via-cream to-dust relative overflow-hidden">
         <div className="absolute top-10 -right-10 w-48 h-48 rounded-full bg-bordeaux/10 blur-3xl" />
         <div className="relative max-w-md mx-auto text-center">
@@ -266,7 +315,6 @@ function Playing({
         </div>
       </section>
 
-      {/* Choix */}
       <section className="px-5 pb-8 pt-4 space-y-3">
         {q.options.map((opt) => {
           const isPicked = picked === opt.id;
@@ -309,7 +357,6 @@ function Playing({
         })}
       </section>
 
-      {/* Feedback + next */}
       {answered && (
         <section className="px-6 pb-10 animate-fade-up">
           <div
@@ -344,20 +391,26 @@ function Playing({
 // ─────────────────────────────────────────────────────────────────────────────
 
 function Done({
+  level,
   questions,
   score,
   bestStreak,
   answers,
   onReplay,
+  onPickLevel,
 }: {
+  level: QuizLevel | "all";
   questions: Question[];
   score: number;
   bestStreak: number;
   answers: { bookId: string; pickedId: string; correct: boolean }[];
   onReplay: () => void;
+  onPickLevel: () => void;
 }) {
   const total = questions.length;
   const pct = Math.round((score / total) * 100);
+  const levelLabel =
+    level === "all" ? "Mode libre" : LEVEL_LABELS[level].title;
 
   const verdict =
     pct === 100
@@ -385,12 +438,11 @@ function Done({
                 sub: "Aucun souci, c'est pour ça qu'Incipit existe. Scroll et apprends.",
               };
 
-  // grille style Wordle pour partage visuel
   const shareGrid = answers
     .map((a) => (a.correct ? "🟥" : "⬜"))
     .join("");
 
-  const shareText = `Incipit Quiz — ${score}/${total} · ${shareGrid} · streak ${bestStreak}`;
+  const shareText = `Incipit Quiz (${levelLabel}) — ${score}/${total} · ${shareGrid} · streak ${bestStreak}`;
 
   const share = async () => {
     const url = `${typeof window !== "undefined" ? window.location.origin : ""}/quiz`;
@@ -414,7 +466,6 @@ function Done({
       await navigator.clipboard.writeText(`${shareText}\n${url}`);
       alert("Score copié dans le presse-papier.");
     } catch {
-      // ultime fallback : ouvrir une fenêtre mail
       window.prompt("Copie ton score :", `${shareText}\n${url}`);
     }
   };
@@ -427,7 +478,7 @@ function Done({
         <div className="absolute -top-20 -left-10 w-72 h-72 rounded-full bg-gold/15 blur-3xl" />
         <div className="relative">
           <div className="text-[10px] uppercase tracking-[0.3em] font-bold text-gold mb-4">
-            Verdict
+            Verdict · {levelLabel}
           </div>
           <div className="font-serif text-8xl font-black leading-none">
             {score}
@@ -463,11 +514,16 @@ function Done({
           onClick={onReplay}
           className="w-full py-4 rounded-full border-2 border-ink text-ink font-serif font-bold text-sm uppercase tracking-widest hover:bg-ink/5 transition"
         >
-          Rejouer une partie
+          Rejouer · {levelLabel}
+        </button>
+        <button
+          onClick={onPickLevel}
+          className="w-full py-3 text-xs uppercase tracking-widest text-ink/55 font-bold hover:text-ink transition"
+        >
+          Changer de niveau
         </button>
       </section>
 
-      {/* Correction détaillée */}
       <section className="px-6 py-4 border-t border-ink/5">
         <div className="text-[10px] uppercase tracking-[0.3em] text-ink/50 font-bold mb-4">
           Corrigé
@@ -476,6 +532,14 @@ function Done({
           {answers.map((a, i) => {
             const q = questions[i];
             const pickedBook = q.options.find((o) => o.id === a.pickedId)!;
+            const bookFicheId = FICHE_IDS.has(q.book.id) ? q.book.id : null;
+            // Certains ids du quiz sont préfixés "q-" — on tente aussi la
+            // correspondance sans préfixe pour lier vers /book/[id] si elle
+            // existe parmi les 12 fiches.
+            const stripped = q.book.id.replace(/^q-/, "");
+            const matchedFiche =
+              bookFicheId ?? (FICHE_IDS.has(stripped) ? stripped : null);
+
             return (
               <li
                 key={i}
@@ -506,13 +570,18 @@ function Done({
                       Tu avais répondu : {pickedBook.title}
                     </div>
                   )}
+                  <p className="text-xs text-ink/65 mt-2 italic leading-snug">
+                    {q.book.hook}
+                  </p>
                 </div>
-                <Link
-                  href={`/book/${q.book.id}`}
-                  className="inline-block mt-2 text-[11px] uppercase tracking-widest font-bold text-bordeaux"
-                >
-                  Ouvrir la fiche →
-                </Link>
+                {matchedFiche && (
+                  <Link
+                    href={`/book/${matchedFiche}`}
+                    className="inline-block mt-2 text-[11px] uppercase tracking-widest font-bold text-bordeaux"
+                  >
+                    Ouvrir la fiche →
+                  </Link>
+                )}
               </li>
             );
           })}
