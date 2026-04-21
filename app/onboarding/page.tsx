@@ -5,8 +5,19 @@ import { useRouter } from "next/navigation";
 import { GENRES } from "@/lib/mock-data";
 import type { Genre } from "@/lib/types";
 import { completeOnboarding, getPrefs } from "@/lib/prefs";
+import {
+  getDailyIncipit,
+  incipitTeaser,
+  formatDate,
+} from "@/lib/daily-incipit";
 
-type Step = "splash" | "welcome" | "firstName" | "genres" | "tone";
+type Step =
+  | "splash"
+  | "welcome"
+  | "firstName"
+  | "genres"
+  | "tone"
+  | "tomorrow";
 
 export default function OnboardingPage() {
   const router = useRouter();
@@ -279,6 +290,10 @@ export default function OnboardingPage() {
     );
   }
 
+  if (step === "tomorrow") {
+    return <TomorrowTeaser onFinish={finish} onBack={() => setStep("tone")} />;
+  }
+
   // step === "tone"
   return (
     <div className="min-h-screen flex flex-col px-6 py-10 bg-paper">
@@ -349,11 +364,92 @@ export default function OnboardingPage() {
 
       <button
         type="button"
-        onClick={finish}
+        onClick={() => setStep("tomorrow")}
         className="mt-8 bg-ink text-paper py-4 rounded-full text-sm font-bold uppercase tracking-widest text-center hover:bg-bordeaux transition"
       >
-        Entrer dans Incipit →
+        Suivant →
       </button>
+    </div>
+  );
+}
+
+function TomorrowTeaser({
+  onFinish,
+  onBack,
+}: {
+  onFinish: () => void;
+  onBack: () => void;
+}) {
+  // Teaser de l'incipit de J+1 (flouté) — pour donner une raison concrète
+  // de revenir demain (retour panel v8, Inès et Camille). Rendu client-side
+  // à l'instant T : si on ouvre l'onboarding à 23h59, on voit bien l'incipit
+  // de demain une minute plus tard.
+  const { book, date } = getDailyIncipit(-1); // -1 jour "de retard" = demain
+  const teaser = incipitTeaser(book, 140);
+
+  return (
+    <div className="min-h-screen flex flex-col px-6 py-10 bg-paper">
+      <div className="flex items-center justify-between mb-2">
+        <button
+          type="button"
+          onClick={onBack}
+          className="text-[11px] uppercase tracking-widest text-ink/60 font-semibold hover:text-ink transition"
+        >
+          ← Retour
+        </button>
+        <div className="text-[11px] uppercase tracking-[0.25em] text-ink/50 font-semibold">
+          Demain
+        </div>
+      </div>
+
+      <div className="flex-1 flex flex-col justify-center max-w-sm mx-auto w-full">
+        <div className="text-[10px] uppercase tracking-[0.3em] text-bordeaux font-bold mb-2">
+          Ton prochain incipit
+        </div>
+        <div className="text-xs text-ink/50 mb-6 italic first-letter:uppercase">
+          {formatDate(date)}
+        </div>
+
+        <div className="relative bg-gradient-to-b from-cream to-dust rounded-3xl p-6 mb-8 border border-ink/10 shadow-sm">
+          <div
+            className="font-serif text-7xl text-bordeaux/25 leading-none mb-2 select-none"
+            aria-hidden
+          >
+            “
+          </div>
+          <blockquote
+            className="font-serif text-[22px] leading-[1.3] text-ink italic blur-sm select-none"
+            aria-label="Incipit flouté pour demain"
+          >
+            {teaser}
+          </blockquote>
+          <div className="absolute inset-0 flex items-end justify-center pb-6 pointer-events-none">
+            <div className="text-[11px] uppercase tracking-widest text-ink/70 font-bold bg-paper/90 px-3 py-1.5 rounded-full shadow">
+              🔒 Reviens demain
+            </div>
+          </div>
+        </div>
+
+        <h1 className="font-serif text-2xl font-bold text-ink mb-2 leading-snug">
+          Un classique par jour, 2 minutes.
+        </h1>
+        <p className="text-ink/70 text-[15px] leading-relaxed mb-2">
+          Chaque matin, un nouveau rituel t'attend. Le lundi un incipit,
+          le mardi une citation, le mercredi une punchline de rap décortiquée,
+          le jeudi un quiz, le vendredi une carte à partager.
+        </p>
+        <p className="text-ink/50 text-[13px] italic mb-4">
+          Pas de notification imposée. Juste une promesse : ça vaut le détour.
+        </p>
+
+        <button
+          type="button"
+          onClick={onFinish}
+          className="mt-4 bg-ink text-paper py-4 rounded-full text-sm font-bold uppercase tracking-widest hover:bg-bordeaux transition"
+        >
+          Entrer dans Incipit →
+        </button>
+      </div>
     </div>
   );
 }

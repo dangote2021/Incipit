@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { BOOKS } from "@/lib/mock-data";
-import DailyIncipit from "@/components/DailyIncipit";
+import DailyRitual from "@/components/DailyRitual";
 import ResumeCard from "@/components/ResumeCard";
 import WelcomeBanner from "@/components/WelcomeBanner";
 import PersonalizedPitchFeed from "@/components/PersonalizedPitchFeed";
@@ -67,17 +67,21 @@ export default function HomePage() {
       <main className="snap-y snap-mandatory overflow-y-scroll h-screen no-scrollbar -mt-0">
         {/* Ordre du haut de feed :
             - Nouveau visiteur (pas de cookie) → WelcomeBanner d'abord, pour
-              comprendre ce qu'est l'app avant de se prendre un Beckett ou
-              un Proust plein écran (retour panel beta v6, Marion).
-            - Retour → DailyIncipit d'abord, c'est la signature éditoriale. */}
+              comprendre ce qu'est l'app avant de se prendre un rituel plein
+              écran (retour panel beta v6, Marion).
+            - Retour → DailyRitual d'abord. Le rituel change selon le jour
+              de la semaine (retour panel v8, Thibault) : lundi incipit,
+              mardi citation, mercredi punchline, jeudi quiz, vendredi carte,
+              samedi passage clé, dimanche classique de la semaine. Même
+              squelette visuel, contenu différent → reconnaissance + variété. */}
         {isProbablyNewVisitor ? (
           <>
             <WelcomeBanner />
-            <DailyIncipit />
+            <DailyRitual />
           </>
         ) : (
           <>
-            <DailyIncipit />
+            <DailyRitual />
             <WelcomeBanner />
           </>
         )}
