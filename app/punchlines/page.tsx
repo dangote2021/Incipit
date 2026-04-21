@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 import AppHeader from "@/components/AppHeader";
 import { RAP_PUNCHLINES, getBook } from "@/lib/mock-data";
 import type { RapEra, RapPunchline } from "@/lib/types";
+import { usePremium, FREE_QUOTAS } from "@/lib/premium";
 
 const ERAS: { key: RapEra | "all"; label: string }[] = [
   { key: "all", label: "Tout" },
@@ -24,14 +25,22 @@ const VIBE_ACCENT: Record<RapPunchline["vibe"], string> = {
 
 export default function PunchlinesPage() {
   const [era, setEra] = useState<RapEra | "all">("all");
+  const { isPremium, hydrated } = usePremium();
 
-  const items = useMemo(
+  const filtered = useMemo(
     () =>
       era === "all"
         ? RAP_PUNCHLINES
         : RAP_PUNCHLINES.filter((p) => p.era === era),
     [era]
   );
+
+  // Free : on affiche seulement les N premières cartes après filtre,
+  // Premium : tout. Ça laisse le plaisir de découvrir, mais on fait miroiter.
+  const cap = FREE_QUOTAS.punchlineCards;
+  const isGated = hydrated && !isPremium && filtered.length > cap;
+  const items = isGated ? filtered.slice(0, cap) : filtered;
+  const hiddenCount = filtered.length - items.length;
 
   return (
     <div className="min-h-screen bg-ink text-paper">
@@ -83,6 +92,29 @@ export default function PunchlinesPage() {
           {items.map((p) => (
             <PunchlineCard key={p.id} p={p} />
           ))}
+
+          {isGated && (
+            <div className="rounded-3xl bg-gradient-to-br from-gold/20 to-bordeaux/30 border border-gold/40 p-6 backdrop-blur">
+              <div className="text-[10px] uppercase tracking-[0.3em] text-gold font-black">
+                Encore {hiddenCount} punchlines analysées
+              </div>
+              <div className="font-serif text-xl font-black text-paper mt-2 leading-snug">
+                Passe Premium pour dérouler tout le crate.
+              </div>
+              <p className="text-sm text-paper/75 mt-2 leading-relaxed">
+                Booba, Damso, SCH, Kery James, Diam's, IAM — on a les
+                punchlines, les figures de style, les ponts classiques.
+                Gratuit : {FREE_QUOTAS.punchlineCards} par session. Premium :
+                zéro limite, et on en rajoute chaque semaine.
+              </p>
+              <Link
+                href="/premium"
+                className="mt-4 inline-block w-full text-center bg-gold text-ink py-3 rounded-full text-[11px] uppercase tracking-widest font-black hover:bg-paper transition"
+              >
+                Débloquer les {hiddenCount} autres →
+              </Link>
+            </div>
+          )}
         </div>
       </main>
     </div>

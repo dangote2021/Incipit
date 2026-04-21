@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import AppHeader from "@/components/AppHeader";
+import IncipitArchiveList, {
+  type ArchiveEntry,
+} from "@/components/IncipitArchiveList";
 import {
   getDailyIncipit,
   getRecentDailyIncipits,
@@ -91,57 +94,19 @@ export default function IncipitArchivePage() {
         </p>
       </section>
 
-      {/* Liste archive */}
-      <section className="px-5 pb-16 space-y-3">
-        {archive.slice(1).map(({ book, date }, i) => {
-          const teaser = incipitTeaser(book, 160);
-          return (
-            <article
-              key={i}
-              className={`bg-paper border border-ink/10 rounded-2xl p-5 hover:border-ink/25 transition`}
-            >
-              <div className="flex items-start justify-between gap-4 mb-3">
-                <div>
-                  <div className="text-[10px] uppercase tracking-[0.25em] text-ink/45 font-bold">
-                    Il y a {i + 1} jour{i === 0 ? "" : "s"}
-                  </div>
-                  <div className="text-[10px] uppercase tracking-widest text-ink/50 font-bold mt-0.5">
-                    {formatShortDate(date)}
-                  </div>
-                </div>
-                <a
-                  href={`/api/incipit-card/${book.id}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-[11px] uppercase tracking-widest font-bold text-bordeaux shrink-0"
-                  aria-label={`Télécharger la carte pour ${book.title}`}
-                >
-                  Carte ↓
-                </a>
-              </div>
-
-              <Link href={`/book/${book.id}`} className="block group">
-                <blockquote className="font-serif text-[17px] italic text-ink/90 leading-snug border-l-2 border-bordeaux/60 pl-3 mb-3 group-hover:border-bordeaux transition">
-                  « {teaser} »
-                </blockquote>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="font-serif text-base font-bold text-ink">
-                      {book.title}
-                    </div>
-                    <div className="text-xs text-ink/60">
-                      {book.author} · {book.year}
-                    </div>
-                  </div>
-                  <span className="text-ink/40 group-hover:text-bordeaux transition">
-                    →
-                  </span>
-                </div>
-              </Link>
-            </article>
-          );
-        })}
-      </section>
+      {/* Liste archive — calculée côté serveur, rendue côté client pour le gate. */}
+      <IncipitArchiveList
+        entries={archive.slice(1).map<ArchiveEntry>(({ book, date }, i) => ({
+          bookId: book.id,
+          bookTitle: book.title,
+          bookAuthor: book.author,
+          bookYear: book.year,
+          teaser: incipitTeaser(book, 160),
+          shortDate: formatShortDate(date),
+          daysAgo: i + 1,
+        }))}
+        freeVisible={2}
+      />
 
       <section className="px-6 pb-12">
         <div className="bg-cream border border-dust rounded-2xl p-5">

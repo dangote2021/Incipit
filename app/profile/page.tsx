@@ -3,6 +3,7 @@
 import Link from "next/link";
 import AppHeader from "@/components/AppHeader";
 import BookCover from "@/components/BookCover";
+import PremiumBadge from "@/components/PremiumBadge";
 import {
   ME,
   MY_LIBRARY,
@@ -74,6 +75,11 @@ export default function ProfilePage() {
             <Stat value={earnedBadges.length} label="Badges" />
           </div>
         </div>
+      </section>
+
+      {/* Statut Premium — sous la carte profil */}
+      <section className="px-5 pt-4">
+        <PremiumBadge variant="block" />
       </section>
 
       <main className="px-5 py-6 space-y-8">

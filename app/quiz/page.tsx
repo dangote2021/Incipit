@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import AppHeader from "@/components/AppHeader";
 import { BOOKS } from "@/lib/mock-data";
 import {
@@ -11,6 +11,32 @@ import {
   type QuizIncipit,
   type QuizLevel,
 } from "@/lib/quiz-incipits";
+import { usePremium, FREE_QUOTAS } from "@/lib/premium";
+
+// Compteur de parties jouées dans la session (reset à la fermeture de
+// l'onglet). Côté free, on plafonne pour créer l'envie d'upgrade, sans
+// être agressif — 3 parties c'est de quoi jouer.
+const SESSION_KEY = "incipit:quiz:roundsPlayed";
+
+function getSessionRounds(): number {
+  if (typeof window === "undefined") return 0;
+  try {
+    const raw = window.sessionStorage.getItem(SESSION_KEY);
+    return raw ? Math.max(0, parseInt(raw, 10) || 0) : 0;
+  } catch {
+    return 0;
+  }
+}
+
+function bumpSessionRounds(): number {
+  const next = getSessionRounds() + 1;
+  try {
+    window.sessionStorage.setItem(SESSION_KEY, String(next));
+  } catch {
+    // ignore
+  }
+  return next;
+}
 
 type Question = {
   book: QuizIncipit;
@@ -78,9 +104,23 @@ type State =
 
 export default function QuizPage() {
   const [state, setState] = useState<State>({ phase: "intro" });
+  const [roundsPlayed, setRoundsPlayed] = useState(0);
+  const { isPremium, hydrated } = usePremium();
+
+  // Lecture initiale du compteur de session (côté client uniquement).
+  useEffect(() => {
+    setRoundsPlayed(getSessionRounds());
+  }, []);
+
+  const reachedFreeCap =
+    hydrated && !isPremium && roundsPlayed >= FREE_QUOTAS.quizRounds;
 
   const start = (level: QuizLevel | "all") => {
+    // Gate : si plafond atteint et pas Premium, on renvoie vers /premium.
+    if (reachedFreeCap) return;
     const questions = makeRound(level);
+    const played = bumpSessionRounds();
+    setRoundsPlayed(played);
     setState({
       phase: "playing",
       level,
@@ -131,7 +171,15 @@ export default function QuizPage() {
     }
   };
 
-  if (state.phase === "intro") return <Intro onStart={start} />;
+  if (state.phase === "intro")
+    return (
+      <Intro
+        onStart={start}
+        reachedFreeCap={reachedFreeCap}
+        isPremium={isPremium}
+        roundsPlayed={roundsPlayed}
+      />
+    );
   if (state.phase === "done")
     return (
       <Done
@@ -142,6 +190,8 @@ export default function QuizPage() {
         answers={state.answers}
         onReplay={() => start(state.level)}
         onPickLevel={() => setState({ phase: "intro" })}
+        reachedFreeCap={reachedFreeCap}
+        isPremium={isPremium}
       />
     );
 
@@ -152,7 +202,17 @@ export default function QuizPage() {
 
 // ─────────────────────────────────────────────────────────────────────────────
 
-function Intro({ onStart }: { onStart: (level: QuizLevel | "all") => void }) {
+function Intro({
+  onStart,
+  reachedFreeCap,
+  isPremium,
+  roundsPlayed,
+}: {
+  onStart: (level: QuizLevel | "all") => void;
+  reachedFreeCap: boolean;
+  isPremium: boolean;
+  roundsPlayed: number;
+}) {
   return (
     <div className="min-h-screen">
       <AppHeader title="Devine l'incipit" subtitle="Jeu littéraire" back />
@@ -171,7 +231,44 @@ function Intro({ onStart }: { onStart: (level: QuizLevel | "all") => void }) {
           l'œil. Un bon score ? Tu partages. Un mauvais ? On te donne 12 pitches
           pour rattraper.
         </p>
+
+        {/* Indicateur quota free / statut Premium */}
+        {isPremium ? (
+          <div className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gold/15 border border-gold/40 text-[10px] uppercase tracking-widest text-gold font-black">
+            <span className="h-1.5 w-1.5 rounded-full bg-gold" />
+            Premium · parties illimitées
+          </div>
+        ) : (
+          <div className="mt-4 text-[11px] uppercase tracking-widest text-ink/50 font-bold">
+            Session : {Math.min(roundsPlayed, FREE_QUOTAS.quizRounds)} /{" "}
+            {FREE_QUOTAS.quizRounds} parties gratuites
+          </div>
+        )}
       </section>
+
+      {/* Paywall quand le plafond est atteint */}
+      {reachedFreeCap && (
+        <section className="px-6 pt-6 pb-2">
+          <div className="bg-ink text-paper rounded-3xl p-5 shadow-xl">
+            <div className="text-[10px] uppercase tracking-[0.3em] text-gold font-black">
+              Plafond atteint
+            </div>
+            <div className="font-serif text-xl font-black mt-2 leading-snug">
+              Tu as vidé les {FREE_QUOTAS.quizRounds} parties gratuites de la session.
+            </div>
+            <p className="text-sm text-paper/75 mt-2 leading-relaxed">
+              Passe Premium pour enchaîner sans fin, débloquer le Mode série, et
+              te mesurer à tout le corpus sans pause.
+            </p>
+            <Link
+              href="/premium"
+              className="mt-4 inline-block w-full text-center bg-gold text-ink py-3 rounded-full text-[11px] uppercase tracking-widest font-black hover:bg-paper transition"
+            >
+              Activer Premium · 7 jours offerts
+            </Link>
+          </div>
+        </section>
+      )}
 
       <section className="px-6 py-8">
         <div className="text-[10px] uppercase tracking-[0.3em] text-ink/50 font-bold mb-4">
@@ -183,22 +280,30 @@ function Intro({ onStart }: { onStart: (level: QuizLevel | "all") => void }) {
             level="easy"
             count={BY_LEVEL.easy.length}
             onStart={onStart}
+            disabled={reachedFreeCap}
           />
           <LevelCard
             kicker="02"
             level="medium"
             count={BY_LEVEL.medium.length}
             onStart={onStart}
+            disabled={reachedFreeCap}
           />
           <LevelCard
             kicker="03"
             level="hard"
             count={BY_LEVEL.hard.length}
             onStart={onStart}
+            disabled={reachedFreeCap}
           />
           <button
             onClick={() => onStart("all")}
-            className="w-full text-left bg-ink text-paper rounded-2xl p-4 hover:bg-bordeaux transition"
+            disabled={reachedFreeCap}
+            className={`w-full text-left rounded-2xl p-4 transition ${
+              reachedFreeCap
+                ? "bg-ink/40 text-paper/60 cursor-not-allowed"
+                : "bg-ink text-paper hover:bg-bordeaux"
+            }`}
           >
             <div className="text-[10px] uppercase tracking-widest font-bold text-gold mb-1">
               Mode libre
@@ -210,6 +315,23 @@ function Intro({ onStart }: { onStart: (level: QuizLevel | "all") => void }) {
               {QUIZ_INCIPITS.length} incipits, tirage au hasard, tous niveaux confondus.
             </div>
           </button>
+          {isPremium && (
+            <button
+              onClick={() => onStart("hard")}
+              className="w-full text-left rounded-2xl p-4 transition bg-gradient-to-br from-gold to-gold/70 text-ink hover:from-gold/90"
+            >
+              <div className="text-[10px] uppercase tracking-widest font-black mb-1">
+                Mode série · Premium
+              </div>
+              <div className="font-serif font-bold text-lg leading-tight">
+                Niveau Légende, jusqu'à la première faute
+              </div>
+              <div className="text-xs text-ink/75 mt-1">
+                Tu enchaînes les incipits corsés, on compte ta série la plus
+                longue. Tu tombes ? Tu recommences, sans limite.
+              </div>
+            </button>
+          )}
         </div>
       </section>
 
@@ -230,33 +352,40 @@ function LevelCard({
   level,
   count,
   onStart,
+  disabled = false,
 }: {
   kicker: string;
   level: QuizLevel;
   count: number;
   onStart: (level: QuizLevel) => void;
+  disabled?: boolean;
 }) {
   const meta = LEVEL_LABELS[level];
   return (
     <button
       onClick={() => onStart(level)}
-      className="w-full text-left bg-paper border-2 border-ink/10 hover:border-bordeaux rounded-2xl p-4 transition flex items-start gap-4"
+      disabled={disabled}
+      className={`w-full text-left rounded-2xl p-4 transition flex items-start gap-4 border-2 ${
+        disabled
+          ? "bg-paper/60 border-ink/5 text-ink/40 cursor-not-allowed"
+          : "bg-paper border-ink/10 hover:border-bordeaux"
+      }`}
     >
-      <div className="font-serif text-2xl font-black text-bordeaux leading-none shrink-0 mt-0.5 w-10">
+      <div
+        className={`font-serif text-2xl font-black leading-none shrink-0 mt-0.5 w-10 ${
+          disabled ? "text-ink/30" : "text-bordeaux"
+        }`}
+      >
         {kicker}
       </div>
       <div className="flex-1 min-w-0">
-        <div className="font-serif text-lg font-bold text-ink">
-          {meta.title}
-        </div>
-        <div className="text-sm text-ink/65 leading-snug mt-0.5">
-          {meta.sub}
-        </div>
-        <div className="text-[10px] uppercase tracking-widest text-ink/45 font-bold mt-2">
+        <div className="font-serif text-lg font-bold">{meta.title}</div>
+        <div className="text-sm leading-snug mt-0.5 opacity-80">{meta.sub}</div>
+        <div className="text-[10px] uppercase tracking-widest font-bold mt-2 opacity-60">
           {count} incipits
         </div>
       </div>
-      <span className="text-ink/30 text-xl shrink-0 mt-1">→</span>
+      <span className="text-xl shrink-0 mt-1 opacity-40">→</span>
     </button>
   );
 }
@@ -398,6 +527,8 @@ function Done({
   answers,
   onReplay,
   onPickLevel,
+  reachedFreeCap,
+  isPremium,
 }: {
   level: QuizLevel | "all";
   questions: Question[];
@@ -406,6 +537,8 @@ function Done({
   answers: { bookId: string; pickedId: string; correct: boolean }[];
   onReplay: () => void;
   onPickLevel: () => void;
+  reachedFreeCap: boolean;
+  isPremium: boolean;
 }) {
   const total = questions.length;
   const pct = Math.round((score / total) * 100);
@@ -510,12 +643,26 @@ function Done({
         >
           Partager mon score
         </button>
-        <button
-          onClick={onReplay}
-          className="w-full py-4 rounded-full border-2 border-ink text-ink font-serif font-bold text-sm uppercase tracking-widest hover:bg-ink/5 transition"
-        >
-          Rejouer · {levelLabel}
-        </button>
+        {reachedFreeCap ? (
+          <Link
+            href="/premium"
+            className="block w-full py-4 rounded-full bg-gold text-ink font-serif font-black text-sm uppercase tracking-widest hover:bg-gold/90 transition text-center"
+          >
+            Passer Premium pour rejouer
+          </Link>
+        ) : (
+          <button
+            onClick={onReplay}
+            className="w-full py-4 rounded-full border-2 border-ink text-ink font-serif font-bold text-sm uppercase tracking-widest hover:bg-ink/5 transition"
+          >
+            Rejouer · {levelLabel}
+            {!isPremium && (
+              <span className="ml-2 text-ink/40 text-xs">
+                (gratuit)
+              </span>
+            )}
+          </button>
+        )}
         <button
           onClick={onPickLevel}
           className="w-full py-3 text-xs uppercase tracking-widest text-ink/55 font-bold hover:text-ink transition"
