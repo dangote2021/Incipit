@@ -33,13 +33,20 @@ export default function HomePage() {
   const genres = parseGenresCookie(genresCookie);
   const ordered = orderByGenres(BOOKS, genres);
 
+  // Heuristique "premier visiteur" côté serveur : pas de cookie genres =
+  // très probablement pas onboardé. On réordonne pour que l'utilisateur
+  // voie d'abord "ce qu'est l'app" (WelcomeBanner) avant l'incipit du
+  // jour en plein écran. Pour les retours, on garde l'ordre historique
+  // (incipit en premier, il signe l'app).
+  const isProbablyNewVisitor = !genresCookie;
+
   return (
     <div className="relative">
       {/* Header flottant */}
       <div className="fixed top-0 left-1/2 -translate-x-1/2 z-40 w-full max-w-xl px-5 pt-4 pointer-events-none">
         <div className="flex items-center justify-between pointer-events-auto">
           <Link
-            href="/onboarding"
+            href="/"
             className="flex items-baseline gap-1 px-3 py-1.5 rounded-full bg-paper/70 backdrop-blur-md border border-ink/10 shadow-sm"
           >
             <span className="font-serif font-black text-xl tracking-tight text-ink">
@@ -58,13 +65,22 @@ export default function HomePage() {
 
       {/* Carrousel vertical de pitches (scroll snap) */}
       <main className="snap-y snap-mandatory overflow-y-scroll h-screen no-scrollbar -mt-0">
-        {/* Ouverture du feed : l'incipit du jour, une première ligne qui donne
-            envie. C'est la signature de l'app : on commence par la littérature,
-            pas par un écran d'accueil. */}
-        <DailyIncipit />
-
-        {/* Message d'accueil contextuel (nouveau vs retour) */}
-        <WelcomeBanner />
+        {/* Ordre du haut de feed :
+            - Nouveau visiteur (pas de cookie) → WelcomeBanner d'abord, pour
+              comprendre ce qu'est l'app avant de se prendre un Beckett ou
+              un Proust plein écran (retour panel beta v6, Marion).
+            - Retour → DailyIncipit d'abord, c'est la signature éditoriale. */}
+        {isProbablyNewVisitor ? (
+          <>
+            <WelcomeBanner />
+            <DailyIncipit />
+          </>
+        ) : (
+          <>
+            <DailyIncipit />
+            <WelcomeBanner />
+          </>
+        )}
 
         {/* "Je reprends" — uniquement si un livre est en cours */}
         <ResumeCard />

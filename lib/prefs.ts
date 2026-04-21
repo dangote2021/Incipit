@@ -14,6 +14,8 @@ export type IncipitPrefs = {
   onboardedAt: string;
   /** ISO date de la dernière visite (mise à jour à l'entrée) */
   lastSeenAt: string;
+  /** Prénom saisi à l'onboarding (peut être vide si passé) */
+  firstName: string;
   /** Genres sélectionnés à l'onboarding */
   genres: Genre[];
   /** Ton narratif choisi */
@@ -47,6 +49,7 @@ export const DEFAULT_PREFS: IncipitPrefs = {
   onboarded: false,
   onboardedAt: "",
   lastSeenAt: "",
+  firstName: "",
   genres: [],
   tone: "boloss",
   visits: 0,
@@ -105,19 +108,24 @@ export function markVisit(): IncipitPrefs {
 }
 
 /**
- * Finalise l'onboarding avec les choix de l'utilisateur.
+ * Finalise l'onboarding avec les choix de l'utilisateur. `firstName` est
+ * optionnel — si l'utilisateur a skippé l'étape, on garde la valeur
+ * précédente (ou "").
  */
 export function completeOnboarding(input: {
   genres: Genre[];
   tone: IncipitTone;
+  firstName?: string;
 }): IncipitPrefs {
   const current = getPrefs();
   const now = new Date().toISOString();
+  const trimmed = (input.firstName ?? current.firstName ?? "").trim();
   const next: IncipitPrefs = {
     ...current,
     onboarded: true,
     onboardedAt: current.onboardedAt || now,
     lastSeenAt: now,
+    firstName: trimmed,
     genres: input.genres,
     tone: input.tone,
   };

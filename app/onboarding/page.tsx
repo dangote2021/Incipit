@@ -1,19 +1,19 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { GENRES } from "@/lib/mock-data";
 import type { Genre } from "@/lib/types";
 import { completeOnboarding, getPrefs } from "@/lib/prefs";
 
+type Step = "splash" | "welcome" | "firstName" | "genres" | "tone";
+
 export default function OnboardingPage() {
   const router = useRouter();
   const [selected, setSelected] = useState<Set<Genre>>(new Set());
-  const [step, setStep] = useState<
-    "name" | "welcome" | "genres" | "tone"
-  >("name");
+  const [step, setStep] = useState<Step>("splash");
   const [tone, setTone] = useState<"boloss" | "neutre">("boloss");
+  const [firstName, setFirstName] = useState("");
 
   // Pré-remplit avec les prefs existantes si l'utilisateur revient
   // modifier ses choix.
@@ -22,11 +22,28 @@ export default function OnboardingPage() {
     if (prefs.onboarded) {
       setSelected(new Set(prefs.genres));
       setTone(prefs.tone);
+      setFirstName(prefs.firstName || "");
     }
   }, []);
 
   const finish = () => {
-    completeOnboarding({ genres: Array.from(selected), tone });
+    completeOnboarding({
+      genres: Array.from(selected),
+      tone,
+      firstName: firstName.trim(),
+    });
+    router.push("/");
+  };
+
+  // "Passer" : onboarding minimal — on persiste quand même le fait que
+  // l'utilisateur est passé par là pour que WelcomeBanner ne l'appelle
+  // pas éternellement "première fois ici".
+  const skipAll = () => {
+    completeOnboarding({
+      genres: [],
+      tone: "boloss",
+      firstName: firstName.trim(),
+    });
     router.push("/");
   };
 
@@ -38,7 +55,7 @@ export default function OnboardingPage() {
     });
   };
 
-  if (step === "name") {
+  if (step === "splash") {
     return (
       <div className="min-h-screen flex flex-col justify-center px-6 py-10 bg-paper">
         <div className="max-w-sm mx-auto text-center">
@@ -68,10 +85,6 @@ export default function OnboardingPage() {
           >
             Entrer
           </button>
-
-          <p className="mt-4 text-[11px] text-ink/40 italic">
-            (Oui, ça se prononce bien « in-ki-pit ». C'est du latin.)
-          </p>
         </div>
       </div>
     );
@@ -80,7 +93,15 @@ export default function OnboardingPage() {
   if (step === "welcome") {
     return (
       <div className="min-h-screen flex flex-col justify-between px-6 py-10 bg-gradient-to-b from-paper via-cream to-dust">
-        <div />
+        <div className="pt-2">
+          <button
+            type="button"
+            onClick={() => setStep("splash")}
+            className="text-[11px] uppercase tracking-widest text-ink/60 font-semibold hover:text-ink transition"
+          >
+            ← Retour
+          </button>
+        </div>
         <div className="text-center animate-fade-up">
           <div className="font-serif text-6xl font-black text-ink leading-none">
             Incipit<span className="text-bordeaux">.</span>
@@ -97,15 +118,15 @@ export default function OnboardingPage() {
               Les premières lignes qui donnent envie.
             </h1>
             <p className="text-ink/70 text-[15px] leading-relaxed">
-              Chaque pitch te raconte un chef-d'œuvre en 90 secondes, ton
+              Chaque pitch te raconte un chef-d&apos;œuvre en 90 secondes, ton
               tranchant, sans chichi. Tu trouves ta bibliothèque, tes notes,
-              tes clubs, un compagnon pour t'accompagner. On redonne envie.
+              tes clubs, un compagnon pour t&apos;accompagner. On redonne envie.
             </p>
           </div>
         </div>
 
         <button
-          onClick={() => setStep("genres")}
+          onClick={() => setStep("firstName")}
           className="mt-10 w-full max-w-sm mx-auto bg-ink text-paper py-4 rounded-full text-sm font-bold uppercase tracking-widest shadow-lg hover:bg-bordeaux transition"
         >
           Commencer
@@ -114,14 +135,88 @@ export default function OnboardingPage() {
     );
   }
 
+  if (step === "firstName") {
+    return (
+      <div className="min-h-screen flex flex-col px-6 py-10 bg-paper">
+        <div className="flex items-center justify-between mb-6">
+          <button
+            type="button"
+            onClick={() => setStep("welcome")}
+            className="text-[11px] uppercase tracking-widest text-ink/60 font-semibold hover:text-ink transition"
+          >
+            ← Retour
+          </button>
+          <div className="text-[11px] uppercase tracking-[0.25em] text-ink/50 font-semibold">
+            Bienvenue
+          </div>
+        </div>
+
+        <div className="flex-1 flex flex-col justify-center max-w-sm mx-auto w-full">
+          <h1 className="font-serif text-3xl font-bold text-ink mb-2">
+            Comment tu t&apos;appelles ?
+          </h1>
+          <p className="text-ink/60 text-sm mb-8">
+            Juste ton prénom. Rien n&apos;est envoyé, tout reste sur ton
+            appareil.
+          </p>
+
+          <input
+            type="text"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+            placeholder="Ton prénom"
+            autoFocus
+            autoComplete="given-name"
+            maxLength={40}
+            className="w-full px-5 py-4 text-lg font-serif bg-paper border-2 border-ink/15 rounded-2xl focus:border-bordeaux focus:outline-none text-ink placeholder:text-ink/30"
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && firstName.trim().length > 0) {
+                setStep("genres");
+              }
+            }}
+          />
+
+          <button
+            type="button"
+            onClick={() => setStep("genres")}
+            disabled={firstName.trim().length === 0}
+            className="mt-8 w-full bg-ink text-paper py-4 rounded-full text-sm font-bold uppercase tracking-widest disabled:opacity-30 hover:bg-bordeaux transition"
+          >
+            Suivant
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              setFirstName("");
+              setStep("genres");
+            }}
+            className="mt-4 text-xs uppercase tracking-widest text-ink/50 font-semibold hover:text-ink transition"
+          >
+            Rester anonyme
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   if (step === "genres") {
     return (
       <div className="min-h-screen flex flex-col px-6 py-10 bg-paper">
-        <div className="mb-2 text-[11px] uppercase tracking-[0.25em] text-ink/50 font-semibold">
-          Étape 1 / 2 · Univers
+        <div className="flex items-center justify-between mb-2">
+          <button
+            type="button"
+            onClick={() => setStep("firstName")}
+            className="text-[11px] uppercase tracking-widest text-ink/60 font-semibold hover:text-ink transition"
+          >
+            ← Retour
+          </button>
+          <div className="text-[11px] uppercase tracking-[0.25em] text-ink/50 font-semibold">
+            Étape 1 / 2 · Univers
+          </div>
         </div>
         <h1 className="font-serif text-3xl font-bold text-ink mb-2">
-          Qu'est-ce qui te parle ?
+          Qu&apos;est-ce qui te parle ?
         </h1>
         <p className="text-ink/60 text-sm mb-6">
           Choisis au moins deux univers. On calibrera ton feed.
@@ -140,7 +235,6 @@ export default function OnboardingPage() {
                     : "border-ink/10 bg-paper hover:border-ink/30"
                 }`}
               >
-                <div className="text-3xl mb-2">{g.emoji}</div>
                 <div
                   className={`font-serif text-lg font-bold leading-tight ${
                     active ? "text-paper" : "text-ink"
@@ -166,16 +260,17 @@ export default function OnboardingPage() {
         </div>
 
         <div className="mt-6 flex items-center justify-between">
-          <Link
-            href="/"
-            className="text-xs uppercase tracking-widest text-ink/50 font-semibold"
+          <button
+            type="button"
+            onClick={skipAll}
+            className="text-xs uppercase tracking-widest text-ink/50 font-semibold hover:text-ink transition"
           >
             Passer
-          </Link>
+          </button>
           <button
             onClick={() => setStep("tone")}
             disabled={selected.size < 1}
-            className="bg-ink text-paper px-6 py-3 rounded-full text-sm font-bold uppercase tracking-widest disabled:opacity-30"
+            className="bg-ink text-paper px-6 py-3 rounded-full text-sm font-bold uppercase tracking-widest disabled:opacity-30 hover:bg-bordeaux transition"
           >
             Suivant ({selected.size})
           </button>
@@ -187,8 +282,17 @@ export default function OnboardingPage() {
   // step === "tone"
   return (
     <div className="min-h-screen flex flex-col px-6 py-10 bg-paper">
-      <div className="mb-2 text-[11px] uppercase tracking-[0.25em] text-ink/50 font-semibold">
-        Étape 2 / 2 · Ton
+      <div className="flex items-center justify-between mb-2">
+        <button
+          type="button"
+          onClick={() => setStep("genres")}
+          className="text-[11px] uppercase tracking-widest text-ink/60 font-semibold hover:text-ink transition"
+        >
+          ← Retour
+        </button>
+        <div className="text-[11px] uppercase tracking-[0.25em] text-ink/50 font-semibold">
+          Étape 2 / 2 · Ton
+        </div>
       </div>
       <h1 className="font-serif text-3xl font-bold text-ink mb-2">
         Quel ton tu préfères ?
@@ -207,7 +311,7 @@ export default function OnboardingPage() {
           }`}
         >
           <div className="flex items-start justify-between mb-2">
-            <div className="font-serif text-xl font-bold">Tranchant 🔪</div>
+            <div className="font-serif text-xl font-bold">Tranchant</div>
             {tone === "boloss" && (
               <span className="text-xs bg-paper text-bordeaux px-2 py-0.5 rounded-full font-bold">
                 Choisi
@@ -229,7 +333,7 @@ export default function OnboardingPage() {
           }`}
         >
           <div className="flex items-start justify-between mb-2">
-            <div className="font-serif text-xl font-bold">Classique 📜</div>
+            <div className="font-serif text-xl font-bold">Classique</div>
             {tone === "neutre" && (
               <span className="text-xs bg-paper text-ink px-2 py-0.5 rounded-full font-bold">
                 Choisi

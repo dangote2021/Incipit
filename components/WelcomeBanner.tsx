@@ -10,6 +10,7 @@ export default function WelcomeBanner() {
   const [mode, setMode] = useState<Mode>("loading");
   const [visits, setVisits] = useState(0);
   const [days, setDays] = useState<number | null>(null);
+  const [firstName, setFirstName] = useState<string>("");
 
   useEffect(() => {
     // Lit les prefs AVANT de les mettre à jour pour savoir si c'est une
@@ -24,6 +25,7 @@ export default function WelcomeBanner() {
     }
     setVisits(updated.visits);
     setDays(daysSince(before.lastSeenAt));
+    setFirstName((before.firstName || "").trim());
   }, []);
 
   if (mode === "loading" || mode === "hidden") return null;
@@ -65,10 +67,16 @@ export default function WelcomeBanner() {
       <div className="max-w-xl">
         <div className="text-[10px] uppercase tracking-[0.3em] text-ink/50 font-bold mb-2">
           {visits >= 10
-            ? "Fidèle lecteur"
+            ? firstName
+              ? `Fidèle lecteur · ${firstName}`
+              : "Fidèle lecteur"
             : visits >= 3
-              ? "Content de te revoir"
-              : "Rebonjour"}
+              ? firstName
+                ? `Content de te revoir, ${firstName}`
+                : "Content de te revoir"
+              : firstName
+                ? `Rebonjour, ${firstName}`
+                : "Rebonjour"}
         </div>
         <h2 className="font-serif text-2xl font-bold text-ink leading-tight mb-1">
           {days === 0

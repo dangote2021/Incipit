@@ -1,11 +1,13 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import AppHeader from "@/components/AppHeader";
 import BookCover from "@/components/BookCover";
 import PremiumBadge from "@/components/PremiumBadge";
 import BadgePanel from "@/components/BadgePanel";
 import IOSInstallCard from "@/components/IOSInstallCard";
+import { getPrefs } from "@/lib/prefs";
 import {
   ME,
   MY_LIBRARY,
@@ -21,6 +23,15 @@ import {
 } from "@/lib/mock-data";
 
 export default function ProfilePage() {
+  // Prénom saisi à l'onboarding — lu côté client pour éviter un flash
+  // (SSR ne connaît pas localStorage). On garde ME.name en fallback pour
+  // les utilisateurs qui ont passé l'étape prénom.
+  const [firstName, setFirstName] = useState<string | null>(null);
+  useEffect(() => {
+    const fn = getPrefs().firstName?.trim();
+    setFirstName(fn && fn.length > 0 ? fn : null);
+  }, []);
+  const displayName = firstName || ME.name;
   const read = MY_LIBRARY.filter((e) => e.status === "read");
   const reading = MY_LIBRARY.filter((e) => e.status === "reading");
   const myNotes = getNotesByUser(ME.id);
@@ -62,7 +73,7 @@ export default function ProfilePage() {
             </div>
             <div className="flex-1">
               <h1 className="font-serif text-2xl font-bold leading-tight">
-                {ME.name}
+                {displayName}
               </h1>
               <div className="text-xs text-paper/70 mb-2">{ME.handle}</div>
               <p className="text-sm text-paper/90 font-serif italic leading-snug">
