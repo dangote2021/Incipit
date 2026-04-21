@@ -18,6 +18,8 @@
 // Jalons : 3 (flamme), 7, 30, 100 — badges culturels, pas points.
 // ─────────────────────────────────────────────────────────────────────────────
 
+import { postReEngagement } from "./re-engagement";
+
 const KEY = "incipit:streak:v1";
 
 export type StreakState = {
@@ -107,6 +109,7 @@ export function recordOpen(): {
   }
 
   let current: number;
+  let absentDays = 0;
   if (!prev.lastOpen) {
     // Première ouverture jamais.
     current = 1;
@@ -119,10 +122,18 @@ export function recordOpen(): {
       // Jour manqué → redémarrage bienveillant à 1.
       current = 1;
       broken = true;
+      absentDays = gap;
     } else {
       // Cas limite (horloge reculée) : on ne décrémente pas.
       current = prev.current || 1;
     }
+  }
+
+  // Re-engagement : si l'utilisateur a manqué ≥ 3 jours, on pose un signal
+  // que la home va consommer pour afficher un banner "bon retour". Défini
+  // dans lib/re-engagement.ts, classé J3 / J7 / J30.
+  if (absentDays >= 3) {
+    postReEngagement(absentDays, today);
   }
 
   const longest = Math.max(prev.longest, current);

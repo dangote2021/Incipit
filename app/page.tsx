@@ -5,6 +5,10 @@ import DailyRitual from "@/components/DailyRitual";
 import ResumeCard from "@/components/ResumeCard";
 import WelcomeBanner from "@/components/WelcomeBanner";
 import PersonalizedPitchFeed from "@/components/PersonalizedPitchFeed";
+import NextSuggestion from "@/components/NextSuggestion";
+import ReEngagementBanner from "@/components/ReEngagementBanner";
+import NotifOptIn from "@/components/NotifOptIn";
+import DailyNotifKicker from "@/components/DailyNotifKicker";
 import {
   GENRES_COOKIE_NAME,
   parseGenresCookie,
@@ -65,6 +69,12 @@ export default function HomePage() {
 
       {/* Carrousel vertical de pitches (scroll snap) */}
       <main className="snap-y snap-mandatory overflow-y-scroll h-screen no-scrollbar -mt-0">
+        {/* Banner "bon retour" — se monte uniquement si l'utilisateur a
+            été absent ≥ 3 jours (signal posé par recordOpen, consommé au
+            dismiss). Placé en toute première section pour être vu — c'est
+            le levier #10 du panel v8. */}
+        <ReEngagementBanner />
+
         {/* Ordre du haut de feed :
             - Nouveau visiteur (pas de cookie) → WelcomeBanner d'abord, pour
               comprendre ce qu'est l'app avant de se prendre un rituel plein
@@ -88,6 +98,20 @@ export default function HomePage() {
 
         {/* "Je reprends" — uniquement si un livre est en cours */}
         <ResumeCard />
+
+        {/* Parcours de lecture — suggestion "après X, lis Y" (v8 #6).
+            Se monte uniquement si l'utilisateur a marqué ≥1 livre comme lu,
+            sinon le composant retourne null (pas de slot vide). */}
+        <NextSuggestion />
+
+        {/* Opt-in notification (v8 #3) — gated sur streak ≥ 3 et n'apparaît
+            qu'une fois acceptée/refusée. Pilotée 100% côté client. */}
+        <NotifOptIn />
+
+        {/* Déclencheur muet de la notif quotidienne — tire dès qu'on est
+            passé l'heure cible + pas déjà notifié aujourd'hui. Filet de
+            rattrapage web (Capacitor fait la vraie planif offline). */}
+        <DailyNotifKicker />
 
         {/* Feed de pitches re-priorisé par genre : tri serveur via cookie
             (pas de flash au premier paint), avec un second pass client qui
@@ -120,6 +144,16 @@ export default function HomePage() {
               Découvrir les clubs →
             </Link>
           </div>
+          {/* Porte d'entrée explicite pour les débutants — retour panel v8,
+              Yanis/Camille D. ("par où je commence ?"). On le place en
+              pied de feed plutôt qu'en haut pour ne pas polluer le rituel
+              quotidien des habitués, mais au moins il existe. */}
+          <Link
+            href="/debutant"
+            className="mt-4 inline-flex items-center gap-2 text-[11px] uppercase tracking-widest font-bold text-ink/60 hover:text-bordeaux transition"
+          >
+            Pas sûr par où commencer ? Parcours débutant →
+          </Link>
         </section>
       </main>
     </div>

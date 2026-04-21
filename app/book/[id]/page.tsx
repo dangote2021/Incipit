@@ -9,6 +9,7 @@ import OpeningLinesReveal from "@/components/book/OpeningLinesReveal";
 import NoteComposer from "@/components/book/NoteComposer";
 import BookActionPanel from "@/components/book/BookActionPanel";
 import LibrairesByPostalCode from "@/components/book/LibrairesByPostalCode";
+import MarkAsReadButton from "@/components/book/MarkAsReadButton";
 import {
   BOOKS,
   getBook,
@@ -119,6 +120,11 @@ export default async function BookPage({ params }: Props) {
                 ★ Domaine public · lecture gratuite
               </div>
             )}
+            {/* "J'ai lu ce livre" — déclenche le parcours de lecture
+                (cf. components/NextSuggestion.tsx). Placé dans le Hero
+                pour être immédiatement saisissable à l'arrivée sur la
+                fiche — retour panel v8, Mehdi. */}
+            <MarkAsReadButton bookId={book.id} />
           </div>
         </div>
       </section>

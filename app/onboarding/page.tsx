@@ -46,6 +46,19 @@ export default function OnboardingPage() {
     router.push("/");
   };
 
+  // Variante "je débute" : même complétion d'onboarding, mais on atterrit
+  // sur la feuille de route débutant au lieu du feed. Retour panel v8 :
+  // Yanis demandait qu'on l'oriente explicitement à la sortie de
+  // l'onboarding ("je viens de m'inscrire, je fais quoi maintenant ?").
+  const finishAsBeginner = () => {
+    completeOnboarding({
+      genres: Array.from(selected),
+      tone,
+      firstName: firstName.trim(),
+    });
+    router.push("/debutant");
+  };
+
   // "Passer" : onboarding minimal — on persiste quand même le fait que
   // l'utilisateur est passé par là pour que WelcomeBanner ne l'appelle
   // pas éternellement "première fois ici".
@@ -291,7 +304,13 @@ export default function OnboardingPage() {
   }
 
   if (step === "tomorrow") {
-    return <TomorrowTeaser onFinish={finish} onBack={() => setStep("tone")} />;
+    return (
+      <TomorrowTeaser
+        onFinish={finish}
+        onFinishAsBeginner={finishAsBeginner}
+        onBack={() => setStep("tone")}
+      />
+    );
   }
 
   // step === "tone"
@@ -375,9 +394,11 @@ export default function OnboardingPage() {
 
 function TomorrowTeaser({
   onFinish,
+  onFinishAsBeginner,
   onBack,
 }: {
   onFinish: () => void;
+  onFinishAsBeginner: () => void;
   onBack: () => void;
 }) {
   // Teaser de l'incipit de J+1 (flouté) — pour donner une raison concrète
@@ -448,6 +469,17 @@ function TomorrowTeaser({
           className="mt-4 bg-ink text-paper py-4 rounded-full text-sm font-bold uppercase tracking-widest hover:bg-bordeaux transition"
         >
           Entrer dans Incipit →
+        </button>
+        {/* Sortie alternative pour les lecteurs qui débutent vraiment.
+            Panel v8 (Yanis) : "je me suis inscrit, je voulais qu'on me
+            prenne par la main". On ouvre une porte discrète, pas une
+            arche triomphale — pour ne pas infantiliser les autres. */}
+        <button
+          type="button"
+          onClick={onFinishAsBeginner}
+          className="mt-3 w-full text-[11px] uppercase tracking-widest text-ink/55 font-semibold hover:text-bordeaux transition"
+        >
+          Je débute avec les classiques — guide-moi
         </button>
       </div>
     </div>

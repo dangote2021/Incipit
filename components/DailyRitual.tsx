@@ -69,9 +69,21 @@ function renderVariant(kind: string) {
 }
 
 // ── Overline réutilisable ──────────────────────────────────────────────────
-function Overline({ kindLabel, date }: { kindLabel: string; date: Date }) {
+// Un "share bookId" optionnel permet d'ajouter un raccourci "⬇ carte" sur
+// toutes les variantes qui ont un livre associé, pas juste le vendredi
+// (retour panel v8, Chloé et Inès : la carte story est un driver de
+// rétention fort, elle doit être à 1 tap TOUS les jours).
+function Overline({
+  kindLabel,
+  date,
+  shareBookId,
+}: {
+  kindLabel: string;
+  date: Date;
+  shareBookId?: string;
+}) {
   return (
-    <div className="flex items-start justify-between mb-6">
+    <div className="flex items-start justify-between mb-6 gap-2">
       <div>
         <div className="text-[10px] uppercase tracking-[0.3em] text-bordeaux font-bold">
           {kindLabel}
@@ -80,12 +92,25 @@ function Overline({ kindLabel, date }: { kindLabel: string; date: Date }) {
           {formatDate(date)}
         </div>
       </div>
-      <Link
-        href="/incipit-du-jour"
-        className="text-[10px] uppercase tracking-[0.25em] text-ink/60 font-bold bg-paper/80 backdrop-blur-md border border-ink/10 px-3 py-2 rounded-full hover:text-bordeaux transition"
-      >
-        Archive →
-      </Link>
+      <div className="flex items-center gap-1.5 shrink-0">
+        {shareBookId && (
+          <a
+            href={`/api/incipit-card/${shareBookId}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[10px] uppercase tracking-[0.25em] text-ink/60 font-bold bg-paper/80 backdrop-blur-md border border-ink/10 px-3 py-2 rounded-full hover:text-bordeaux transition"
+            aria-label="Télécharger la carte à partager"
+          >
+            ⬇ Carte
+          </a>
+        )}
+        <Link
+          href="/incipit-du-jour"
+          className="text-[10px] uppercase tracking-[0.25em] text-ink/60 font-bold bg-paper/80 backdrop-blur-md border border-ink/10 px-3 py-2 rounded-full hover:text-bordeaux transition"
+        >
+          Archive →
+        </Link>
+      </div>
     </div>
   );
 }
@@ -96,7 +121,7 @@ function IncipitVariant() {
   const teaser = incipitTeaser(book, 200);
   return (
     <>
-      <Overline kindLabel={ritualLabel("incipit")} date={date} />
+      <Overline kindLabel={ritualLabel("incipit")} date={date} shareBookId={book.id} />
       <div className="max-w-md mx-auto text-center">
         <div className="font-serif text-7xl text-bordeaux/30 leading-none mb-2">
           “
@@ -126,7 +151,7 @@ function QuoteVariant() {
   const book = BOOKS.find((b) => b.id === quote.bookId) ?? BOOKS[0];
   return (
     <>
-      <Overline kindLabel={ritualLabel("quote")} date={new Date()} />
+      <Overline kindLabel={ritualLabel("quote")} date={new Date()} shareBookId={book.id} />
       <div className="max-w-md mx-auto text-center">
         <div className="font-serif text-7xl text-gold/60 leading-none mb-2">
           “
@@ -219,10 +244,10 @@ function MiniQuizVariant() {
       </div>
       <div className="mt-2 max-w-sm mx-auto w-full">
         <Link
-          href="/quiz"
+          href="/quiz/daily"
           className="block w-full text-center bg-ink text-paper py-4 rounded-full text-xs uppercase tracking-widest font-bold shadow-lg hover:bg-bordeaux transition"
         >
-          Jouer le quiz du jour →
+          Jouer le mini-quiz (3 questions) →
         </Link>
       </div>
     </>
@@ -273,7 +298,7 @@ function PassageVariant() {
     : BOOKS[0];
   return (
     <>
-      <Overline kindLabel={ritualLabel("passage")} date={new Date()} />
+      <Overline kindLabel={ritualLabel("passage")} date={new Date()} shareBookId={book.id} />
       <div className="max-w-md mx-auto text-center">
         {passage ? (
           <>
@@ -317,7 +342,7 @@ function WeekBookVariant() {
   const teaser = incipitTeaser(book, 180);
   return (
     <>
-      <Overline kindLabel={ritualLabel("weekbook")} date={new Date()} />
+      <Overline kindLabel={ritualLabel("weekbook")} date={new Date()} shareBookId={book.id} />
       <div className="max-w-md mx-auto text-center">
         <div className="text-[10px] uppercase tracking-[0.3em] text-bordeaux font-bold mb-3">
           Cette semaine on lit
