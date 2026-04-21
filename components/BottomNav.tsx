@@ -49,6 +49,28 @@ function IconCompass({ active }: IconProps) {
   );
 }
 
+function IconQuiz({ active }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" width="22" height="22" aria-hidden>
+      <circle
+        cx="12"
+        cy="12"
+        r="8.5"
+        stroke="currentColor"
+        strokeWidth={stroke(active)}
+      />
+      <path
+        d="M9 9.5a3 3 0 0 1 5.7 1.2c0 1.6-2.2 2-2.2 3.3"
+        stroke="currentColor"
+        strokeWidth={stroke(active)}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <circle cx="12.5" cy="17" r="0.9" fill="currentColor" />
+    </svg>
+  );
+}
+
 function IconClubs({ active }: IconProps) {
   return (
     <svg viewBox="0 0 24 24" fill="none" width="22" height="22" aria-hidden>
@@ -138,10 +160,13 @@ type Tab = {
   Icon: (p: IconProps) => JSX.Element;
 };
 
+// La nav met en avant le Quiz (usage quotidien, court) à la place des Clubs
+// (qui restent accessibles depuis /explore). Le quiz devient la 3e entrée,
+// au centre de la barre — placement de pouce privilégié.
 const TABS: Tab[] = [
   { href: "/", label: "Pitches", Icon: IconBook },
   { href: "/explore", label: "Explorer", Icon: IconCompass },
-  { href: "/clubs", label: "Clubs", Icon: IconClubs },
+  { href: "/quiz", label: "Quiz", Icon: IconQuiz },
   { href: "/library", label: "Bibli", Icon: IconLibrary },
   { href: "/profile", label: "Moi", Icon: IconMe },
 ];

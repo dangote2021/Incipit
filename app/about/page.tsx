@@ -37,8 +37,8 @@ export default function AboutPage() {
 
         <div className="space-y-6">
           <Principle
-            title="Pas de gamification."
-            body="Pas de streak, pas de badges, pas de XP. Lire n'est pas un jeu à optimiser. C'est un plaisir à protéger."
+            title="Pas de gamification toxique."
+            body="Pas de streak qui harcèle, pas d'XP à farmer, pas de classement. Les quiz existent pour le plaisir de reconnaître un auteur, pas pour t'empêcher de dormir. Les jalons qu'on débloque sont des clins d'œil littéraires — Œil de Stendhal, Voltairien, Encyclopédiste — pas des médailles à collectionner."
           />
           <Principle
             title="Pas de notifs qui harcèlent."

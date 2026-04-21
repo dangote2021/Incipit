@@ -5,13 +5,20 @@ import { useEffect, useMemo, useState } from "react";
 import AppHeader from "@/components/AppHeader";
 import { BOOKS } from "@/lib/mock-data";
 import {
-  QUIZ_INCIPITS,
-  BY_LEVEL,
-  LEVEL_LABELS,
-  type QuizIncipit,
-  type QuizLevel,
-} from "@/lib/quiz-incipits";
+  LIT_QUESTIONS,
+  BY_CATEGORY,
+  CATEGORY_LABELS,
+  buildOptions,
+  type LitCategory,
+  type LitQuestion,
+} from "@/lib/quiz-literature";
 import { usePremium, FREE_QUOTAS } from "@/lib/premium";
+import {
+  applyRound,
+  listBadgesWithStatus,
+  type Badge,
+  type RoundAnswer,
+} from "@/lib/badges";
 
 // Compteur de parties jouées dans la session (reset à la fermeture de
 // l'onglet). Côté free, on plafonne pour créer l'envie d'upgrade, sans
@@ -39,15 +46,63 @@ function bumpSessionRounds(): number {
 }
 
 type Question = {
-  book: QuizIncipit;
-  options: QuizIncipit[];
+  lit: LitQuestion;
+  options: string[];
 };
 
 const ROUND_SIZE = 8;
+type ModeId = LitCategory | "mix";
+
+const MODE_ORDER: ModeId[] = [
+  "mix",
+  "opening",
+  "author",
+  "character",
+  "date",
+  "movement",
+  "device",
+];
+
+const MODE_META: Record<ModeId, { title: string; sub: string; mark: string }> =
+  {
+    mix: {
+      title: "Mélange",
+      sub: "Toutes catégories, difficulté variable",
+      mark: "∞",
+    },
+    opening: {
+      title: CATEGORY_LABELS.opening.title,
+      sub: CATEGORY_LABELS.opening.sub,
+      mark: CATEGORY_LABELS.opening.emoji,
+    },
+    author: {
+      title: CATEGORY_LABELS.author.title,
+      sub: CATEGORY_LABELS.author.sub,
+      mark: CATEGORY_LABELS.author.emoji,
+    },
+    character: {
+      title: CATEGORY_LABELS.character.title,
+      sub: CATEGORY_LABELS.character.sub,
+      mark: CATEGORY_LABELS.character.emoji,
+    },
+    date: {
+      title: CATEGORY_LABELS.date.title,
+      sub: CATEGORY_LABELS.date.sub,
+      mark: CATEGORY_LABELS.date.emoji,
+    },
+    movement: {
+      title: CATEGORY_LABELS.movement.title,
+      sub: CATEGORY_LABELS.movement.sub,
+      mark: CATEGORY_LABELS.movement.emoji,
+    },
+    device: {
+      title: CATEGORY_LABELS.device.title,
+      sub: CATEGORY_LABELS.device.sub,
+      mark: CATEGORY_LABELS.device.emoji,
+    },
+  };
 
 // Les 12 fiches Incipit : seuls ces ids ont une /book/[id] dédiée.
-// Utilisé dans le corrigé pour n'afficher le lien "Ouvrir la fiche" que quand
-// on a vraiment quelque chose à montrer.
 const FICHE_IDS = new Set(BOOKS.map((b) => b.id));
 
 function shuffle<T>(arr: T[]): T[] {
@@ -59,47 +114,39 @@ function shuffle<T>(arr: T[]): T[] {
   return copy;
 }
 
-function makeRound(level: QuizLevel | "all"): Question[] {
-  const pool = level === "all" ? QUIZ_INCIPITS : BY_LEVEL[level];
-  const picked = shuffle(pool).slice(0, Math.min(ROUND_SIZE, pool.length));
-  // Les distracteurs viennent du même niveau si possible, sinon on élargit.
-  const distractorPool =
-    pool.length >= 4 ? pool : QUIZ_INCIPITS;
-  return picked.map((book) => {
-    const distractors = shuffle(
-      distractorPool.filter((b) => b.id !== book.id)
-    ).slice(0, 3);
-    const options = shuffle([book, ...distractors]);
-    return { book, options };
-  });
+function poolFor(mode: ModeId): LitQuestion[] {
+  if (mode === "mix") return LIT_QUESTIONS;
+  return BY_CATEGORY[mode] ?? [];
 }
 
-function firstLines(book: QuizIncipit): string {
-  const sentences = book.openingLines.split(/\. |\n/).filter(Boolean);
-  const out = sentences.slice(0, 2).join(". ").replace(/\.*$/, "");
-  return out + ".";
+function makeRound(mode: ModeId): Question[] {
+  const pool = poolFor(mode);
+  if (pool.length === 0) return [];
+  const picked = shuffle(pool).slice(0, Math.min(ROUND_SIZE, pool.length));
+  return picked.map((lit) => ({ lit, options: buildOptions(lit) }));
 }
 
 type State =
   | { phase: "intro" }
   | {
       phase: "playing";
-      level: QuizLevel | "all";
+      mode: ModeId;
       questions: Question[];
       index: number;
       picked: string | null;
       score: number;
       streak: number;
       bestStreak: number;
-      answers: { bookId: string; pickedId: string; correct: boolean }[];
+      answers: { litId: string; picked: string; correct: boolean }[];
     }
   | {
       phase: "done";
-      level: QuizLevel | "all";
+      mode: ModeId;
       questions: Question[];
       score: number;
       bestStreak: number;
-      answers: { bookId: string; pickedId: string; correct: boolean }[];
+      answers: { litId: string; picked: string; correct: boolean }[];
+      newlyUnlocked: Badge[];
     };
 
 export default function QuizPage() {
@@ -107,7 +154,6 @@ export default function QuizPage() {
   const [roundsPlayed, setRoundsPlayed] = useState(0);
   const { isPremium, hydrated } = usePremium();
 
-  // Lecture initiale du compteur de session (côté client uniquement).
   useEffect(() => {
     setRoundsPlayed(getSessionRounds());
   }, []);
@@ -115,15 +161,15 @@ export default function QuizPage() {
   const reachedFreeCap =
     hydrated && !isPremium && roundsPlayed >= FREE_QUOTAS.quizRounds;
 
-  const start = (level: QuizLevel | "all") => {
-    // Gate : si plafond atteint et pas Premium, on renvoie vers /premium.
+  const start = (mode: ModeId) => {
     if (reachedFreeCap) return;
-    const questions = makeRound(level);
+    const questions = makeRound(mode);
+    if (questions.length === 0) return;
     const played = bumpSessionRounds();
     setRoundsPlayed(played);
     setState({
       phase: "playing",
-      level,
+      mode,
       questions,
       index: 0,
       picked: null,
@@ -134,22 +180,22 @@ export default function QuizPage() {
     });
   };
 
-  const pick = (opt: QuizIncipit) => {
+  const pick = (opt: string) => {
     if (state.phase !== "playing" || state.picked) return;
     const current = state.questions[state.index];
-    const correct = opt.id === current.book.id;
+    const correct = opt === current.lit.answer;
     const nextScore = state.score + (correct ? 1 : 0);
     const nextStreak = correct ? state.streak + 1 : 0;
     const nextBest = Math.max(state.bestStreak, nextStreak);
     setState({
       ...state,
-      picked: opt.id,
+      picked: opt,
       score: nextScore,
       streak: nextStreak,
       bestStreak: nextBest,
       answers: [
         ...state.answers,
-        { bookId: current.book.id, pickedId: opt.id, correct },
+        { litId: current.lit.id, picked: opt, correct },
       ],
     });
   };
@@ -158,13 +204,30 @@ export default function QuizPage() {
     if (state.phase !== "playing") return;
     const isLast = state.index >= state.questions.length - 1;
     if (isLast) {
+      // Applique le round sur les stats → on récupère les nouveaux jalons.
+      const roundAnswers: RoundAnswer[] = state.answers.map((a, i) => {
+        const q = state.questions[i].lit;
+        return {
+          correct: a.correct,
+          category: q.category,
+          era: q.era,
+          bookId: q.bookId,
+        };
+      });
+      const newlyUnlocked = applyRound({
+        score: state.score,
+        total: state.questions.length,
+        bestStreak: state.bestStreak,
+        answers: roundAnswers,
+      });
       setState({
         phase: "done",
-        level: state.level,
+        mode: state.mode,
         questions: state.questions,
         score: state.score,
         bestStreak: state.bestStreak,
         answers: state.answers,
+        newlyUnlocked,
       });
     } else {
       setState({ ...state, index: state.index + 1, picked: null });
@@ -183,20 +246,26 @@ export default function QuizPage() {
   if (state.phase === "done")
     return (
       <Done
-        level={state.level}
+        mode={state.mode}
         questions={state.questions}
         score={state.score}
         bestStreak={state.bestStreak}
         answers={state.answers}
-        onReplay={() => start(state.level)}
-        onPickLevel={() => setState({ phase: "intro" })}
+        newlyUnlocked={state.newlyUnlocked}
+        onReplay={() => start(state.mode)}
+        onPickMode={() => setState({ phase: "intro" })}
         reachedFreeCap={reachedFreeCap}
         isPremium={isPremium}
       />
     );
 
   return (
-    <Playing state={state} onPick={pick} onNext={next} total={ROUND_SIZE} />
+    <Playing
+      state={state}
+      onPick={pick}
+      onNext={next}
+      total={state.questions.length}
+    />
   );
 }
 
@@ -208,31 +277,32 @@ function Intro({
   isPremium,
   roundsPlayed,
 }: {
-  onStart: (level: QuizLevel | "all") => void;
+  onStart: (mode: ModeId) => void;
   reachedFreeCap: boolean;
   isPremium: boolean;
   roundsPlayed: number;
 }) {
+  const badges = useBadgeOverview();
+
   return (
     <div className="min-h-screen">
-      <AppHeader title="Devine l'incipit" subtitle="Jeu littéraire" back />
+      <AppHeader title="Quiz littéraire" subtitle="Jeu culturel" back />
 
       <section className="px-6 pt-10 pb-8 bg-cream border-b border-ink/5">
         <div className="text-[10px] uppercase tracking-[0.3em] text-bordeaux font-bold mb-3">
           Règle du jeu
         </div>
         <h2 className="font-serif text-3xl font-black text-ink leading-tight mb-4">
-          On te montre les premières lignes.{" "}
-          <span className="text-bordeaux">Tu devines le livre.</span>
+          Incipits, auteurs, dates, personnages, figures.{" "}
+          <span className="text-bordeaux">Tu choisis le terrain.</span>
         </h2>
         <p className="text-ink/70 text-[15px] leading-relaxed">
-          {ROUND_SIZE} incipits tirés au sort dans un corpus de {QUIZ_INCIPITS.length}.
-          Quatre propositions par question. Tu valides, on te dit si tu as eu
-          l'œil. Un bon score ? Tu partages. Un mauvais ? On te donne 12 pitches
-          pour rattraper.
+          {ROUND_SIZE} questions par partie, quatre propositions à chaque fois.
+          Chaque bonne réponse alimente tes jalons culturels — pas d'XP, pas de
+          streak, juste des clins d'œil quand tu croises un auteur, un siècle
+          ou une figure de style.
         </p>
 
-        {/* Indicateur quota free / statut Premium */}
         {isPremium ? (
           <div className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gold/15 border border-gold/40 text-[10px] uppercase tracking-widest text-gold font-black">
             <span className="h-1.5 w-1.5 rounded-full bg-gold" />
@@ -246,7 +316,45 @@ function Intro({
         )}
       </section>
 
-      {/* Paywall quand le plafond est atteint */}
+      {/* Panneau jalons — visible dès le début, même sans badges débloqués */}
+      <section className="px-6 pt-6">
+        <div className="flex items-end justify-between mb-3">
+          <div>
+            <div className="text-[10px] uppercase tracking-[0.3em] text-ink/50 font-bold">
+              Tes jalons
+            </div>
+            <div className="font-serif text-lg font-black text-ink leading-tight">
+              {badges.unlocked} / {badges.total} débloqués
+            </div>
+          </div>
+          <Link
+            href="/quiz/badges"
+            className="text-[11px] uppercase tracking-widest text-bordeaux font-bold"
+          >
+            Tout voir →
+          </Link>
+        </div>
+        <div className="flex gap-2 overflow-x-auto pb-2 -mx-6 px-6 snap-x">
+          {badges.items.slice(0, 8).map((b) => (
+            <div
+              key={b.id}
+              className={`shrink-0 w-24 aspect-square rounded-2xl border-2 flex flex-col items-center justify-center text-center p-2 snap-start ${
+                b.unlocked
+                  ? "border-gold bg-gold/10 text-ink"
+                  : "border-ink/10 bg-paper/60 text-ink/40"
+              }`}
+            >
+              <div className="font-serif text-2xl font-black leading-none">
+                {b.mark}
+              </div>
+              <div className="text-[9px] uppercase tracking-widest font-bold mt-1.5 leading-tight">
+                {b.name}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {reachedFreeCap && (
         <section className="px-6 pt-6 pb-2">
           <div className="bg-ink text-paper rounded-3xl p-5 shadow-xl">
@@ -254,7 +362,8 @@ function Intro({
               Plafond atteint
             </div>
             <div className="font-serif text-xl font-black mt-2 leading-snug">
-              Tu as vidé les {FREE_QUOTAS.quizRounds} parties gratuites de la session.
+              Tu as vidé les {FREE_QUOTAS.quizRounds} parties gratuites de la
+              session.
             </div>
             <p className="text-sm text-paper/75 mt-2 leading-relaxed">
               Passe Premium pour enchaîner sans fin, débloquer le Mode série, et
@@ -272,66 +381,20 @@ function Intro({
 
       <section className="px-6 py-8">
         <div className="text-[10px] uppercase tracking-[0.3em] text-ink/50 font-bold mb-4">
-          Choisis ton niveau
+          Choisis ta catégorie
         </div>
         <div className="space-y-3">
-          <LevelCard
-            kicker="01"
-            level="easy"
-            count={BY_LEVEL.easy.length}
-            onStart={onStart}
-            disabled={reachedFreeCap}
-          />
-          <LevelCard
-            kicker="02"
-            level="medium"
-            count={BY_LEVEL.medium.length}
-            onStart={onStart}
-            disabled={reachedFreeCap}
-          />
-          <LevelCard
-            kicker="03"
-            level="hard"
-            count={BY_LEVEL.hard.length}
-            onStart={onStart}
-            disabled={reachedFreeCap}
-          />
-          <button
-            onClick={() => onStart("all")}
-            disabled={reachedFreeCap}
-            className={`w-full text-left rounded-2xl p-4 transition ${
-              reachedFreeCap
-                ? "bg-ink/40 text-paper/60 cursor-not-allowed"
-                : "bg-ink text-paper hover:bg-bordeaux"
-            }`}
-          >
-            <div className="text-[10px] uppercase tracking-widest font-bold text-gold mb-1">
-              Mode libre
-            </div>
-            <div className="font-serif font-bold text-lg leading-tight">
-              Tout le corpus mélangé
-            </div>
-            <div className="text-xs text-paper/70 mt-1">
-              {QUIZ_INCIPITS.length} incipits, tirage au hasard, tous niveaux confondus.
-            </div>
-          </button>
-          {isPremium && (
-            <button
-              onClick={() => onStart("hard")}
-              className="w-full text-left rounded-2xl p-4 transition bg-gradient-to-br from-gold to-gold/70 text-ink hover:from-gold/90"
-            >
-              <div className="text-[10px] uppercase tracking-widest font-black mb-1">
-                Mode série · Premium
-              </div>
-              <div className="font-serif font-bold text-lg leading-tight">
-                Niveau Légende, jusqu'à la première faute
-              </div>
-              <div className="text-xs text-ink/75 mt-1">
-                Tu enchaînes les incipits corsés, on compte ta série la plus
-                longue. Tu tombes ? Tu recommences, sans limite.
-              </div>
-            </button>
-          )}
+          {MODE_ORDER.map((mode, i) => (
+            <ModeCard
+              key={mode}
+              kicker={String(i + 1).padStart(2, "0")}
+              mode={mode}
+              count={poolFor(mode).length}
+              onStart={onStart}
+              disabled={reachedFreeCap}
+              highlight={mode === "mix"}
+            />
+          ))}
         </div>
       </section>
 
@@ -347,47 +410,81 @@ function Intro({
   );
 }
 
-function LevelCard({
+function ModeCard({
   kicker,
-  level,
+  mode,
   count,
   onStart,
   disabled = false,
+  highlight = false,
 }: {
   kicker: string;
-  level: QuizLevel;
+  mode: ModeId;
   count: number;
-  onStart: (level: QuizLevel) => void;
+  onStart: (mode: ModeId) => void;
   disabled?: boolean;
+  highlight?: boolean;
 }) {
-  const meta = LEVEL_LABELS[level];
+  const meta = MODE_META[mode];
   return (
     <button
-      onClick={() => onStart(level)}
+      onClick={() => onStart(mode)}
       disabled={disabled}
       className={`w-full text-left rounded-2xl p-4 transition flex items-start gap-4 border-2 ${
         disabled
           ? "bg-paper/60 border-ink/5 text-ink/40 cursor-not-allowed"
-          : "bg-paper border-ink/10 hover:border-bordeaux"
+          : highlight
+            ? "bg-ink text-paper border-ink hover:bg-bordeaux hover:border-bordeaux"
+            : "bg-paper border-ink/10 hover:border-bordeaux"
       }`}
     >
       <div
         className={`font-serif text-2xl font-black leading-none shrink-0 mt-0.5 w-10 ${
-          disabled ? "text-ink/30" : "text-bordeaux"
+          disabled
+            ? "text-ink/30"
+            : highlight
+              ? "text-gold"
+              : "text-bordeaux"
         }`}
       >
         {kicker}
       </div>
       <div className="flex-1 min-w-0">
         <div className="font-serif text-lg font-bold">{meta.title}</div>
-        <div className="text-sm leading-snug mt-0.5 opacity-80">{meta.sub}</div>
+        <div className={`text-sm leading-snug mt-0.5 ${highlight ? "opacity-80" : "opacity-80"}`}>
+          {meta.sub}
+        </div>
         <div className="text-[10px] uppercase tracking-widest font-bold mt-2 opacity-60">
-          {count} incipits
+          {count} question{count > 1 ? "s" : ""}
         </div>
       </div>
-      <span className="text-xl shrink-0 mt-1 opacity-40">→</span>
+      <span className={`text-2xl shrink-0 leading-none mt-1 ${highlight ? "text-gold" : "text-bordeaux/50"}`}>
+        {meta.mark}
+      </span>
     </button>
   );
+}
+
+function useBadgeOverview() {
+  const [items, setItems] = useState<ReturnType<typeof listBadgesWithStatus>>(
+    []
+  );
+  useEffect(() => {
+    const refresh = () => setItems(listBadgesWithStatus());
+    refresh();
+    const onChange = () => refresh();
+    window.addEventListener("incipit:badges:change", onChange);
+    window.addEventListener("storage", onChange);
+    return () => {
+      window.removeEventListener("incipit:badges:change", onChange);
+      window.removeEventListener("storage", onChange);
+    };
+  }, []);
+  return {
+    items,
+    total: items.length,
+    unlocked: items.filter((b) => b.unlocked).length,
+  };
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -399,14 +496,15 @@ function Playing({
   total,
 }: {
   state: Extract<State, { phase: "playing" }>;
-  onPick: (b: QuizIncipit) => void;
+  onPick: (opt: string) => void;
   onNext: () => void;
   total: number;
 }) {
   const { questions, index, picked, score, streak } = state;
   const q = questions[index];
   const answered = picked !== null;
-  const lines = useMemo(() => firstLines(q.book), [q.book]);
+  const meta = MODE_META[state.mode];
+  const catMeta = CATEGORY_LABELS[q.lit.category];
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -417,7 +515,7 @@ function Playing({
             ? `${streak} d'affilée`
             : score > 0
               ? `${score} / ${index}`
-              : "À toi de jouer"
+              : meta.title
         }
         back
       />
@@ -432,28 +530,33 @@ function Playing({
       <section className="flex-1 px-6 pt-8 pb-6 bg-gradient-to-b from-paper via-cream to-dust relative overflow-hidden">
         <div className="absolute top-10 -right-10 w-48 h-48 rounded-full bg-bordeaux/10 blur-3xl" />
         <div className="relative max-w-md mx-auto text-center">
-          <div className="text-[10px] uppercase tracking-[0.3em] text-bordeaux font-bold mb-4">
-            Qui a écrit ça ?
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-ink/5 border border-ink/10 text-[9px] uppercase tracking-[0.2em] font-black text-ink/70 mb-4">
+            <span className="font-serif text-base leading-none">
+              {catMeta.emoji}
+            </span>
+            {catMeta.title}
           </div>
-          <div className="font-serif text-6xl text-bordeaux/30 leading-none mb-2">
-            “
-          </div>
-          <blockquote className="font-serif text-[22px] leading-[1.4] text-ink italic">
-            {lines}
+          {q.lit.category === "opening" && (
+            <div className="font-serif text-6xl text-bordeaux/30 leading-none mb-1">
+              “
+            </div>
+          )}
+          <blockquote className="font-serif text-[22px] leading-[1.35] text-ink italic px-2">
+            {q.lit.prompt}
           </blockquote>
         </div>
       </section>
 
       <section className="px-5 pb-8 pt-4 space-y-3">
         {q.options.map((opt) => {
-          const isPicked = picked === opt.id;
-          const isCorrect = opt.id === q.book.id;
+          const isPicked = picked === opt;
+          const isCorrect = opt === q.lit.answer;
           const showAsRight = answered && isCorrect;
           const showAsWrong = answered && isPicked && !isCorrect;
 
           return (
             <button
-              key={opt.id}
+              key={opt}
               type="button"
               disabled={answered}
               onClick={() => onPick(opt)}
@@ -468,12 +571,7 @@ function Playing({
               }`}
             >
               <div className="flex-1 min-w-0">
-                <div className="font-serif font-bold text-base truncate">
-                  {opt.title}
-                </div>
-                <div className="text-xs text-ink/60 truncate">
-                  {opt.author} · {opt.year}
-                </div>
+                <div className="font-serif font-bold text-base">{opt}</div>
               </div>
               {showAsRight && (
                 <span className="text-sage text-xl shrink-0">✓</span>
@@ -490,19 +588,19 @@ function Playing({
         <section className="px-6 pb-10 animate-fade-up">
           <div
             className={`rounded-2xl p-5 border ${
-              picked === q.book.id
+              picked === q.lit.answer
                 ? "border-sage/40 bg-sage/5"
                 : "border-bordeaux/30 bg-bordeaux/5"
             }`}
           >
             <div className="text-[10px] uppercase tracking-[0.25em] font-bold text-ink/60 mb-1">
-              {picked === q.book.id ? "Bien vu" : "Raté"}
+              {picked === q.lit.answer ? "Bien vu" : "Raté"}
             </div>
             <p className="font-serif text-lg font-bold text-ink leading-snug">
-              {q.book.title} — {q.book.author}
+              {q.lit.answer}
             </p>
             <p className="text-sm text-ink/70 mt-2 leading-relaxed italic">
-              {q.book.hook}
+              {q.lit.explanation}
             </p>
           </div>
           <button
@@ -520,30 +618,31 @@ function Playing({
 // ─────────────────────────────────────────────────────────────────────────────
 
 function Done({
-  level,
+  mode,
   questions,
   score,
   bestStreak,
   answers,
+  newlyUnlocked,
   onReplay,
-  onPickLevel,
+  onPickMode,
   reachedFreeCap,
   isPremium,
 }: {
-  level: QuizLevel | "all";
+  mode: ModeId;
   questions: Question[];
   score: number;
   bestStreak: number;
-  answers: { bookId: string; pickedId: string; correct: boolean }[];
+  answers: { litId: string; picked: string; correct: boolean }[];
+  newlyUnlocked: Badge[];
   onReplay: () => void;
-  onPickLevel: () => void;
+  onPickMode: () => void;
   reachedFreeCap: boolean;
   isPremium: boolean;
 }) {
   const total = questions.length;
-  const pct = Math.round((score / total) * 100);
-  const levelLabel =
-    level === "all" ? "Mode libre" : LEVEL_LABELS[level].title;
+  const pct = total > 0 ? Math.round((score / total) * 100) : 0;
+  const modeLabel = MODE_META[mode].title;
 
   const verdict =
     pct === 100
@@ -571,19 +670,12 @@ function Done({
                 sub: "Aucun souci, c'est pour ça qu'Incipit existe. Scroll et apprends.",
               };
 
-  const shareGrid = answers
-    .map((a) => (a.correct ? "🟥" : "⬜"))
-    .join("");
-
-  const shareText = `Incipit Quiz (${levelLabel}) — ${score}/${total} · ${shareGrid} · streak ${bestStreak}`;
+  const shareGrid = answers.map((a) => (a.correct ? "🟥" : "⬜")).join("");
+  const shareText = `Incipit Quiz (${modeLabel}) — ${score}/${total} · ${shareGrid} · streak ${bestStreak}`;
 
   const share = async () => {
     const url = `${typeof window !== "undefined" ? window.location.origin : ""}/quiz`;
-    const payload = {
-      title: "Incipit Quiz",
-      text: shareText,
-      url,
-    };
+    const payload = { title: "Incipit Quiz", text: shareText, url };
     try {
       if (
         typeof navigator !== "undefined" &&
@@ -611,15 +703,13 @@ function Done({
         <div className="absolute -top-20 -left-10 w-72 h-72 rounded-full bg-gold/15 blur-3xl" />
         <div className="relative">
           <div className="text-[10px] uppercase tracking-[0.3em] font-bold text-gold mb-4">
-            Verdict · {levelLabel}
+            Verdict · {modeLabel}
           </div>
           <div className="font-serif text-8xl font-black leading-none">
             {score}
             <span className="text-paper/50">/{total}</span>
           </div>
-          <p className="mt-6 font-serif text-3xl font-black">
-            {verdict.title}
-          </p>
+          <p className="mt-6 font-serif text-3xl font-black">{verdict.title}</p>
           <p className="mt-2 text-sm text-paper/80 italic leading-relaxed max-w-sm mx-auto">
             {verdict.sub}
           </p>
@@ -635,6 +725,41 @@ function Done({
           </div>
         </div>
       </section>
+
+      {/* Jalons nouvellement débloqués — s'il y en a */}
+      {newlyUnlocked.length > 0 && (
+        <section className="px-6 pt-6 pb-2">
+          <div className="rounded-3xl bg-gold/15 border-2 border-gold p-5">
+            <div className="text-[10px] uppercase tracking-[0.3em] text-bordeaux font-black">
+              Jalon{newlyUnlocked.length > 1 ? "s" : ""} débloqué
+              {newlyUnlocked.length > 1 ? "s" : ""}
+            </div>
+            <div className="mt-3 space-y-3">
+              {newlyUnlocked.map((b) => (
+                <div key={b.id} className="flex items-start gap-3">
+                  <div className="shrink-0 w-12 h-12 rounded-xl bg-gold text-ink font-serif text-xl font-black flex items-center justify-center">
+                    {b.mark}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="font-serif text-lg font-black text-ink leading-tight">
+                      {b.name}
+                    </div>
+                    <div className="text-sm text-ink/75 italic leading-snug">
+                      {b.tagline}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <Link
+              href="/quiz/badges"
+              className="inline-block mt-4 text-[11px] uppercase tracking-widest font-bold text-bordeaux"
+            >
+              Voir tous les jalons →
+            </Link>
+          </div>
+        </section>
+      )}
 
       <section className="px-6 py-6 space-y-3">
         <button
@@ -655,19 +780,17 @@ function Done({
             onClick={onReplay}
             className="w-full py-4 rounded-full border-2 border-ink text-ink font-serif font-bold text-sm uppercase tracking-widest hover:bg-ink/5 transition"
           >
-            Rejouer · {levelLabel}
+            Rejouer · {modeLabel}
             {!isPremium && (
-              <span className="ml-2 text-ink/40 text-xs">
-                (gratuit)
-              </span>
+              <span className="ml-2 text-ink/40 text-xs">(gratuit)</span>
             )}
           </button>
         )}
         <button
-          onClick={onPickLevel}
+          onClick={onPickMode}
           className="w-full py-3 text-xs uppercase tracking-widest text-ink/55 font-bold hover:text-ink transition"
         >
-          Changer de niveau
+          Changer de catégorie
         </button>
       </section>
 
@@ -677,15 +800,9 @@ function Done({
         </div>
         <ul className="space-y-3">
           {answers.map((a, i) => {
-            const q = questions[i];
-            const pickedBook = q.options.find((o) => o.id === a.pickedId)!;
-            const bookFicheId = FICHE_IDS.has(q.book.id) ? q.book.id : null;
-            // Certains ids du quiz sont préfixés "q-" — on tente aussi la
-            // correspondance sans préfixe pour lier vers /book/[id] si elle
-            // existe parmi les 12 fiches.
-            const stripped = q.book.id.replace(/^q-/, "");
+            const q = questions[i].lit;
             const matchedFiche =
-              bookFicheId ?? (FICHE_IDS.has(stripped) ? stripped : null);
+              q.bookId && FICHE_IDS.has(q.bookId) ? q.bookId : null;
 
             return (
               <li
@@ -698,7 +815,7 @@ function Done({
               >
                 <div className="flex items-center justify-between gap-3">
                   <span className="text-xs uppercase tracking-widest font-bold text-ink/50">
-                    Q{i + 1}
+                    Q{i + 1} · {CATEGORY_LABELS[q.category].title}
                   </span>
                   <span
                     className={`text-xs font-bold ${
@@ -710,15 +827,19 @@ function Done({
                 </div>
                 <div className="mt-2 text-sm">
                   <div className="font-serif font-bold text-ink">
-                    {q.book.title} — {q.book.author}
+                    {q.prompt}
+                  </div>
+                  <div className="text-xs text-ink/70 mt-1">
+                    Réponse :{" "}
+                    <span className="font-bold text-ink">{q.answer}</span>
                   </div>
                   {!a.correct && (
-                    <div className="text-xs text-ink/60 mt-1">
-                      Tu avais répondu : {pickedBook.title}
+                    <div className="text-xs text-ink/60 mt-0.5">
+                      Tu avais répondu : {a.picked}
                     </div>
                   )}
                   <p className="text-xs text-ink/65 mt-2 italic leading-snug">
-                    {q.book.hook}
+                    {q.explanation}
                   </p>
                 </div>
                 {matchedFiche && (
@@ -737,10 +858,10 @@ function Done({
 
       <section className="px-6 pt-4 pb-12">
         <Link
-          href="/explore"
-          className="block text-center text-xs uppercase tracking-widest text-ink/50 font-semibold"
+          href="/quiz/badges"
+          className="block text-center text-xs uppercase tracking-widest text-bordeaux font-bold"
         >
-          Retour à l'exploration
+          Voir mes jalons culturels →
         </Link>
       </section>
     </div>

@@ -4,6 +4,7 @@ import Link from "next/link";
 import AppHeader from "@/components/AppHeader";
 import BookCover from "@/components/BookCover";
 import PremiumBadge from "@/components/PremiumBadge";
+import BadgePanel from "@/components/BadgePanel";
 import {
   ME,
   MY_LIBRARY,
@@ -182,10 +183,18 @@ export default function ProfilePage() {
           </div>
         </section>
 
-        {/* Badges */}
+        {/* Jalons culturels — vrai système, lié aux quiz */}
         <section>
           <h2 className="text-[11px] uppercase tracking-[0.25em] font-bold text-ink/50 mb-3">
-            Badges · {earnedBadges.length} / {BADGES.length}
+            Jalons culturels
+          </h2>
+          <BadgePanel variant="block" />
+        </section>
+
+        {/* Badges (ancien système mock — sample data démo de départ) */}
+        <section>
+          <h2 className="text-[11px] uppercase tracking-[0.25em] font-bold text-ink/50 mb-3">
+            Bibliographie · {earnedBadges.length} / {BADGES.length}
           </h2>
           <div className="grid grid-cols-3 gap-3">
             {earnedBadges.map((b) => (
