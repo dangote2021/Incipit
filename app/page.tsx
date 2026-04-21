@@ -6,6 +6,7 @@ import DailyIncipit from "@/components/DailyIncipit";
 import ResumeCard from "@/components/ResumeCard";
 import RapLitTeaser from "@/components/RapLitTeaser";
 import WelcomeBanner from "@/components/WelcomeBanner";
+import QuizTeaser from "@/components/QuizTeaser";
 
 export default function HomePage() {
   return (
@@ -33,14 +34,16 @@ export default function HomePage() {
 
       {/* Carrousel vertical de pitches (scroll snap) */}
       <main className="snap-y snap-mandatory overflow-y-scroll h-screen no-scrollbar -mt-0">
+        {/* Ouverture du feed : l'incipit du jour, une première ligne qui donne
+            envie. C'est la signature de l'app : on commence par la littérature,
+            pas par un écran d'accueil. */}
+        <DailyIncipit />
+
         {/* Message d'accueil contextuel (nouveau vs retour) */}
         <WelcomeBanner />
 
         {/* "Je reprends" — uniquement si un livre est en cours */}
         <ResumeCard />
-
-        {/* Rituel matinal — Incipit du jour */}
-        <DailyIncipit />
 
         {BOOKS.map((b, i) => (
           <Fragment key={b.id}>
@@ -48,6 +51,9 @@ export default function HomePage() {
             {/* On glisse l'interlude Rap & Lit après le 4e pitch pour casser le
                 rythme et surprendre. */}
             {i === 3 && <RapLitTeaser />}
+            {/* Le quiz apparaît en milieu de feed, comme un défi entre deux
+                pitches : rafraîchit l'attention. */}
+            {i === 7 && <QuizTeaser />}
           </Fragment>
         ))}
 
@@ -61,12 +67,20 @@ export default function HomePage() {
             Reviens demain pour un nouvel incipit. Ou rejoins un book club pour
             continuer la conversation.
           </p>
-          <Link
-            href="/clubs"
-            className="mt-6 inline-flex items-center gap-2 bg-ink text-paper px-5 py-3 rounded-full text-sm font-semibold"
-          >
-            Découvrir les clubs →
-          </Link>
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+            <Link
+              href="/quiz"
+              className="inline-flex items-center gap-2 bg-bordeaux text-paper px-5 py-3 rounded-full text-sm font-semibold hover:bg-ink transition"
+            >
+              Jouer au quiz →
+            </Link>
+            <Link
+              href="/clubs"
+              className="inline-flex items-center gap-2 bg-ink text-paper px-5 py-3 rounded-full text-sm font-semibold"
+            >
+              Découvrir les clubs →
+            </Link>
+          </div>
         </section>
       </main>
     </div>

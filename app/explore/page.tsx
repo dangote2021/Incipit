@@ -107,6 +107,28 @@ function ThemesTab() {
       </Link>
 
       <Link
+        href="/quiz"
+        className="block relative overflow-hidden rounded-2xl p-5 mb-5 bg-gradient-to-br from-bordeaux via-bordeaux to-ink text-paper border border-gold/30 hover:border-gold/60 transition group"
+      >
+        <div className="absolute -top-10 -right-8 w-40 h-40 rounded-full bg-gold/20 blur-3xl pointer-events-none" />
+        <div className="relative">
+          <div className="text-[10px] uppercase tracking-[0.3em] text-gold font-bold mb-1">
+            Nouveau · Jeu
+          </div>
+          <h3 className="font-serif text-xl font-bold leading-tight mb-1">
+            Devine l'incipit.
+          </h3>
+          <p className="text-sm text-paper/85 leading-relaxed">
+            8 premières lignes, 4 choix par question. Trois minutes pour savoir
+            si t'as l'œil littéraire. Score partageable.
+          </p>
+          <div className="mt-3 inline-flex items-center gap-2 text-xs font-bold text-gold group-hover:underline">
+            Lancer une partie →
+          </div>
+        </div>
+      </Link>
+
+      <Link
         href="/domaine-public"
         className="block rounded-2xl p-5 mb-5 bg-cream border border-ink/10 hover:border-gold/50 transition group"
       >
