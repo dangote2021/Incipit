@@ -5,6 +5,7 @@ import AppHeader from "@/components/AppHeader";
 import BookCover from "@/components/BookCover";
 import PremiumBadge from "@/components/PremiumBadge";
 import BadgePanel from "@/components/BadgePanel";
+import IOSInstallCard from "@/components/IOSInstallCard";
 import {
   ME,
   MY_LIBRARY,
@@ -361,6 +362,11 @@ export default function ProfilePage() {
             ))}
           </ul>
         </section>
+
+        {/* Aide à l'installation PWA pour les iPhone users (visible uniquement
+            sur iOS Safari hors mode standalone). Sur Android / Chrome / déjà
+            installé : le composant retourne null, zéro impact visuel. */}
+        <IOSInstallCard />
 
         {/* Actions */}
         <section className="pt-2 space-y-2">
