@@ -6,7 +6,13 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "typecheck": "tsc -p tsconfig.check.json --noEmit",
+    "cap:setup": "npm install @capacitor/core @capacitor/cli @capacitor/ios @capacitor/android @capacitor/app @capacitor/status-bar @capacitor/splash-screen",
+    "cap:init": "npx cap init Incipit app.incipit.reader --web-dir=public",
+    "cap:add-ios": "npx cap add ios",
+    "cap:add-android": "npx cap add android",
+    "cap:sync": "npx cap sync"
   },
   "dependencies": {
     "next": "14.2.15",

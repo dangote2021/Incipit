@@ -126,7 +126,8 @@ export default function ReadPage({
       {characters.length > 0 && (
         <button
           onClick={() => setCharsOpen(true)}
-          className="fixed bottom-8 right-6 z-20 bg-sage text-paper rounded-full shadow-xl px-5 py-3 flex items-center gap-2 hover:scale-105 transition"
+          className="fixed right-6 z-20 bg-sage text-paper rounded-full shadow-xl px-5 py-3 flex items-center gap-2 hover:scale-105 transition"
+          style={{ bottom: `calc(2rem + env(safe-area-inset-bottom, 0px))` }}
         >
           <span className="text-xl">🎭</span>
           <span className="text-xs uppercase tracking-widest font-bold">
