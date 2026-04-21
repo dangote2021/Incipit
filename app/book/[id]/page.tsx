@@ -10,6 +10,7 @@ import NoteComposer from "@/components/book/NoteComposer";
 import BookActionPanel from "@/components/book/BookActionPanel";
 import LibrairesByPostalCode from "@/components/book/LibrairesByPostalCode";
 import MarkAsReadButton from "@/components/book/MarkAsReadButton";
+import PassagesList from "@/components/book/PassagesList";
 import {
   BOOKS,
   getBook,
@@ -257,34 +258,12 @@ export default async function BookPage({ params }: Props) {
               Du vrai texte, choisi avec soin. On te dit pourquoi chaque
               passage compte.
             </p>
-            <ol className="space-y-3">
-              {passages.slice(0, 3).map((p) => (
-                <li
-                  key={p.id}
-                  className="bg-paper border border-ink/10 rounded-2xl p-4"
-                >
-                  <div className="flex items-baseline gap-3 mb-2">
-                    <span className="font-serif text-2xl text-bordeaux/40 font-bold leading-none">
-                      0{p.order}
-                    </span>
-                    <div className="flex-1 min-w-0">
-                      <div className="font-serif text-[15px] font-bold text-ink leading-tight">
-                        {p.title}
-                      </div>
-                      <div className="text-[10px] uppercase tracking-widest text-ink/50 font-bold mt-0.5">
-                        {p.chapter} · {p.readingMinutes} min
-                      </div>
-                    </div>
-                  </div>
-                  <p className="text-[13px] text-ink/70 leading-relaxed mb-3">
-                    {p.context}
-                  </p>
-                  <blockquote className="border-l-2 border-bordeaux/60 pl-3 font-serif text-[14px] text-ink/90 italic leading-relaxed">
-                    {p.excerpt}
-                  </blockquote>
-                </li>
-              ))}
-            </ol>
+            {/* Client-side gate : 2 passages gratuits, 5 Premium (cf.
+                FEATURES.passagesFull dans lib/premium). On laisse le composant
+                rendre tous les passages (SEO) et appliquer le floutage au
+                hydrate. */}
+            <PassagesList passages={passages} />
+
           </section>
         )}
 
