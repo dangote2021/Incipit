@@ -137,7 +137,7 @@ export const LIT_QUESTIONS: LitQuestion[] = [
     distractors: ["Arthur Rimbaud", "Paul Verlaine", "Victor Hugo"],
     explanation:
       "1857. Recueil également poursuivi pour outrage aux mœurs la même année que Bovary.",
-    bookId: "fleurs-du-mal",
+    bookId: "fleurs-mal",
   },
   {
     id: "au-6",
@@ -361,7 +361,7 @@ export const LIT_QUESTIONS: LitQuestion[] = [
     distractors: ["Naturalisme", "Classicisme", "Dadaïsme"],
     explanation:
       "Baudelaire, précurseur du symbolisme : donner à voir l'invisible à travers des correspondances.",
-    bookId: "fleurs-du-mal",
+    bookId: "fleurs-mal",
   },
   {
     id: "mv-3",

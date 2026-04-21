@@ -16,34 +16,19 @@ import { usePremium, FREE_QUOTAS } from "@/lib/premium";
 import {
   applyRound,
   listBadgesWithStatus,
+  readStats,
   type Badge,
   type RoundAnswer,
 } from "@/lib/badges";
+import {
+  getQuizRoundCounter,
+  bumpQuizRoundCounter,
+} from "@/lib/daily-content";
 
-// Compteur de parties jouées dans la session (reset à la fermeture de
-// l'onglet). Côté free, on plafonne pour créer l'envie d'upgrade, sans
-// être agressif — 3 parties c'est de quoi jouer.
-const SESSION_KEY = "incipit:quiz:roundsPlayed";
-
-function getSessionRounds(): number {
-  if (typeof window === "undefined") return 0;
-  try {
-    const raw = window.sessionStorage.getItem(SESSION_KEY);
-    return raw ? Math.max(0, parseInt(raw, 10) || 0) : 0;
-  } catch {
-    return 0;
-  }
-}
-
-function bumpSessionRounds(): number {
-  const next = getSessionRounds() + 1;
-  try {
-    window.sessionStorage.setItem(SESSION_KEY, String(next));
-  } catch {
-    // ignore
-  }
-  return next;
-}
+// Ancien : sessionStorage → reset à la fermeture de l'onglet, paywall
+// contournable en 2 clics. Remonté par Mehdi (panel beta).
+// Nouveau : compteur journalier localStorage indexé par date UTC, via
+// lib/daily-content.ts — 3 parties / jour free, reset auto à minuit UTC.
 
 type Question = {
   lit: LitQuestion;
@@ -147,6 +132,7 @@ type State =
       bestStreak: number;
       answers: { litId: string; picked: string; correct: boolean }[];
       newlyUnlocked: Badge[];
+      isFirstSession: boolean;
     };
 
 export default function QuizPage() {
@@ -155,7 +141,7 @@ export default function QuizPage() {
   const { isPremium, hydrated } = usePremium();
 
   useEffect(() => {
-    setRoundsPlayed(getSessionRounds());
+    setRoundsPlayed(getQuizRoundCounter());
   }, []);
 
   const reachedFreeCap =
@@ -165,7 +151,7 @@ export default function QuizPage() {
     if (reachedFreeCap) return;
     const questions = makeRound(mode);
     if (questions.length === 0) return;
-    const played = bumpSessionRounds();
+    const played = bumpQuizRoundCounter();
     setRoundsPlayed(played);
     setState({
       phase: "playing",
@@ -220,6 +206,10 @@ export default function QuizPage() {
         bestStreak: state.bestStreak,
         answers: roundAnswers,
       });
+      // Pour adoucir le ton du verdict lors de la toute première partie :
+      // après applyRound(), sessionsCompleted a déjà été incrémenté, donc
+      // c'est « 1 » qui marque la première session.
+      const isFirstSession = readStats().sessionsCompleted <= 1;
       setState({
         phase: "done",
         mode: state.mode,
@@ -228,6 +218,7 @@ export default function QuizPage() {
         bestStreak: state.bestStreak,
         answers: state.answers,
         newlyUnlocked,
+        isFirstSession,
       });
     } else {
       setState({ ...state, index: state.index + 1, picked: null });
@@ -252,6 +243,7 @@ export default function QuizPage() {
         bestStreak={state.bestStreak}
         answers={state.answers}
         newlyUnlocked={state.newlyUnlocked}
+        isFirstSession={state.isFirstSession}
         onReplay={() => start(state.mode)}
         onPickMode={() => setState({ phase: "intro" })}
         reachedFreeCap={reachedFreeCap}
@@ -310,8 +302,9 @@ function Intro({
           </div>
         ) : (
           <div className="mt-4 text-[11px] uppercase tracking-widest text-ink/50 font-bold">
-            Session : {Math.min(roundsPlayed, FREE_QUOTAS.quizRounds)} /{" "}
-            {FREE_QUOTAS.quizRounds} parties gratuites
+            Aujourd'hui :{" "}
+            {Math.min(roundsPlayed, FREE_QUOTAS.quizRounds)} /{" "}
+            {FREE_QUOTAS.quizRounds} parties · reset demain
           </div>
         )}
       </section>
@@ -362,12 +355,13 @@ function Intro({
               Plafond atteint
             </div>
             <div className="font-serif text-xl font-black mt-2 leading-snug">
-              Tu as vidé les {FREE_QUOTAS.quizRounds} parties gratuites de la
-              session.
+              Tu as joué tes {FREE_QUOTAS.quizRounds} parties gratuites
+              d'aujourd'hui.
             </div>
             <p className="text-sm text-paper/75 mt-2 leading-relaxed">
-              Passe Premium pour enchaîner sans fin, débloquer le Mode série, et
-              te mesurer à tout le corpus sans pause.
+              Reviens demain pour une nouvelle journée — ou passe Premium pour
+              enchaîner sans fin, débloquer le Mode série, et te mesurer à tout
+              le corpus sans pause.
             </p>
             <Link
               href="/premium"
@@ -384,17 +378,22 @@ function Intro({
           Choisis ta catégorie
         </div>
         <div className="space-y-3">
-          {MODE_ORDER.map((mode, i) => (
-            <ModeCard
-              key={mode}
-              kicker={String(i + 1).padStart(2, "0")}
-              mode={mode}
-              count={poolFor(mode).length}
-              onStart={onStart}
-              disabled={reachedFreeCap}
-              highlight={mode === "mix"}
-            />
-          ))}
+          {MODE_ORDER.map((mode, i) => {
+            const count = poolFor(mode).length;
+            return (
+              <ModeCard
+                key={mode}
+                kicker={String(i + 1).padStart(2, "0")}
+                mode={mode}
+                count={count}
+                onStart={onStart}
+                // Pool vide (pas encore de questions sur cette catégorie) =
+                // bouton désactivé visuellement plutôt qu'un clic sans effet.
+                disabled={reachedFreeCap || count === 0}
+                highlight={mode === "mix"}
+              />
+            );
+          })}
         </div>
       </section>
 
@@ -624,6 +623,7 @@ function Done({
   bestStreak,
   answers,
   newlyUnlocked,
+  isFirstSession,
   onReplay,
   onPickMode,
   reachedFreeCap,
@@ -635,6 +635,7 @@ function Done({
   bestStreak: number;
   answers: { litId: string; picked: string; correct: boolean }[];
   newlyUnlocked: Badge[];
+  isFirstSession: boolean;
   onReplay: () => void;
   onPickMode: () => void;
   reachedFreeCap: boolean;
@@ -644,8 +645,35 @@ function Done({
   const pct = total > 0 ? Math.round((score / total) * 100) : 0;
   const modeLabel = MODE_META[mode].title;
 
-  const verdict =
-    pct === 100
+  // Mehdi (panel beta) : "se faire rentrer dedans au premier essai, c'est la
+  // sortie garantie". On adoucit la première partie — même verdict, tonalité
+  // d'accueil. Les mauvais scores restent signalés, mais sans condescendance.
+  const verdict = isFirstSession
+    ? pct === 100
+      ? {
+          title: "Incroyable pour une première.",
+          sub: "Score parfait sur ta partie d'intro. Respect.",
+        }
+      : pct >= 75
+        ? {
+            title: "Sacrée première.",
+            sub: "Tu arrives avec des bagages. Reviens, on a tout pour nourrir.",
+          }
+        : pct >= 50
+          ? {
+              title: "Belle première.",
+              sub: "Tu as l'œil, et c'est déjà beaucoup. On fait le reste ensemble.",
+            }
+          : pct >= 25
+            ? {
+                title: "On démarre ensemble.",
+                sub: "Première partie : normal. Le corpus est à toi — chaque scroll compte.",
+              }
+            : {
+                title: "Bienvenue.",
+                sub: "Personne ne connaît tout, surtout pas à la première partie. Incipit est fait pour ça.",
+              }
+    : pct === 100
       ? {
           title: "Parfait.",
           sub: "T'as lu, ou t'as du flair d'anthologie. Respect.",
@@ -662,12 +690,12 @@ function Done({
             }
           : pct >= 25
             ? {
-                title: "On débute.",
-                sub: "Normal. Tu vas nous rattraper ça avec 12 pitches.",
+                title: "On reprend.",
+                sub: "Rien de grave. Un scroll de pitches et tu remontes la pente.",
               }
             : {
-                title: "Aïe.",
-                sub: "Aucun souci, c'est pour ça qu'Incipit existe. Scroll et apprends.",
+                title: "Jour sans.",
+                sub: "Ça arrive. Reviens demain, le corpus ne bouge pas.",
               };
 
   const shareGrid = answers.map((a) => (a.correct ? "🟥" : "⬜")).join("");

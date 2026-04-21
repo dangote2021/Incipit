@@ -7,6 +7,7 @@ import ResumeCard from "@/components/ResumeCard";
 import RapLitTeaser from "@/components/RapLitTeaser";
 import WelcomeBanner from "@/components/WelcomeBanner";
 import QuizTeaser from "@/components/QuizTeaser";
+import DailyQuizCard from "@/components/DailyQuizCard";
 
 export default function HomePage() {
   return (
@@ -48,11 +49,16 @@ export default function HomePage() {
         {BOOKS.map((b, i) => (
           <Fragment key={b.id}>
             <PitchCard book={b} />
+            {/* Quiz du jour — après le 2e pitch, au moment où l'utilisateur
+                a mangé son premier contenu sans être engagé. La question
+                tourne chaque jour (déterministe UTC), donc la carte change
+                à chaque visite quotidienne sans jamais drifter. */}
+            {i === 1 && <DailyQuizCard />}
             {/* On glisse l'interlude Rap & Lit après le 4e pitch pour casser le
                 rythme et surprendre. */}
             {i === 3 && <RapLitTeaser />}
-            {/* Le quiz apparaît en milieu de feed, comme un défi entre deux
-                pitches : rafraîchit l'attention. */}
+            {/* Le quiz "full" apparaît en milieu de feed, comme un défi entre
+                deux pitches : rafraîchit l'attention. */}
             {i === 7 && <QuizTeaser />}
           </Fragment>
         ))}

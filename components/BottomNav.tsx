@@ -71,39 +71,6 @@ function IconQuiz({ active }: IconProps) {
   );
 }
 
-function IconClubs({ active }: IconProps) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" width="22" height="22" aria-hidden>
-      <circle
-        cx="9"
-        cy="9"
-        r="3"
-        stroke="currentColor"
-        strokeWidth={stroke(active)}
-      />
-      <circle
-        cx="16.5"
-        cy="10.5"
-        r="2.5"
-        stroke="currentColor"
-        strokeWidth={stroke(active)}
-      />
-      <path
-        d="M3.5 19c0-2.8 2.5-5 5.5-5s5.5 2.2 5.5 5"
-        stroke="currentColor"
-        strokeWidth={stroke(active)}
-        strokeLinecap="round"
-      />
-      <path
-        d="M15 19c0-2 1.5-3.7 3.5-3.7s3.5 1.7 3.5 3.7"
-        stroke="currentColor"
-        strokeWidth={stroke(active)}
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
 function IconLibrary({ active }: IconProps) {
   return (
     <svg viewBox="0 0 24 24" fill="none" width="22" height="22" aria-hidden>
