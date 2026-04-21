@@ -63,12 +63,12 @@ export const FEATURES = {
     free: "1 livre suivi",
     premium: "Tous les livres en parallèle",
   },
-  /** Passages clés : accès aux 5 passages au lieu de 2. */
+  /** Passages clés : accès aux passages complets au lieu des 2 premiers. */
   passagesFull: {
     id: "passagesFull",
     label: "Tous les passages clés",
-    free: "2 passages",
-    premium: "5 passages + contexte",
+    free: "2 premiers",
+    premium: "Tous, avec contexte",
   },
 } as const;
 
