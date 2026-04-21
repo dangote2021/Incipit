@@ -19,20 +19,91 @@ export type Vibe =
   | "wild"
   | "mystique";
 
-export type Book = {
-  id: string;
+/**
+ * Niveau éditorial d'un livre dans notre corpus. Demandé par le panel v7
+ * (Léa, critique littéraire) : impossible de traiter un Proust et un
+ * Maupassant sur le même plan sans signal éditorial.
+ * - `chef-oeuvre` : œuvre cardinale, colonne vertébrale d'une littérature
+ * - `classique` : œuvre majeure, fait partie du canon
+ * - `incontournable` : œuvre qu'on a envie de faire lire, pas forcément canonique
+ */
+export type BookTier = "chef-oeuvre" | "classique" | "incontournable";
+
+/**
+ * Recommandation bibliographique complémentaire : essais, correspondances,
+ * biographies, adaptations. Demandé par Léa v7 — "pour lire autour d'une
+ * œuvre, pas juste l'œuvre".
+ */
+export type GoingFurtherEntry = {
+  kind: "essai" | "biographie" | "correspondance" | "adaptation" | "roman";
   title: string;
   author: string;
-  year: number;
+  year?: number;
+  note: string;          // 1 phrase — pourquoi c'est pertinent pour cette œuvre
+};
+
+/**
+ * Mot d'un libraire indépendant réel (ou mocké pour le dev) sur le livre.
+ * Demandé par Jean-Baptiste v7 — "vous montrez un pitch, pas un avis de
+ * métier. C'est la prescription qui fait vendre."
+ */
+export type LibraireEndorsement = {
+  libraire: string;       // "Clarisse M."
+  librairie: string;      // "Ombres Blanches, Toulouse"
+  text: string;           // 2-3 phrases signées
+};
+
+export type Book = {
+  id: string;
+  title: string;                 // titre court d'affichage ("Swann")
+  fullTitle?: string;            // titre bibliographique complet ("Du côté de chez Swann")
+  author: string;
+  year: number;                  // année de première parution
   genre: Genre;
   pages: number;
-  cover: string;           // gradient tailwind classes
-  pitch: string;           // pitch long
-  hook: string;            // 1 phrase punchline
-  openingLines: string;    // premiers paragraphes (domaine public)
+  cover: string;                 // gradient tailwind classes
+  pitch: string;                 // pitch long
+  hook: string;                  // 1 phrase punchline
+  openingLines: string;          // premiers paragraphes (domaine public)
   themes: string[];
   vibe: Vibe;
-  moods: Mood[];           // parcours thématiques transversaux
+  moods: Mood[];                 // parcours thématiques transversaux
+  // ─── Niveau éditorial ────────────────────────────────────────────────────
+  tier?: BookTier;               // chef-oeuvre / classique / incontournable
+  // ─── Crédits édition & traducteur (blocker panel v7) ─────────────────────
+  /**
+   * Édition de référence utilisée pour l'incipit affiché. Ex : "Folio
+   * classique, Gallimard, 1972". Si l'œuvre est en français dans l'édition
+   * originale, on peut aussi pointer l'édition originale.
+   */
+  referenceEdition?: string;
+  /**
+   * Nom du traducteur pour les œuvres traduites du domaine public. Pour
+   * les œuvres françaises, laissé vide. Pour Kafka, Dostoïevski, Woolf,
+   * etc. on indique la traduction utilisée (et qui doit elle-même être
+   * dans le domaine public).
+   */
+  translator?: string;
+  /**
+   * Année de la traduction (utile pour vérifier le domaine public de la
+   * traduction elle-même — une trad de 1925 est libre, une trad de 1990
+   * ne l'est pas).
+   */
+  translationYear?: number;
+  // ─── Contexte historique + bio auteur (édito majeur v7) ──────────────────
+  /**
+   * Encadré de contexte historique : pourquoi ce livre à ce moment-là.
+   * 2-4 phrases. Demandé par Léa — "1942 c'est pas un décor".
+   */
+  historicalContext?: string;
+  /**
+   * Bio auteur étoffée (3-5 paragraphes possibles, utilisé en Markdown
+   * light : \n\n pour les sauts de para). Demandé par Camille.
+   */
+  authorBio?: string;
+  // ─── "Pour aller plus loin" + "Avis du libraire" ─────────────────────────
+  goingFurther?: GoingFurtherEntry[];
+  libraireEndorsement?: LibraireEndorsement;
   // ─── Connecteurs plateformes & domaine public ────────────────────────────
   publicDomain?: boolean;  // auteur mort depuis +70 ans → lecture intégrale légale
   gutenbergId?: string;    // ID Project Gutenberg si connu, sinon search
@@ -205,6 +276,7 @@ export type Librairie = {
   distanceKm: number;
   city: string;
   url: string;            // lien vers disponibilité (mocké)
+  postalCode?: string;    // code postal principal de la librairie (pour géoloc simple)
 };
 
 export type RecapBlock = {

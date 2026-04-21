@@ -8,6 +8,7 @@ import LibraryStatusPicker from "@/components/book/LibraryStatusPicker";
 import OpeningLinesReveal from "@/components/book/OpeningLinesReveal";
 import NoteComposer from "@/components/book/NoteComposer";
 import BookActionPanel from "@/components/book/BookActionPanel";
+import LibrairesByPostalCode from "@/components/book/LibrairesByPostalCode";
 import {
   BOOKS,
   getBook,
@@ -65,12 +66,50 @@ export default async function BookPage({ params }: Props) {
         <div className="relative flex gap-5 items-start">
           <BookCover book={book} size="lg" />
           <div className="flex-1">
-            <VibeBadge vibe={book.vibe} />
+            <div className="flex flex-wrap items-center gap-2">
+              <VibeBadge vibe={book.vibe} />
+              {book.tier && (
+                <span
+                  className={`inline-flex items-center text-[10px] uppercase tracking-[0.25em] font-bold px-2.5 py-1 rounded-full border ${
+                    book.tier === "chef-oeuvre"
+                      ? "bg-gold/90 text-ink border-gold"
+                      : book.tier === "classique"
+                        ? "bg-paper/20 text-paper border-paper/40"
+                        : "bg-paper/10 text-paper/90 border-paper/30"
+                  }`}
+                  title={
+                    book.tier === "chef-oeuvre"
+                      ? "Œuvre cardinale du canon"
+                      : book.tier === "classique"
+                        ? "Œuvre majeure du canon"
+                        : "Incontournable"
+                  }
+                >
+                  {book.tier === "chef-oeuvre"
+                    ? "Chef-d'œuvre"
+                    : book.tier === "classique"
+                      ? "Classique"
+                      : "Incontournable"}
+                </span>
+              )}
+            </div>
             <h1 className="mt-3 font-serif text-3xl font-black leading-[1.05] ink-drop">
               {book.title}
             </h1>
-            <div className="text-paper/80 mt-1 font-medium">
+            {book.fullTitle && book.fullTitle !== book.title && (
+              <div className="text-paper/75 text-sm font-serif italic mt-1 leading-snug">
+                {book.fullTitle}
+              </div>
+            )}
+            <div className="text-paper/85 mt-1 font-medium">
               {book.author}
+              {book.translator ? (
+                <span className="text-paper/70 text-sm">
+                  {" "}
+                  · trad. {book.translator}
+                  {book.translationYear ? ` (${book.translationYear})` : ""}
+                </span>
+              ) : null}
             </div>
             <div className="text-xs text-paper/70 mt-1 uppercase tracking-widest">
               {book.year} · {book.pages} p · {book.genre}
@@ -147,7 +186,52 @@ export default async function BookPage({ params }: Props) {
             L'incipit
           </h2>
           <OpeningLinesReveal openingLines={book.openingLines} />
+          {book.referenceEdition && (
+            <p className="text-[11px] text-ink/50 mt-3 leading-relaxed italic">
+              Édition de référence : {book.referenceEdition}
+              {book.translator
+                ? ` · Traduction ${book.translator}${
+                    book.translationYear ? ` (${book.translationYear})` : ""
+                  }`
+                : ""}
+              .
+            </p>
+          )}
         </section>
+
+        {/* Contexte historique — SSR, crawlable. Demandé par Léa (panel v7). */}
+        {book.historicalContext && (
+          <section>
+            <h2 className="text-[11px] uppercase tracking-[0.25em] font-bold text-ink/50 mb-3">
+              Le livre dans son siècle
+            </h2>
+            <div className="bg-cream/60 border border-dust rounded-2xl p-5">
+              <p className="text-[15px] leading-relaxed text-ink/85">
+                {book.historicalContext}
+              </p>
+            </div>
+          </section>
+        )}
+
+        {/* Avis du libraire — SSR, crawlable. Demandé par Jean-Baptiste. */}
+        {book.libraireEndorsement && (
+          <section>
+            <h2 className="text-[11px] uppercase tracking-[0.25em] font-bold text-ink/50 mb-3">
+              L'avis du libraire
+            </h2>
+            <blockquote className="bg-paper border-l-4 border-bordeaux rounded-r-2xl p-5">
+              <p className="font-serif italic text-[15px] text-ink/90 leading-relaxed mb-3">
+                « {book.libraireEndorsement.text} »
+              </p>
+              <footer className="text-[11px] uppercase tracking-widest font-bold text-ink/60">
+                — {book.libraireEndorsement.libraire},{" "}
+                <span className="text-bordeaux">
+                  {book.libraireEndorsement.librairie}
+                </span>
+              </footer>
+            </blockquote>
+          </section>
+        )}
 
         {/* Passages clés — SSR, crawlables */}
         {passages.length > 0 && (
@@ -282,6 +366,65 @@ export default async function BookPage({ params }: Props) {
         {/* Où lire / écouter */}
         <ReadElsewhere book={book} />
 
+        {/* Géolocalisation libraire — widget client, saisie code postal. */}
+        <LibrairesByPostalCode book={book} />
+
+        {/* Bio auteur — SSR, crawlable. Demandé par Camille (panel v7). */}
+        {book.authorBio && (
+          <section>
+            <h2 className="text-[11px] uppercase tracking-[0.25em] font-bold text-ink/50 mb-3">
+              L'auteur · {book.author}
+            </h2>
+            <div className="bg-paper border border-ink/10 rounded-2xl p-5 space-y-3">
+              {book.authorBio.split("\n\n").map((para, i) => (
+                <p
+                  key={i}
+                  className="text-[15px] leading-relaxed text-ink/85"
+                >
+                  {para}
+                </p>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Pour aller plus loin — SSR, crawlable. Demandé par Léa. */}
+        {book.goingFurther && book.goingFurther.length > 0 && (
+          <section>
+            <h2 className="text-[11px] uppercase tracking-[0.25em] font-bold text-ink/50 mb-3">
+              Pour aller plus loin
+            </h2>
+            <ul className="space-y-3">
+              {book.goingFurther.map((entry, i) => (
+                <li
+                  key={i}
+                  className="bg-paper border border-ink/10 rounded-2xl p-4"
+                >
+                  <div className="flex items-baseline gap-2 mb-1">
+                    <span className="text-[10px] uppercase tracking-[0.25em] font-bold text-bordeaux">
+                      {kindLabel(entry.kind)}
+                    </span>
+                    {entry.year && (
+                      <span className="text-[10px] text-ink/40 font-bold">
+                        · {entry.year}
+                      </span>
+                    )}
+                  </div>
+                  <div className="font-serif text-base font-bold text-ink leading-tight">
+                    {entry.title}
+                  </div>
+                  <div className="text-xs text-ink/60 mb-2">
+                    {entry.author}
+                  </div>
+                  <p className="text-[13px] leading-relaxed text-ink/75 italic">
+                    {entry.note}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
         {/* Annotations publiques — SSR, crawlables */}
         {annotations.length > 0 && (
           <section>
@@ -413,4 +556,22 @@ export default async function BookPage({ params }: Props) {
       </main>
     </>
   );
+}
+
+// Label humain pour les types d'entrées "Pour aller plus loin".
+function kindLabel(kind: string): string {
+  switch (kind) {
+    case "essai":
+      return "Essai";
+    case "biographie":
+      return "Biographie";
+    case "correspondance":
+      return "Correspondance";
+    case "adaptation":
+      return "Adaptation";
+    case "roman":
+      return "Roman";
+    default:
+      return kind;
+  }
 }

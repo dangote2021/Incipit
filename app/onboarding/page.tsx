@@ -311,7 +311,7 @@ export default function OnboardingPage() {
           }`}
         >
           <div className="flex items-start justify-between mb-2">
-            <div className="font-serif text-xl font-bold">Tranchant</div>
+            <div className="font-serif text-xl font-bold">Direct</div>
             {tone === "boloss" && (
               <span className="text-xs bg-paper text-bordeaux px-2 py-0.5 rounded-full font-bold">
                 Choisi
@@ -320,7 +320,7 @@ export default function OnboardingPage() {
           </div>
           <div className={`text-sm ${tone === "boloss" ? "text-paper/90" : "text-ink/70"}`}>
             Argot assumé, irrévérence, punchlines. Les classiques comme tu
-            ne les as jamais entendus. (Recommandé.)
+            ne les as jamais entendus.
           </div>
         </button>
 

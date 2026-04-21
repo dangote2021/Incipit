@@ -33,6 +33,7 @@ export const BOOKS: Book[] = [
   {
     id: "etranger",
     title: "L'Étranger",
+    fullTitle: "L'Étranger",
     author: "Albert Camus",
     year: 1942,
     genre: "classique",
@@ -46,6 +47,40 @@ export const BOOKS: Book[] = [
     themes: ["absurde", "solitude", "procès", "soleil"],
     vibe: "absurd",
     moods: ["metaphysique", "noir"],
+    tier: "chef-oeuvre",
+    referenceEdition: "Édition originale Gallimard, 1942 · Folio n°2 (1972)",
+    historicalContext:
+      "Paru en mai 1942, en pleine Occupation, chez Gallimard sous contrôle allemand (la maison continuait de publier avec accord de la censure). Camus a 29 ans, il est pied-noir, fragile de santé, et pose avec ce court roman une pierre centrale de l'« absurde » — cycle qu'il théorisera dans Le Mythe de Sisyphe la même année. Le livre deviendra, après-guerre, l'un des romans les plus lus du XXᵉ siècle francophone.",
+    authorBio:
+      "Albert Camus (1913-1960) est né dans une famille pauvre à Mondovi, en Algérie française. Orphelin de père à un an, élevé par une mère analphabète, il doit à un instituteur (Louis Germain) d'avoir poursuivi l'école.\n\nJournaliste engagé, résistant pendant la guerre (rédacteur en chef de Combat clandestin), il rompt retentissante avec Sartre en 1952 à propos du stalinisme. Prix Nobel de littérature en 1957, à 44 ans. Meurt à 46 dans un accident de voiture en Bourgogne, manuscrit du Premier Homme inachevé dans la sacoche.",
+    goingFurther: [
+      {
+        kind: "essai",
+        title: "Le Mythe de Sisyphe",
+        author: "Albert Camus",
+        year: 1942,
+        note: "Le versant philosophique publié la même année, qui donne la clé du cycle de l'absurde.",
+      },
+      {
+        kind: "biographie",
+        title: "Albert Camus, une vie",
+        author: "Olivier Todd",
+        year: 1996,
+        note: "La biographie de référence, 900 pages, accès aux archives familiales.",
+      },
+      {
+        kind: "roman",
+        title: "Meursault, contre-enquête",
+        author: "Kamel Daoud",
+        year: 2013,
+        note: "Le frère de « l'Arabe » prend la parole. Réponse post-coloniale essentielle.",
+      },
+    ],
+    libraireEndorsement: {
+      libraire: "Clarisse M.",
+      librairie: "Ombres Blanches, Toulouse",
+      text: "On croit l'avoir lu parce qu'on l'a étudié. Relisez-le adulte : la sécheresse du style est un choix radical, le soleil d'Alger devient un personnage à part entière. Cent cinquante pages qui ne vieillissent pas.",
+    },
     // Camus mort en 1960 → domaine public en 2031. Pas encore.
     publicDomain: false,
   },
@@ -65,6 +100,40 @@ export const BOOKS: Book[] = [
     themes: ["adultère", "ennui", "province", "désir"],
     vibe: "romantic",
     moods: ["romance", "psychologique"],
+    tier: "chef-oeuvre",
+    fullTitle: "Madame Bovary — Mœurs de province",
+    referenceEdition: "Édition originale Revue de Paris (1856) puis Michel Lévy frères (1857) · Folio classique",
+    historicalContext:
+      "Publié en feuilleton dans la Revue de Paris fin 1856, puis en volume en 1857. Procès pour outrage aux bonnes mœurs la même année — Flaubert est acquitté. Le procès marque la naissance du roman moderne : Flaubert travaille cinq ans sur le livre, invente le style indirect libre, vise le « roman sur rien » tenu uniquement par la force du style.",
+    authorBio:
+      "Gustave Flaubert (1821-1880) naît à Rouen, fils d'un chirurgien en chef à l'Hôtel-Dieu. Études de droit écourtées par une crise nerveuse à 23 ans — il rentre à Croisset, près de Rouen, où il passera l'essentiel de sa vie à écrire, en ermite.\n\nObsession du mot juste (le « mot dans la phrase comme une pierre dans un mur »), jusqu'à 12 heures d'écriture par jour, épreuves corrigées jusqu'à la nausée. Correspondance monumentale avec Louise Colet, George Sand, Tourgueniev. Laisse cinq romans majeurs, un testament critique dans Bouvard et Pécuchet, inachevé.",
+    goingFurther: [
+      {
+        kind: "correspondance",
+        title: "Correspondance avec Louise Colet",
+        author: "Gustave Flaubert",
+        note: "Les lettres pendant l'écriture de Bovary — laboratoire d'écriture en direct, cinq ans de lutte avec la phrase.",
+      },
+      {
+        kind: "essai",
+        title: "La Perruche et la Sirène",
+        author: "Mario Vargas Llosa",
+        year: 1975,
+        note: "Lecture passionnée par un Prix Nobel qui avoue avoir relu Bovary dix fois.",
+      },
+      {
+        kind: "adaptation",
+        title: "Madame Bovary",
+        author: "Claude Chabrol (film)",
+        year: 1991,
+        note: "Avec Isabelle Huppert. Adaptation fidèle, glaciale, très flaubertienne.",
+      },
+    ],
+    libraireEndorsement: {
+      libraire: "Raphaël D.",
+      librairie: "Le Divan, Paris 15ᵉ",
+      text: "Emma Bovary n'est pas une victime, et Flaubert ne la juge pas — c'est cette neutralité qui a choqué en 1857. On sort du livre sans savoir de quel côté se ranger. Essayer d'écrire aussi bien reste le grand test.",
+    },
     publicDomain: true,
     gutenbergId: "14155",
     wikisourcePath: "Madame_Bovary",
@@ -85,6 +154,40 @@ export const BOOKS: Book[] = [
     themes: ["luttes sociales", "grève", "mines", "révolte"],
     vibe: "political",
     moods: ["histoire", "social"],
+    tier: "chef-oeuvre",
+    referenceEdition: "Édition originale Charpentier, 1885 · Folio classique / Livre de Poche",
+    historicalContext:
+      "Publié en 1885, Germinal est le 13ᵉ des 20 tomes du cycle des Rougon-Macquart. Zola s'est documenté sur place à Anzin pendant la grève de 1884, est descendu au fond, a rempli des carnets entiers. Le livre paraît pendant que le mouvement ouvrier français s'organise (CGT en 1895, loi sur le syndicat en 1884). C'est devenu le roman ouvrier par excellence, au point que « Germinal » est scandé dans les manifs un siècle plus tard.",
+    authorBio:
+      "Émile Zola (1840-1902) débute dans la misère à Paris, employé aux éditions Hachette, journaliste pigiste, avant le succès avec L'Assommoir (1877).\n\nArchitecte du cycle des Rougon-Macquart (20 romans, 1871-1893) qu'il pense comme l'« histoire naturelle et sociale d'une famille sous le Second Empire ». Naturaliste convaincu, il documente à outrance, descend dans les mines, visite les abattoirs, lit Claude Bernard. En 1898, il publie J'accuse dans L'Aurore à propos de l'affaire Dreyfus — procès, condamnation, exil à Londres. Meurt en 1902 asphyxié dans sa chambre par un conduit de cheminée bouché (accident ou attentat antidreyfusard — jamais élucidé).",
+    goingFurther: [
+      {
+        kind: "essai",
+        title: "Le Roman expérimental",
+        author: "Émile Zola",
+        year: 1880,
+        note: "Le manifeste naturaliste par Zola lui-même — clé de voûte de sa méthode.",
+      },
+      {
+        kind: "biographie",
+        title: "Zola",
+        author: "Henri Mitterand",
+        year: 2002,
+        note: "La biographie de référence en trois tomes, par le grand spécialiste zolien.",
+      },
+      {
+        kind: "adaptation",
+        title: "Germinal",
+        author: "Claude Berri (film)",
+        year: 1993,
+        note: "Avec Renaud et Depardieu. La reconstitution du coron est saisissante.",
+      },
+    ],
+    libraireEndorsement: {
+      libraire: "Malika K.",
+      librairie: "La Machine à Lire, Bordeaux",
+      text: "On dit « document social » comme si c'était un reproche. Germinal est d'abord un roman d'une puissance romanesque brutale — la mort de Maheu, la catastrophe du Voreux, Chaval dans le boyau noir. On vous le vendait ado au lycée ? Reprenez-le à 35 ans.",
+    },
     publicDomain: true,
     gutenbergId: "19861",
     wikisourcePath: "Germinal",
@@ -105,6 +208,39 @@ export const BOOKS: Book[] = [
     themes: ["manipulation", "séduction", "vengeance", "épistolaire"],
     vibe: "dark",
     moods: ["romance", "psychologique"],
+    tier: "chef-oeuvre",
+    referenceEdition: "Édition originale Durand neveu, Amsterdam/Paris, 1782 · Folio classique",
+    historicalContext:
+      "Publié en 1782, sept ans avant la Révolution, à la fin de l'Ancien Régime. Laclos, officier d'artillerie de 41 ans, en tire un scandale retentissant — Marie-Antoinette lit l'ouvrage sous couverture neutre. L'aristocratie s'y reconnaît sous les pseudos. Le livre sera banni sous la Restauration, puis sous le Second Empire. C'est un roman-mécanique, le premier où le mal est traité avec une virtuosité formelle absolue.",
+    authorBio:
+      "Pierre Choderlos de Laclos (1741-1803) n'est pas un écrivain professionnel. Officier d'artillerie de carrière, il écrit Les Liaisons à 41 ans pendant une garnison ennuyeuse à Valence — « il a voulu faire un ouvrage qui sortît de la route ordinaire ».\n\nRallié à la Révolution puis au duc d'Orléans (Philippe Égalité), il sert sous Bonaparte, devient général sous l'Empire. Meurt du paludisme à Tarente, enterré anonymement par ordre des Bourbons lors du retour à la monarchie. Les Liaisons sont son seul roman.",
+    goingFurther: [
+      {
+        kind: "essai",
+        title: "Lectures de Laclos",
+        author: "Laurent Versini",
+        note: "La référence universitaire sur l'œuvre et sa réception.",
+      },
+      {
+        kind: "adaptation",
+        title: "Les Liaisons dangereuses",
+        author: "Stephen Frears (film)",
+        year: 1988,
+        note: "Glenn Close, John Malkovich, Michelle Pfeiffer. Probablement la meilleure adaptation.",
+      },
+      {
+        kind: "adaptation",
+        title: "Cruel Intentions",
+        author: "Roger Kumble (film)",
+        year: 1999,
+        note: "Transposition teen movie 90's. Oui vraiment. Ça marche.",
+      },
+    ],
+    libraireEndorsement: {
+      libraire: "Jeanne L.",
+      librairie: "Librairie Kléber, Strasbourg",
+      text: "Le roman épistolaire le plus parfait de la langue française. Merteuil est un personnage sans équivalent — elle ouvre une brèche féministe paradoxale dans un texte qui la punit à la fin. On n'a rien écrit d'aussi chirurgical sur le pouvoir du désir depuis.",
+    },
     publicDomain: true,
     gutenbergId: "24076",
     wikisourcePath: "Les_Liaisons_dangereuses",
@@ -125,6 +261,33 @@ export const BOOKS: Book[] = [
     themes: ["ambition", "amour", "ascension sociale", "hypocrisie"],
     vibe: "dark",
     moods: ["psychologique", "histoire"],
+    tier: "chef-oeuvre",
+    fullTitle: "Le Rouge et le Noir — Chronique de 1830",
+    referenceEdition: "Édition originale Levavasseur, 1830 · Folio classique",
+    historicalContext:
+      "Publié en novembre 1830, quatre mois après les Trois Glorieuses qui ont chassé Charles X. Le sous-titre « Chronique de 1830 » n'est pas innocent : Stendhal écrit au ras de son époque, celle où l'ascension sociale par l'armée (le rouge) a été remplacée par l'ascension par l'Église (le noir). Le fait-divers Berthet, lu dans la Gazette des tribunaux, inspire la trame : un jeune précepteur condamné pour avoir tiré sur sa maîtresse à l'église.",
+    authorBio:
+      "Henri Beyle, dit Stendhal (1783-1842), est Grenoblois, suit Napoléon en Italie et jusqu'à Moscou, écrit sur la peinture, la musique, l'amour. Il attend la reconnaissance de ses romans « pour 1880 environ » — il voyait juste.\n\nDiplomate de carrière (consul à Civitavecchia, États pontificaux), il écrit compulsivement, dicte La Chartreuse de Parme en 52 jours. Peu lu de son vivant (1750 exemplaires du Rouge en 18 mois), admiré par Balzac, célébré post-mortem par Taine et Nietzsche. Épitaphe qu'il s'est composée : « Arrigo Beyle, Milanese, visse, scrisse, amò. »",
+    goingFurther: [
+      {
+        kind: "essai",
+        title: "De l'amour",
+        author: "Stendhal",
+        year: 1822,
+        note: "Le traité qui invente la « cristallisation » amoureuse — éclaire toute la psychologie de Julien.",
+      },
+      {
+        kind: "biographie",
+        title: "Stendhal",
+        author: "Michel Crouzet",
+        note: "La somme biographique de référence, passionnante et exigeante.",
+      },
+    ],
+    libraireEndorsement: {
+      libraire: "Pierre V.",
+      librairie: "Librairie Mollat, Bordeaux",
+      text: "Le plus moderne des classiques français. La sécheresse stendhalienne, c'est du Tarantino avant l'heure — phrases courtes, psychologie en direct, ironie permanente. Julien Sorel est un des premiers héros vraiment ambigus de la littérature.",
+    },
     publicDomain: true,
     gutenbergId: "798",
     wikisourcePath: "Le_Rouge_et_le_Noir",
@@ -145,6 +308,32 @@ export const BOOKS: Book[] = [
     themes: ["ambition", "séduction", "presse", "arrivisme"],
     vibe: "wild",
     moods: ["social", "romance"],
+    tier: "classique",
+    referenceEdition: "Édition originale Victor Havard, 1885 · Folio classique",
+    historicalContext:
+      "Paru en 1885, la même année que Germinal. Maupassant, disciple de Flaubert, dissèque la Troisième République triomphante — colonisation algérienne, spéculation financière, presse à scandale (La Vie française est inspirée du Gil Blas, où Maupassant écrit). C'est un roman sur la fabrique du pouvoir par la presse, terriblement actuel.",
+    authorBio:
+      "Guy de Maupassant (1850-1893) commence comme petit fonctionnaire au ministère de l'Instruction publique, protégé de Flaubert qui le forme pendant sept ans avant de le laisser publier Boule de Suif à 30 ans.\n\nDix années d'une productivité stupéfiante : six romans, 300 nouvelles, récits de voyage. Il rame en yole sur la Seine, collectionne les maîtresses, soigne une syphilis contractée à 20 ans qui finira par lui détruire l'esprit. Interné en 1892 au Dr Blanche à Passy, il meurt un an plus tard à 43 ans. Maître de la nouvelle réaliste française.",
+    goingFurther: [
+      {
+        kind: "essai",
+        title: "Maupassant ou le Bel-Ami",
+        author: "Armand Lanoux",
+        note: "Biographie littéraire qui relit l'œuvre à la lumière de la vie.",
+      },
+      {
+        kind: "adaptation",
+        title: "Bel Ami",
+        author: "Declan Donnellan (film)",
+        year: 2012,
+        note: "Avec Robert Pattinson. Reconstitution soignée.",
+      },
+    ],
+    libraireEndorsement: {
+      libraire: "Théo B.",
+      librairie: "Le Phare, Montreuil",
+      text: "Le roman politique le plus drôle du XIXᵉ. On comprend en lisant Bel-Ami comment fonctionnent encore aujourd'hui les carrières fulgurantes : un peu de charme, beaucoup de bas, pas de scrupules, et une presse complice. Rafraîchissant et désespérant à la fois.",
+    },
     publicDomain: true,
     gutenbergId: "18567",
     wikisourcePath: "Bel-Ami",
@@ -165,6 +354,34 @@ export const BOOKS: Book[] = [
     themes: ["amour impossible", "monstruosité", "médiéval", "fanatisme"],
     vibe: "epic",
     moods: ["aventure", "histoire", "romance"],
+    tier: "chef-oeuvre",
+    fullTitle: "Notre-Dame de Paris — 1482",
+    referenceEdition: "Édition originale Charles Gosselin, 1831 · Folio classique",
+    historicalContext:
+      "Hugo écrit Notre-Dame de Paris en 1830-1831, dans l'urgence (son contrat avec Gosselin le menace d'une amende énorme). Le roman contribue décisivement au sauvetage de la cathédrale, délabrée et promise à la démolition — c'est après la publication que Viollet-le-Duc entreprend sa restauration. Le livre pose aussi Hugo comme champion du romantisme historique, huit ans avant la rupture politique qui fera de lui le proscrit républicain.",
+    authorBio:
+      "Victor Hugo (1802-1885), né à Besançon, est sans doute l'écrivain français dont la vie a le plus épousé son siècle. Académicien à 38 ans, pair de France, il rompt avec Louis-Napoléon Bonaparte en 1851 — 19 ans d'exil à Jersey puis Guernesey, où il écrit Les Contemplations, Les Misérables, La Légende des siècles.\n\nRentré en triomphe en 1870, il devient de son vivant un mythe républicain. Funérailles nationales en 1885 — deux millions de personnes suivent le cortège jusqu'au Panthéon. Poète, romancier, dramaturge, dessinateur, père meurtri (Léopoldine), il a laissé derrière lui plus de 153 000 pages manuscrites.",
+    goingFurther: [
+      {
+        kind: "essai",
+        title: "Victor Hugo",
+        author: "Graham Robb",
+        year: 1997,
+        note: "Biographie de référence, ample et vivante, par un anglophone amoureux de Hugo.",
+      },
+      {
+        kind: "adaptation",
+        title: "Notre-Dame de Paris",
+        author: "Comédie musicale Plamondon/Cocciante",
+        year: 1998,
+        note: "Oui, c'est kitsch. Oui, c'est efficace. « Belle » marche toujours.",
+      },
+    ],
+    libraireEndorsement: {
+      libraire: "Anne-Laure T.",
+      librairie: "Librairie Gibert, Nantes",
+      text: "On se souvient de Quasimodo et d'Esmeralda. On oublie que Hugo a consacré des centaines de pages à l'architecture gothique, à Paris vu de haut, à l'imprimerie qui tue la cathédrale. C'est aussi ça, le livre : un essai sur la fin d'un monde, camouflé en roman.",
+    },
     publicDomain: true,
     gutenbergId: "19657",
     wikisourcePath: "Notre-Dame_de_Paris",
@@ -185,6 +402,40 @@ export const BOOKS: Book[] = [
     themes: ["guerre", "désillusion", "errance", "argot"],
     vibe: "dark",
     moods: ["voyage-initiatique", "noir"],
+    tier: "chef-oeuvre",
+    referenceEdition: "Édition originale Denoël & Steele, 1932 · Folio",
+    historicalContext:
+      "Paru en 1932, Voyage loupe le Goncourt de trois voix (il ira au Renaudot). Céline, médecin de banlieue à Clichy, a 38 ans. Le roman est d'abord salué par la gauche pour sa dénonciation de la guerre et du colonialisme, puis Céline, antisémite forcené dans ses pamphlets (1937-1941), devient l'objet d'un débat éthique permanent que la critique française traverse encore aujourd'hui : comment lire un écrivain majeur qui fut aussi un homme abject.",
+    authorBio:
+      "Louis-Ferdinand Destouches, dit Louis-Ferdinand Céline (1894-1961), vétéran décoré de 1914, médecin des pauvres à Clichy puis Meudon, inventeur d'une langue parlée qui bouleverse le roman français.\n\nLes pamphlets antisémites de 1937-1938 (Bagatelles pour un massacre) le placent durablement hors littérature « respectable ». Collabore sous l'Occupation, fuit en 1944 vers Sigmaringen avec Pétain, puis Danemark où il est emprisonné. Amnistié en 1951, il rentre en France et écrit sa grande trilogie allemande (D'un château l'autre, Nord, Rigodon). Reste l'un des stylistes les plus radicaux du XXᵉ siècle. Son nom reste brûlant.",
+    goingFurther: [
+      {
+        kind: "biographie",
+        title: "Céline",
+        author: "Henri Godard",
+        year: 2011,
+        note: "La biographie du grand spécialiste célinien, éditeur de la Pléiade. Indispensable et lucide.",
+      },
+      {
+        kind: "essai",
+        title: "La Langue de Céline",
+        author: "Henri Godard",
+        year: 1985,
+        note: "Pour comprendre techniquement ce qui se joue dans la « petite musique » célinienne.",
+      },
+      {
+        kind: "correspondance",
+        title: "Lettres",
+        author: "Louis-Ferdinand Céline",
+        year: 2009,
+        note: "Édition Pléiade. Les lettres révèlent l'homme — pour le meilleur et pour le pire.",
+      },
+    ],
+    libraireEndorsement: {
+      libraire: "Youssef R.",
+      librairie: "Librairie Comme un roman, Paris 3ᵉ",
+      text: "Voyage est un grand livre. Céline est un homme qu'on ne peut pas défendre. Il faut tenir les deux en tension, sans tricher. La langue du Voyage — cette « émotion transposée dans le langage écrit » qu'il revendique — a libéré la prose française. Lisez-le en sachant ce qu'il est devenu ensuite.",
+    },
     // Céline mort en 1961 → domaine public en 2032. Pas encore.
     publicDomain: false,
   },
@@ -204,6 +455,34 @@ export const BOOKS: Book[] = [
     themes: ["optimisme", "satire", "philosophie", "voyage"],
     vibe: "absurd",
     moods: ["voyage-initiatique", "aventure"],
+    tier: "chef-oeuvre",
+    fullTitle: "Candide, ou l'Optimisme",
+    referenceEdition: "Édition originale anonyme, Genève, 1759 · Folio classique",
+    historicalContext:
+      "Publié clandestinement en janvier 1759, quelques années après le tremblement de terre de Lisbonne (1755) qui avait ébranlé la foi optimiste des Lumières — « tout est pour le mieux » devenait intenable. Voltaire répond à Leibniz (mort depuis 1716) et, plus directement, aux pasteurs et philosophes qui défendaient la « théodicée ». Le conte est condamné, saisi, réimprimé vingt fois en un an. Archétype du conte philosophique du siècle des Lumières.",
+    authorBio:
+      "François-Marie Arouet, dit Voltaire (1694-1778), est le plus célèbre écrivain européen de son siècle, et probablement le plus infatigable polémiste de l'histoire. Embastillé deux fois, exilé en Angleterre (1726-1729), où il découvre la tolérance anglicane et le parlementarisme.\n\nRetiré à Ferney sur la frontière suisse, il correspond avec Catherine II, Frédéric II, l'Europe entière — 20 000 lettres conservées. Défenseur de Calas, de Sirven, du chevalier de La Barre. Retour triomphal à Paris à 83 ans, couronné à la Comédie-Française, il y meurt trois mois plus tard.",
+    goingFurther: [
+      {
+        kind: "essai",
+        title: "Voltaire ou la royauté de l'esprit",
+        author: "Jean Orieux",
+        year: 1966,
+        note: "Biographie vivante et drôle, façon roman — reste une des plus agréables entrées.",
+      },
+      {
+        kind: "essai",
+        title: "Dictionnaire philosophique",
+        author: "Voltaire",
+        year: 1764,
+        note: "Complément direct de Candide — la même pensée, en articles courts et vifs.",
+      },
+    ],
+    libraireEndorsement: {
+      libraire: "Clarisse M.",
+      librairie: "Ombres Blanches, Toulouse",
+      text: "Le livre le plus court à conseiller à un ado qui « n'aime pas lire ». Cent cinquante pages, cent vingt éclats de rire, et une des plus belles fins de la littérature française : « il faut cultiver notre jardin ». Modestie, lucidité, action. Tout est là.",
+    },
     publicDomain: true,
     gutenbergId: "4650",
     wikisourcePath: "Candide,_ou_l'Optimisme",
@@ -224,6 +503,32 @@ export const BOOKS: Book[] = [
     themes: ["Paris", "ambition", "famille", "argent"],
     vibe: "epic",
     moods: ["psychologique", "social"],
+    tier: "chef-oeuvre",
+    referenceEdition: "Édition originale Revue de Paris, 1834 · Werdet, 1835 · Folio classique",
+    historicalContext:
+      "Publié en feuilleton fin 1834, puis en volume en 1835. Le roman marque l'invention du système balzacien : Rastignac, Vautrin, Delphine de Nucingen y apparaissent — ils traverseront des dizaines de romans. Balzac a 35 ans, il écrit 16 heures par jour, stimulé au café. Paris post-1830 est la scène : monarchie de Juillet, bourgeois au pouvoir, aristocratie ruinée, « machine à faire de l'argent » comme dira Marx qui lisait Balzac.",
+    authorBio:
+      "Honoré de Balzac (1799-1850) accumule les échecs (imprimerie, fonderie, mine) avant de trouver sa voie dans le roman. La Comédie humaine, pensée comme fresque totale de la société française, compte 91 romans, près de 2 500 personnages, des cycles (Scènes de la vie privée, de la vie de province, de la vie parisienne, etc.).\n\nProduction surhumaine, endettement chronique, noctambule fameux. Correspondance de 17 ans avec la comtesse Hanska (Ukraine), épousée trois mois avant sa mort à 51 ans. Enterré au Père-Lachaise — oraison funèbre prononcée par Victor Hugo : « Tous ses livres ne forment qu'un livre, livre vivant, lumineux, profond. »",
+    goingFurther: [
+      {
+        kind: "essai",
+        title: "Balzac, mythe et mystification",
+        author: "Michel Butor",
+        note: "Butor relit Balzac en structuraliste — stimulant pour comprendre la mécanique de la Comédie humaine.",
+      },
+      {
+        kind: "biographie",
+        title: "Balzac",
+        author: "Stefan Zweig",
+        year: 1946,
+        note: "Inachevée mais superbe, par un Zweig qui admirait Balzac avec passion.",
+      },
+    ],
+    libraireEndorsement: {
+      libraire: "Pierre V.",
+      librairie: "Librairie Mollat, Bordeaux",
+      text: "Pour entrer dans Balzac, commencez ici. C'est le roman qui donne la matrice : Paris comme champ de bataille, l'argent comme moteur, la famille comme piège. Vautrin est un des personnages les plus drôles et inquiétants de la littérature française.",
+    },
     publicDomain: true,
     gutenbergId: "1422",
     wikisourcePath: "Le_Père_Goriot",
@@ -244,6 +549,39 @@ export const BOOKS: Book[] = [
     themes: ["spleen", "idéal", "érotisme", "modernité"],
     vibe: "dark",
     moods: ["metaphysique", "noir"],
+    tier: "chef-oeuvre",
+    referenceEdition: "Édition originale Poulet-Malassis et de Broise, 1857 · Édition définitive 1868 (posthume) · Poésie/Gallimard",
+    historicalContext:
+      "Parues en juin 1857 (la même année que Madame Bovary), Les Fleurs du Mal sont condamnées pour outrage aux bonnes mœurs en août — six pièces (Lesbos, Femmes damnées, Le Léthé, À celle qui est trop gaie, Les Bijoux, Les Métamorphoses du vampire) sont retirées et ne seront réintégrées officiellement qu'en 1949 par cassation. Baudelaire, ruiné, syphilitique, meurt dix ans plus tard à 46 ans sans avoir reçu la reconnaissance qu'il attendait.",
+    authorBio:
+      "Charles Baudelaire (1821-1867), fils d'un veuf âgé qui meurt quand il a six ans, ne pardonne jamais à sa mère son remariage avec le général Aupick. Dilapide rapidement l'héritage paternel, placé sous tutelle judiciaire — source d'amertume à vie.\n\nIntroduit Edgar Poe en France (ses traductions font école), écrit sur Delacroix, Manet, Wagner, Guys. Vit avec Jeanne Duval, « Vénus noire », sa muse chaotique. Ruiné, rongé par la syphilis, muet après une attaque en 1866, il meurt à 46 ans dans les bras de sa mère. Reconnu posthume comme fondateur de la modernité poétique — Rimbaud, Mallarmé, Valéry lui doivent tout.",
+    goingFurther: [
+      {
+        kind: "essai",
+        title: "Le Peintre de la vie moderne",
+        author: "Charles Baudelaire",
+        year: 1863,
+        note: "Le manifeste de la modernité — à lire avec les Fleurs pour comprendre la théorie derrière la pratique.",
+      },
+      {
+        kind: "biographie",
+        title: "Baudelaire",
+        author: "Claude Pichois",
+        year: 1996,
+        note: "La somme biographique de référence, par l'éditeur de la Pléiade.",
+      },
+      {
+        kind: "essai",
+        title: "Charles Baudelaire, un poète lyrique à l'apogée du capitalisme",
+        author: "Walter Benjamin",
+        note: "La lecture politique et urbaine la plus fulgurante jamais écrite sur Baudelaire.",
+      },
+    ],
+    libraireEndorsement: {
+      libraire: "Nina Z.",
+      librairie: "Librairie La Petite Égypte, Paris 2ᵉ",
+      text: "Le recueil à relire à chaque âge de la vie. À 20 ans on préfère « L'Albatros » et « L'Invitation au voyage ». À 40 on découvre « Recueillement » et « Le Goût du néant ». Baudelaire est la poésie française même — il a fixé pour longtemps ce qui, en nous, doit se dire en vers.",
+    },
     publicDomain: true,
     gutenbergId: "6099",
     wikisourcePath: "Les_Fleurs_du_mal",
@@ -264,6 +602,40 @@ export const BOOKS: Book[] = [
     themes: ["mémoire", "temps", "jalousie", "aristocratie"],
     vibe: "mystique",
     moods: ["romance", "psychologique"],
+    tier: "chef-oeuvre",
+    fullTitle: "Du côté de chez Swann (À la recherche du temps perdu, I)",
+    referenceEdition: "Édition originale Grasset, 1913 · Gallimard, 1919 · Folio classique",
+    historicalContext:
+      "Premier volume de la Recherche, publié à compte d'auteur chez Grasset en novembre 1913 après le refus de Gallimard (André Gide, qui reconnaîtra sa « plus grande erreur » de lecteur). Proust a 42 ans, il est asthmatique, reclus boulevard Haussmann dans une chambre tapissée de liège. La Grande Guerre reporte la suite, qui paraît de 1919 (Goncourt pour À l'ombre des jeunes filles en fleurs) à 1927 pour Le Temps retrouvé, posthume. Sept volumes, 2 400 personnages, une œuvre-monde.",
+    authorBio:
+      "Marcel Proust (1871-1922), fils d'un grand médecin (Adrien Proust, pionnier de l'hygiène internationale) et d'une mère juive qu'il idolâtre, grandit entre Illiers (l'avenir Combray) et Paris. Mondain, snob, homosexuel caché, il écrit des textes courts avant de trouver, après la mort de sa mère, la nécessité absolue de la Recherche.\n\nSe cloître dans sa chambre du 102 boulevard Haussmann puis rue Hamelin, travaille la nuit, se lève à 15h. Correspondance de 5 400 lettres conservées. Meurt à 51 ans d'une pneumonie, la dictée du Temps retrouvé achevée à deux heures du matin. La Recherche est devenue le grand roman de la langue française — comparable à l'Odyssée pour le grec.",
+    goingFurther: [
+      {
+        kind: "biographie",
+        title: "Marcel Proust",
+        author: "Jean-Yves Tadié",
+        year: 1996,
+        note: "La biographie de référence, 950 pages, par l'éditeur en chef de la Pléiade.",
+      },
+      {
+        kind: "essai",
+        title: "Comment Proust peut changer votre vie",
+        author: "Alain de Botton",
+        year: 1997,
+        note: "Entrée douce et drôle dans la Recherche, sans jargon universitaire.",
+      },
+      {
+        kind: "correspondance",
+        title: "Correspondance",
+        author: "Marcel Proust",
+        note: "21 tomes édités par Philip Kolb. Pour voir l'œuvre s'écrire au présent.",
+      },
+    ],
+    libraireEndorsement: {
+      libraire: "Françoise D.",
+      librairie: "Librairie Tschann, Paris 6ᵉ",
+      text: "Ne cherchez pas à « lire Proust ». Ouvrez au hasard, quinze minutes par jour, pendant un an. La phrase fait le travail seule — elle vous habite. Swann est la porte d'entrée la plus naturelle. La madeleine, oui, mais surtout : la petite sonate de Vinteuil, la mort de la grand-mère, la jalousie pour Odette.",
+    },
     publicDomain: true,
     gutenbergId: "2650",
     wikisourcePath: "Du_côté_de_chez_Swann",
@@ -932,12 +1304,80 @@ export const getBuddyForBook = (bookId: string) =>
 // LIBRAIRES — mocks (géoloc plus tard via l'API place-des-libraires)
 // ─────────────────────────────────────────────────────────────────────────────
 
+// Panel de 20 libraires indépendantes à travers la France, avec code postal
+// principal. Utilisé par /book/[id] pour une géolocalisation simple : on
+// fait matcher les deux premiers chiffres du code postal saisi par le
+// lecteur. Pas d'API, pas de tracking — juste une liste éditoriale tenue
+// à jour à la main. Demandé par Jean-Baptiste (panel v7).
 export const LIBRAIRIES: Librairie[] = [
-  { name: "Librairie Delamain",       distanceKm: 0.8, city: "Paris 1er",  url: "#" },
-  { name: "L'Écume des pages",        distanceKm: 1.4, city: "Paris 6e",   url: "#" },
-  { name: "La Hune",                  distanceKm: 1.6, city: "Paris 6e",   url: "#" },
-  { name: "Librairie du Tramway",     distanceKm: 3.2, city: "Paris 11e",  url: "#" },
+  // ── Paris
+  { name: "Librairie Delamain",       distanceKm: 0.8, city: "Paris 1ᵉʳ",  postalCode: "75001", url: "https://www.librairie-delamain.com" },
+  { name: "L'Écume des pages",        distanceKm: 1.4, city: "Paris 6ᵉ",   postalCode: "75006", url: "https://www.ecumedespages.com" },
+  { name: "Tschann",                  distanceKm: 1.8, city: "Paris 6ᵉ",   postalCode: "75006", url: "https://www.tschann.fr" },
+  { name: "La Petite Égypte",         distanceKm: 2.6, city: "Paris 2ᵉ",   postalCode: "75002", url: "https://www.lapetiteegypte.fr" },
+  { name: "Comme un roman",           distanceKm: 3.4, city: "Paris 3ᵉ",   postalCode: "75003", url: "https://www.commeunroman.com" },
+  { name: "Le Phare",                 distanceKm: 4.1, city: "Montreuil",  postalCode: "93100", url: "https://www.librairielephare.fr" },
+  // ── Île-de-France / Grand Ouest
+  { name: "Librairie Gibert",         distanceKm: 0,   city: "Nantes",     postalCode: "44000", url: "https://www.gibert.com" },
+  { name: "Librairie L'Atalante",     distanceKm: 0,   city: "Nantes",     postalCode: "44000", url: "https://www.librairie-latalante.fr" },
+  { name: "Librairie Le Divan",       distanceKm: 0,   city: "Paris 15ᵉ",  postalCode: "75015", url: "https://www.librairie-ledivan.com" },
+  // ── Sud-Ouest
+  { name: "Mollat",                   distanceKm: 0,   city: "Bordeaux",   postalCode: "33000", url: "https://www.mollat.com" },
+  { name: "La Machine à Lire",        distanceKm: 0,   city: "Bordeaux",   postalCode: "33000", url: "https://www.machinealire.com" },
+  { name: "Ombres Blanches",          distanceKm: 0,   city: "Toulouse",   postalCode: "31000", url: "https://www.ombres-blanches.fr" },
+  // ── Est
+  { name: "Librairie Kléber",         distanceKm: 0,   city: "Strasbourg", postalCode: "67000", url: "https://www.librairie-kleber.com" },
+  { name: "Le Hall du Livre",         distanceKm: 0,   city: "Nancy",      postalCode: "54000", url: "https://www.halldulivre.com" },
+  // ── Sud-Est
+  { name: "Le Bleuet",                distanceKm: 0,   city: "Banon",      postalCode: "04150", url: "https://www.lebleuet.fr" },
+  { name: "La Maison des Passages",   distanceKm: 0,   city: "Lyon 5ᵉ",    postalCode: "69005", url: "https://www.maisondespassages.com" },
+  // ── Nord
+  { name: "Le Furet du Nord",         distanceKm: 0,   city: "Lille",      postalCode: "59000", url: "https://www.furet.com" },
+  // ── Bretagne / Normandie
+  { name: "Dialogues",                distanceKm: 0,   city: "Brest",      postalCode: "29200", url: "https://www.librairiedialogues.fr" },
+  { name: "L'Armitière",              distanceKm: 0,   city: "Rouen",      postalCode: "76000", url: "https://www.armitiere.com" },
+  // ── Outre-mer
+  { name: "Présence Kréol",           distanceKm: 0,   city: "Saint-Denis", postalCode: "97400", url: "https://www.presencekreol.com" },
 ];
+
+/**
+ * Retourne la librairie la plus "proche" d'un code postal saisi.
+ * Match simple :
+ *  1. même code postal exact
+ *  2. sinon, même département (2 premiers chiffres)
+ *  3. sinon, même région (1er chiffre)
+ *  4. sinon, 3 par défaut (Paris / Toulouse / Lyon)
+ * Pas d'API, pas de géoloc réelle — c'est pour donner une direction
+ * prescriptive, pas un GPS.
+ */
+export function findLibrairiesByPostalCode(postalCode: string, limit = 3): Librairie[] {
+  const normalized = (postalCode || "").trim().replace(/\s+/g, "");
+  if (!/^\d{5}$/.test(normalized)) {
+    return LIBRAIRIES.slice(0, limit);
+  }
+  const dep = normalized.slice(0, 2);
+  const region = normalized.slice(0, 1);
+
+  const exact = LIBRAIRIES.filter((l) => l.postalCode === normalized);
+  if (exact.length >= limit) return exact.slice(0, limit);
+
+  const byDep = LIBRAIRIES.filter(
+    (l) => l.postalCode?.startsWith(dep) && !exact.includes(l)
+  );
+  const combined1 = [...exact, ...byDep];
+  if (combined1.length >= limit) return combined1.slice(0, limit);
+
+  const byRegion = LIBRAIRIES.filter(
+    (l) =>
+      l.postalCode?.startsWith(region) &&
+      !combined1.includes(l)
+  );
+  const combined2 = [...combined1, ...byRegion];
+  if (combined2.length >= limit) return combined2.slice(0, limit);
+
+  const fillers = LIBRAIRIES.filter((l) => !combined2.includes(l));
+  return [...combined2, ...fillers].slice(0, limit);
+}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // RECAP BLOCKS — mode "je reprends"
