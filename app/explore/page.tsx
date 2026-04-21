@@ -106,6 +106,26 @@ function ThemesTab() {
         </div>
       </Link>
 
+      <Link
+        href="/domaine-public"
+        className="block rounded-2xl p-5 mb-5 bg-cream border border-ink/10 hover:border-gold/50 transition group"
+      >
+        <div className="text-[10px] uppercase tracking-[0.3em] text-bordeaux font-bold mb-1">
+          Lecture gratuite
+        </div>
+        <h3 className="font-serif text-xl font-bold text-ink leading-tight mb-1">
+          10 chefs-d'œuvre dans le domaine public.
+        </h3>
+        <p className="text-sm text-ink/70 leading-relaxed">
+          Flaubert, Zola, Hugo, Baudelaire, Proust et d'autres — auteurs morts
+          depuis plus de 70 ans, œuvres libres et légales. On t'oriente vers
+          Gutenberg, Wikisource et Gallica.
+        </p>
+        <div className="mt-3 inline-flex items-center gap-2 text-xs font-bold text-bordeaux group-hover:underline">
+          Accéder à la lecture libre →
+        </div>
+      </Link>
+
       <div className="bg-gradient-to-br from-bordeaux to-ink text-paper rounded-2xl p-5 mb-5">
         <div className="text-[10px] uppercase tracking-widest text-paper/70 font-bold mb-1">
           L'envie du jour
