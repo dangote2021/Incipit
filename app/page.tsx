@@ -1,11 +1,38 @@
 import Link from "next/link";
+import { cookies } from "next/headers";
 import { BOOKS } from "@/lib/mock-data";
 import DailyIncipit from "@/components/DailyIncipit";
 import ResumeCard from "@/components/ResumeCard";
 import WelcomeBanner from "@/components/WelcomeBanner";
 import PersonalizedPitchFeed from "@/components/PersonalizedPitchFeed";
+import {
+  GENRES_COOKIE_NAME,
+  parseGenresCookie,
+} from "@/lib/prefs";
+import type { Book } from "@/lib/types";
+
+// Tri stable : matches d'abord (dans l'ordre éditorial), reste derrière.
+// Dupliqué intentionnellement côté serveur pour rendre le feed pré-trié dès
+// le premier paint (fix flash d'hydratation remonté par panel beta v3).
+function orderByGenres(books: Book[], genres: string[]): Book[] {
+  if (genres.length === 0) return books;
+  const set = new Set(genres);
+  const matches: Book[] = [];
+  const rest: Book[] = [];
+  for (const b of books) {
+    if (set.has(b.genre)) matches.push(b);
+    else rest.push(b);
+  }
+  return [...matches, ...rest];
+}
 
 export default function HomePage() {
+  // Lu côté serveur : si le cookie est présent (onboarding déjà fait), on
+  // sert directement le feed personnalisé, sans flash au client.
+  const genresCookie = cookies().get(GENRES_COOKIE_NAME)?.value;
+  const genres = parseGenresCookie(genresCookie);
+  const ordered = orderByGenres(BOOKS, genres);
+
   return (
     <div className="relative">
       {/* Header flottant */}
@@ -42,11 +69,12 @@ export default function HomePage() {
         {/* "Je reprends" — uniquement si un livre est en cours */}
         <ResumeCard />
 
-        {/* Feed de pitches re-priorisé par genre à l'onboarding (client-side,
-            sans hydration mismatch : l'ordre SSR sert de fallback). Les
-            interludes (Quiz du jour, Rap & Lit, Quiz full) restent à des
-            positions fixes dans le flow. */}
-        <PersonalizedPitchFeed books={BOOKS} />
+        {/* Feed de pitches re-priorisé par genre : tri serveur via cookie
+            (pas de flash au premier paint), avec un second pass client qui
+            recolle en cas de changement tardif. Les interludes (Quiz du
+            jour, Rap & Lit, Quiz full) restent à des positions fixes dans
+            le flow. */}
+        <PersonalizedPitchFeed books={ordered} />
 
         {/* Fin de feed */}
         <section className="snap-start min-h-[calc(100vh-6rem)] flex flex-col items-center justify-center bg-cream text-ink px-8 text-center">

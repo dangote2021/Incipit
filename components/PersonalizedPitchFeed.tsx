@@ -5,42 +5,51 @@ import PitchCard from "./PitchCard";
 import RapLitTeaser from "./RapLitTeaser";
 import QuizTeaser from "./QuizTeaser";
 import DailyQuizCard from "./DailyQuizCard";
-import { getPrefs } from "@/lib/prefs";
+import { getPrefs, updatePrefs, GENRES_COOKIE_NAME } from "@/lib/prefs";
 import type { Book, Genre } from "@/lib/types";
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Feed personnalisé — même pool de pitches, ordre remodelé selon les genres
-// choisis à l'onboarding. Trois règles :
+// Feed de pitches — la personnalisation par genres vit principalement côté
+// serveur (cookie `incipit_genres` → tri stable avant le premier paint, donc
+// pas de flash d'hydratation). Ce composant client a trois rôles :
 //
-//   1. Tant qu'on n'a pas lu localStorage (SSR + premier render), on affiche
-//      l'ordre serveur (BOOKS). Zéro hydration mismatch : la liste renvoyée
-//      est identique côté serveur et côté client au premier tick.
-//   2. Une fois hydraté, si l'utilisateur a choisi des genres, on remonte les
-//      livres qui matchent ses genres (stable) — les autres restent derrière
-//      dans leur ordre d'origine. On ne supprime rien : on re-priorise.
-//   3. Les interludes (DailyQuizCard, RapLitTeaser, QuizTeaser) restent à
-//      leurs positions fixes par index (1, 3, 7) — on ne veut pas que le quiz
-//      saute à la fin juste parce qu'on a sélectionné 3 genres.
-//
-// Pourquoi côté client : les prefs vivent en localStorage et n'ont pas de
-// source serveur. Refondre ça côté serveur nécessiterait Supabase + auth —
-// c'est planifié mais pas bloquant pour la personnalisation de base.
+//   1. Afficher le feed dans l'ordre reçu du serveur. Dans le cas nominal
+//      (cookie présent), aucun tri supplémentaire.
+//   2. Edge case "pas encore de cookie" (users d'avant ce déploiement) :
+//      lire localStorage, trier, et écrire le cookie pour que la prochaine
+//      visite soit server-ordered dès le premier paint.
+//   3. Garder les interludes (Quiz du jour, Rap & Lit, Quiz full) à des
+//      positions d'index fixes (1, 3, 7) quel que soit l'ordre effectif.
 // ─────────────────────────────────────────────────────────────────────────────
 
+function hasGenresCookie(): boolean {
+  if (typeof document === "undefined") return false;
+  return document.cookie.split(";").some((c) =>
+    c.trim().startsWith(`${GENRES_COOKIE_NAME}=`)
+  );
+}
+
 export default function PersonalizedPitchFeed({ books }: { books: Book[] }) {
-  const [genres, setGenres] = useState<Genre[] | null>(null);
+  const [localGenres, setLocalGenres] = useState<Genre[] | null>(null);
 
   useEffect(() => {
+    // Si le cookie existe déjà, le serveur a fait son job — on reste sur
+    // l'ordre servi, pas de re-tri, pas de flash.
+    if (hasGenresCookie()) return;
+
     const prefs = getPrefs();
-    setGenres(prefs.onboarded ? prefs.genres : []);
+    if (!prefs.onboarded || prefs.genres.length === 0) return;
+
+    // Edge case : user onboardé avant ce déploiement, pas de cookie. On
+    // réplique les genres en cookie (effet : prochain chargement = tri
+    // serveur), et on applique une réorg locale pour cette visite-ci.
+    updatePrefs({ genres: prefs.genres });
+    setLocalGenres(prefs.genres);
   }, []);
 
   const ordered = useMemo(() => {
-    if (!genres || genres.length === 0) return books;
-    const set = new Set(genres);
-    // Partition stable : matches d'abord, puis le reste, en conservant
-    // l'ordre d'origine dans chaque groupe. Évite le jump visuel d'un tri
-    // complet et préserve la lisibilité de la séquence éditoriale.
+    if (!localGenres || localGenres.length === 0) return books;
+    const set = new Set(localGenres);
     const matches: Book[] = [];
     const rest: Book[] = [];
     for (const b of books) {
@@ -48,7 +57,7 @@ export default function PersonalizedPitchFeed({ books }: { books: Book[] }) {
       else rest.push(b);
     }
     return [...matches, ...rest];
-  }, [books, genres]);
+  }, [books, localGenres]);
 
   return (
     <>

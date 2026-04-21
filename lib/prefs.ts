@@ -24,6 +24,25 @@ export type IncipitPrefs = {
 
 const KEY = "incipit:prefs:v1";
 
+// Cookie miroir des genres choisis — permet au server component (home) de
+// trier le feed avant le premier paint, donc plus de jump d'hydratation
+// (retour panel beta v3 — Inès : "flash ~200ms après re-order client").
+const GENRES_COOKIE = "incipit_genres";
+
+function writeGenresCookie(genres: Genre[]) {
+  if (typeof document === "undefined") return;
+  try {
+    const value = genres.join(",");
+    // 1 an, samesite lax, pas de secure car on est en dev aussi http.
+    const maxAge = 60 * 60 * 24 * 365;
+    document.cookie = `${GENRES_COOKIE}=${encodeURIComponent(
+      value
+    )}; max-age=${maxAge}; path=/; samesite=lax`;
+  } catch {
+    // ignore
+  }
+}
+
 export const DEFAULT_PREFS: IncipitPrefs = {
   onboarded: false,
   onboardedAt: "",
@@ -103,6 +122,7 @@ export function completeOnboarding(input: {
     tone: input.tone,
   };
   safeSet(next);
+  writeGenresCookie(input.genres);
   return next;
 }
 
@@ -113,6 +133,7 @@ export function completeOnboarding(input: {
 export function updatePrefs(patch: Partial<IncipitPrefs>): IncipitPrefs {
   const next: IncipitPrefs = { ...getPrefs(), ...patch };
   safeSet(next);
+  if (patch.genres) writeGenresCookie(patch.genres);
   return next;
 }
 
@@ -123,10 +144,39 @@ export function clearPrefs() {
   if (typeof window === "undefined") return;
   try {
     window.localStorage.removeItem(KEY);
+    if (typeof document !== "undefined") {
+      document.cookie = `${GENRES_COOKIE}=; max-age=0; path=/; samesite=lax`;
+    }
   } catch {
     // ignore
   }
 }
+
+/**
+ * Parse le cookie genres côté serveur. Retourne un tableau vide si le cookie
+ * est absent ou contient des valeurs inconnues. Utilisé par le server
+ * component home pour trier le feed avant le premier paint.
+ */
+export function parseGenresCookie(raw: string | undefined): Genre[] {
+  if (!raw) return [];
+  const allowed: Genre[] = [
+    "classique",
+    "contemporain",
+    "poesie",
+    "polar",
+    "sf-fantastique",
+    "philosophie",
+    "theatre",
+    "bd-graphique",
+  ];
+  const set = new Set<Genre>(allowed);
+  return decodeURIComponent(raw)
+    .split(",")
+    .map((g) => g.trim())
+    .filter((g): g is Genre => set.has(g as Genre));
+}
+
+export const GENRES_COOKIE_NAME = GENRES_COOKIE;
 
 /**
  * Helpers de lisibilité pour la home.

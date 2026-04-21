@@ -35,11 +35,11 @@ export const DEFAULT_PREMIUM: PremiumState = {
 // ─── Feature flags : on centralise tout ici pour pouvoir auditer rapidement
 // ─── ce qui est gratuit vs verrouillé.
 export const FEATURES = {
-  /** Quiz : enchaîner les parties sans limite de session. */
+  /** Quiz : enchaîner les parties sans limite journalière. */
   quizChain: {
     id: "quizChain",
     label: "Enchaîner les quiz",
-    free: "3 parties / session",
+    free: "3 parties / jour",
     premium: "Illimité + Mode série",
   },
   /** Incipit du jour : accès à l'archive des 30 derniers jours. */

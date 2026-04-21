@@ -301,10 +301,15 @@ function Intro({
             Premium · parties illimitées
           </div>
         ) : (
-          <div className="mt-4 text-[11px] uppercase tracking-widest text-ink/50 font-bold">
-            Aujourd'hui :{" "}
-            {Math.min(roundsPlayed, FREE_QUOTAS.quizRounds)} /{" "}
-            {FREE_QUOTAS.quizRounds} parties · reset demain
+          <div className="mt-4 space-y-1">
+            <div className="text-[11px] uppercase tracking-widest text-ink/50 font-bold">
+              Aujourd'hui :{" "}
+              {Math.min(roundsPlayed, FREE_QUOTAS.quizRounds)} /{" "}
+              {FREE_QUOTAS.quizRounds} parties
+            </div>
+            <div className="text-[10px] text-ink/40 italic leading-snug max-w-sm">
+              3 parties, c'est assez pour une pause — on ne vend pas ton temps.
+            </div>
           </div>
         )}
       </section>
