@@ -46,6 +46,8 @@ export const BOOKS: Book[] = [
     themes: ["absurde", "solitude", "procès", "soleil"],
     vibe: "absurd",
     moods: ["metaphysique", "noir"],
+    // Camus mort en 1960 → domaine public en 2031. Pas encore.
+    publicDomain: false,
   },
   {
     id: "bovary",
@@ -63,6 +65,9 @@ export const BOOKS: Book[] = [
     themes: ["adultère", "ennui", "province", "désir"],
     vibe: "romantic",
     moods: ["romance", "psychologique"],
+    publicDomain: true,
+    gutenbergId: "14155",
+    wikisourcePath: "Madame_Bovary",
   },
   {
     id: "germinal",
@@ -80,6 +85,9 @@ export const BOOKS: Book[] = [
     themes: ["luttes sociales", "grève", "mines", "révolte"],
     vibe: "political",
     moods: ["histoire", "social"],
+    publicDomain: true,
+    gutenbergId: "19861",
+    wikisourcePath: "Germinal",
   },
   {
     id: "liaisons",
@@ -97,6 +105,9 @@ export const BOOKS: Book[] = [
     themes: ["manipulation", "séduction", "vengeance", "épistolaire"],
     vibe: "dark",
     moods: ["romance", "psychologique"],
+    publicDomain: true,
+    gutenbergId: "24076",
+    wikisourcePath: "Les_Liaisons_dangereuses",
   },
   {
     id: "rouge-noir",
@@ -114,6 +125,9 @@ export const BOOKS: Book[] = [
     themes: ["ambition", "amour", "ascension sociale", "hypocrisie"],
     vibe: "dark",
     moods: ["psychologique", "histoire"],
+    publicDomain: true,
+    gutenbergId: "798",
+    wikisourcePath: "Le_Rouge_et_le_Noir",
   },
   {
     id: "bel-ami",
@@ -131,6 +145,9 @@ export const BOOKS: Book[] = [
     themes: ["ambition", "séduction", "presse", "arrivisme"],
     vibe: "wild",
     moods: ["social", "romance"],
+    publicDomain: true,
+    gutenbergId: "18567",
+    wikisourcePath: "Bel-Ami",
   },
   {
     id: "notre-dame",
@@ -148,6 +165,9 @@ export const BOOKS: Book[] = [
     themes: ["amour impossible", "monstruosité", "médiéval", "fanatisme"],
     vibe: "epic",
     moods: ["aventure", "histoire", "romance"],
+    publicDomain: true,
+    gutenbergId: "19657",
+    wikisourcePath: "Notre-Dame_de_Paris",
   },
   {
     id: "voyage",
@@ -165,6 +185,8 @@ export const BOOKS: Book[] = [
     themes: ["guerre", "désillusion", "errance", "argot"],
     vibe: "dark",
     moods: ["voyage-initiatique", "noir"],
+    // Céline mort en 1961 → domaine public en 2032. Pas encore.
+    publicDomain: false,
   },
   {
     id: "candide",
@@ -182,6 +204,9 @@ export const BOOKS: Book[] = [
     themes: ["optimisme", "satire", "philosophie", "voyage"],
     vibe: "absurd",
     moods: ["voyage-initiatique", "aventure"],
+    publicDomain: true,
+    gutenbergId: "4650",
+    wikisourcePath: "Candide,_ou_l'Optimisme",
   },
   {
     id: "pere-goriot",
@@ -199,6 +224,9 @@ export const BOOKS: Book[] = [
     themes: ["Paris", "ambition", "famille", "argent"],
     vibe: "epic",
     moods: ["psychologique", "social"],
+    publicDomain: true,
+    gutenbergId: "1422",
+    wikisourcePath: "Le_Père_Goriot",
   },
   {
     id: "fleurs-mal",
@@ -216,6 +244,9 @@ export const BOOKS: Book[] = [
     themes: ["spleen", "idéal", "érotisme", "modernité"],
     vibe: "dark",
     moods: ["metaphysique", "noir"],
+    publicDomain: true,
+    gutenbergId: "6099",
+    wikisourcePath: "Les_Fleurs_du_mal",
   },
   {
     id: "swann",
@@ -233,6 +264,9 @@ export const BOOKS: Book[] = [
     themes: ["mémoire", "temps", "jalousie", "aristocratie"],
     vibe: "mystique",
     moods: ["romance", "psychologique"],
+    publicDomain: true,
+    gutenbergId: "2650",
+    wikisourcePath: "Du_côté_de_chez_Swann",
   },
 ];
 

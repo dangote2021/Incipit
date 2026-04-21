@@ -7,6 +7,7 @@ import AppHeader from "@/components/AppHeader";
 import BookCover from "@/components/BookCover";
 import VibeBadge from "@/components/VibeBadge";
 import CharacterSheet from "@/components/CharacterSheet";
+import ReadElsewhere from "@/components/ReadElsewhere";
 import {
   getBook,
   getNotesForBook,
@@ -81,6 +82,11 @@ export default function BookPage({
             <div className="text-xs text-paper/70 mt-1 uppercase tracking-widest">
               {book.year} · {book.pages} p · {book.genre}
             </div>
+            {book.publicDomain && (
+              <div className="mt-3 inline-flex items-center gap-1.5 bg-gold/90 text-ink text-[10px] uppercase tracking-[0.25em] font-bold px-2.5 py-1 rounded-full">
+                ★ Domaine public · lecture gratuite
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -365,6 +371,9 @@ export default function BookPage({
             </button>
           </div>
         </section>
+
+        {/* Où lire / écouter : connecteurs plateformes */}
+        <ReadElsewhere book={book} />
 
         {/* Annotations publiques */}
         {annotations.length > 0 && (

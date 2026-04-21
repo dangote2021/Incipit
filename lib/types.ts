@@ -33,6 +33,35 @@ export type Book = {
   themes: string[];
   vibe: Vibe;
   moods: Mood[];           // parcours thématiques transversaux
+  // ─── Connecteurs plateformes & domaine public ────────────────────────────
+  publicDomain?: boolean;  // auteur mort depuis +70 ans → lecture intégrale légale
+  gutenbergId?: string;    // ID Project Gutenberg si connu, sinon search
+  wikisourcePath?: string; // ex. "Candide,_ou_l'Optimisme"
+};
+
+// ─── Connecteurs vers plateformes de lecture & écoute ──────────────────────
+// Incipit ne devient PAS une plateforme de lecture : on centralise l'inspiration
+// et on pousse le lecteur vers son écosystème préféré (Audible, Kindle, etc.).
+// Pour les œuvres du domaine public, on propose en plus une lecture intégrale
+// via Gutenberg / Wikisource / Gallica.
+export type ConnectorKind =
+  | "audible"        // livre audio Amazon
+  | "kindle"         // ebook Amazon
+  | "kobo"           // ebook Kobo / Fnac
+  | "apple-books"    // ebook + audio Apple
+  | "google-books"   // ebook Google Play
+  | "gutenberg"      // domaine public
+  | "wikisource"     // domaine public annoté
+  | "gallica"        // BNF numérique
+  | "libraires";     // papier via Placedeslibraires.fr
+
+export type BookConnector = {
+  kind: ConnectorKind;
+  label: string;            // "Écouter sur Audible"
+  format: "audio" | "ebook" | "papier";
+  url: string;
+  accent: string;           // classes tailwind pour la pastille
+  publicDomainOnly?: boolean;
 };
 
 export type Mood =
