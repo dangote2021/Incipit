@@ -1,13 +1,9 @@
-import { Fragment } from "react";
 import Link from "next/link";
 import { BOOKS } from "@/lib/mock-data";
-import PitchCard from "@/components/PitchCard";
 import DailyIncipit from "@/components/DailyIncipit";
 import ResumeCard from "@/components/ResumeCard";
-import RapLitTeaser from "@/components/RapLitTeaser";
 import WelcomeBanner from "@/components/WelcomeBanner";
-import QuizTeaser from "@/components/QuizTeaser";
-import DailyQuizCard from "@/components/DailyQuizCard";
+import PersonalizedPitchFeed from "@/components/PersonalizedPitchFeed";
 
 export default function HomePage() {
   return (
@@ -46,22 +42,11 @@ export default function HomePage() {
         {/* "Je reprends" — uniquement si un livre est en cours */}
         <ResumeCard />
 
-        {BOOKS.map((b, i) => (
-          <Fragment key={b.id}>
-            <PitchCard book={b} />
-            {/* Quiz du jour — après le 2e pitch, au moment où l'utilisateur
-                a mangé son premier contenu sans être engagé. La question
-                tourne chaque jour (déterministe UTC), donc la carte change
-                à chaque visite quotidienne sans jamais drifter. */}
-            {i === 1 && <DailyQuizCard />}
-            {/* On glisse l'interlude Rap & Lit après le 4e pitch pour casser le
-                rythme et surprendre. */}
-            {i === 3 && <RapLitTeaser />}
-            {/* Le quiz "full" apparaît en milieu de feed, comme un défi entre
-                deux pitches : rafraîchit l'attention. */}
-            {i === 7 && <QuizTeaser />}
-          </Fragment>
-        ))}
+        {/* Feed de pitches re-priorisé par genre à l'onboarding (client-side,
+            sans hydration mismatch : l'ordre SSR sert de fallback). Les
+            interludes (Quiz du jour, Rap & Lit, Quiz full) restent à des
+            positions fixes dans le flow. */}
+        <PersonalizedPitchFeed books={BOOKS} />
 
         {/* Fin de feed */}
         <section className="snap-start min-h-[calc(100vh-6rem)] flex flex-col items-center justify-center bg-cream text-ink px-8 text-center">
