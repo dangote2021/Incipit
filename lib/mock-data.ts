@@ -610,6 +610,16 @@ export const QUOTES: Quote[] = [
   { id: "q-13", bookId: "swann",       text: "Le véritable voyage de découverte ne consiste pas à chercher de nouveaux paysages, mais à avoir de nouveaux yeux." },
   { id: "q-14", bookId: "etranger",    text: "J'ai senti alors que j'étais heureux, et que je l'étais encore." },
   { id: "q-15", bookId: "candide",     text: "Optimisme, c'est la rage de soutenir que tout est bien quand on est mal." },
+  { id: "q-16", bookId: "voyage",      text: "Notre voyage à nous est entièrement imaginaire. Voilà sa force." },
+  { id: "q-17", bookId: "voyage",      text: "La vérité de ce monde c'est la mort. Il faut choisir, mourir ou mentir." },
+  { id: "q-18", bookId: "rouge-noir",  text: "L'hypocrisie était sa seule ressource.", context: "Julien à Verrières" },
+  { id: "q-19", bookId: "bel-ami",     text: "On est emporté par des courants qu'on ne maîtrise pas." },
+  { id: "q-20", bookId: "notre-dame",  text: "Les grands édifices, comme les grandes montagnes, sont l'ouvrage des siècles.", context: "Livre III, ch. 1" },
+  { id: "q-21", bookId: "germinal",    text: "Le travail, ça ne doit pas être une peine. Ça doit être une joie.", context: "Étienne à Souvarine" },
+  { id: "q-22", bookId: "pere-goriot", text: "Paris est un véritable océan. Jetez-y la sonde, vous n'en connaîtrez jamais la profondeur." },
+  { id: "q-23", bookId: "bovary",      text: "Elle confondait, dans son désir, les sensualités du luxe avec les joies du cœur." },
+  { id: "q-24", bookId: "liaisons",    text: "Il n'est pas de plus court chemin pour arriver à la tendresse que le dépit.", context: "Valmont à Merteuil" },
+  { id: "q-25", bookId: "swann",       text: "Nous ne tremblons que pour nous, que pour ceux que nous aimons." },
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -1710,6 +1720,228 @@ export const CHARACTERS: Character[] = [
     oneLiner: "Anarchiste russe, ingénieur réfugié, sabote le puits à la fin.",
     description:
       "Ancien noble russe, nihiliste froid. Boit une absinthe et sabote la cage du Voreux : le puits s'effondre, les mineurs meurent. Part ensuite dans la nuit, sans un mot.",
+  },
+
+  // ─── L'Étranger ──
+  {
+    id: "ch-etranger-1",
+    bookId: "etranger",
+    name: "Meursault",
+    role: "protagoniste",
+    avatar: "🕶️",
+    oneLiner: "Employé algérois, réfractaire à toute émotion convenue.",
+    description:
+      "Narrateur et héros négatif de Camus. Il dit ce qu'il ressent — et c'est pas grand chose. La mort de sa mère ne le fait pas pleurer, il flingue un Arabe sur la plage sans haine particulière. Au procès, c'est son manque d'émotion qui le condamne, pas le meurtre. Pur produit de l'absurde.",
+    relations: [
+      { to: "Marie Cardona", link: "liaison sans amour déclaré" },
+      { to: "Raymond Sintès", link: "voisin sulfureux qui l'entraîne" },
+    ],
+    keyQuote: "Aujourd'hui, maman est morte. Ou peut-être hier, je ne sais pas.",
+  },
+  {
+    id: "ch-etranger-2",
+    bookId: "etranger",
+    name: "Marie Cardona",
+    role: "protagoniste",
+    avatar: "👩",
+    oneLiner: "Ex-dactylo, amante de Meursault, joyeuse et solaire.",
+    description:
+      "Retrouve Meursault à la plage le lendemain de l'enterrement. Veut se marier. Meursault accepte, indifférent. Témoigne au procès, maladroite, contre son gré. Incarne la vie qui continue, étrangère à l'absurde.",
+  },
+  {
+    id: "ch-etranger-3",
+    bookId: "etranger",
+    name: "Raymond Sintès",
+    role: "secondaire",
+    avatar: "🥊",
+    oneLiner: "Voisin louche, probable proxénète, entraîne Meursault dans le drame.",
+    description:
+      "Tabasse sa maîtresse, demande à Meursault d'écrire une lettre pour la piéger. Entraîne Meursault sur la plage où la confrontation tourne au meurtre. Le détonateur narratif du roman.",
+  },
+
+  // ─── Candide ──
+  {
+    id: "ch-candide-1",
+    bookId: "candide",
+    name: "Candide",
+    role: "protagoniste",
+    avatar: "🧳",
+    oneLiner: "Jeune naïf westphalien, cobaye du roman philosophique.",
+    description:
+      "Fils bâtard supposé du baron de Thunder-ten-tronckh. Éjecté du château pour avoir embrassé Cunégonde, il traverse guerres, tremblements de terre, inquisition, Eldorado — pour finalement planter des choux avec elle. Voltaire en fait la cible et l'œil candide du lecteur.",
+    relations: [
+      { to: "Pangloss", link: "précepteur optimiste" },
+      { to: "Cunégonde", link: "amour obstiné, devenu moche" },
+      { to: "Martin", link: "compagnon pessimiste lucide" },
+    ],
+    keyQuote: "Il faut cultiver notre jardin.",
+  },
+  {
+    id: "ch-candide-2",
+    bookId: "candide",
+    name: "Pangloss",
+    role: "secondaire",
+    avatar: "🎓",
+    oneLiner: "Précepteur leibnizien, convaincu que tout va pour le mieux.",
+    description:
+      "Docteur en métaphysico-théologo-cosmolo-nigologie. Répète que 'tout est pour le mieux dans le meilleur des mondes possibles' pendant qu'il attrape la vérole, est pendu, dissequé, condamné aux galères. Voltaire dézingue Leibniz à travers lui.",
+  },
+  {
+    id: "ch-candide-3",
+    bookId: "candide",
+    name: "Cunégonde",
+    role: "protagoniste",
+    avatar: "👸",
+    oneLiner: "Objet d'amour de Candide, passée par tous les malheurs possibles.",
+    description:
+      "Fille du baron, d'abord idéalisée. Violée par les Bulgares, vendue, devenue maîtresse d'un juif et d'un grand inquisiteur en parts égales. Quand Candide la retrouve enfin, elle est laide et acariâtre. Il l'épouse quand même.",
+  },
+
+  // ─── Le Rouge et le Noir ──
+  {
+    id: "ch-rouge-1",
+    bookId: "rouge-noir",
+    name: "Julien Sorel",
+    role: "protagoniste",
+    avatar: "⚔️",
+    oneLiner: "Fils de scieur, précepteur, séminariste, secrétaire, condamné à mort.",
+    description:
+      "Lecteur fanatique de Napoléon et de Rousseau. Monté à l'ambition comme d'autres au militantisme. Séduit Mme de Rênal sous la Restauration, puis Mathilde de La Mole à Paris. Tire sur Mme de Rênal à l'église de Verrières, se laisse condamner exprès. Archétype du parvenu romantique.",
+    relations: [
+      { to: "Mme de Rênal", link: "premier amour, victime du coup de feu" },
+      { to: "Mathilde de La Mole", link: "amour d'orgueil à Paris" },
+      { to: "L'abbé Chélan", link: "protecteur ecclésiastique" },
+    ],
+    keyQuote: "L'hypocrisie était sa seule ressource.",
+  },
+  {
+    id: "ch-rouge-2",
+    bookId: "rouge-noir",
+    name: "Mme de Rênal",
+    role: "protagoniste",
+    avatar: "🌹",
+    oneLiner: "Épouse du maire de Verrières, premier amour vrai de Julien.",
+    description:
+      "Mariée à un bourgeois vaniteux, mère de trois enfants. Tombe amoureuse du précepteur Julien. Dénonce leur liaison sous l'emprise d'un confesseur, déclenchant la chute. Meurt trois jours après l'exécution de Julien. Incarne la sincérité contre l'ambition.",
+  },
+  {
+    id: "ch-rouge-3",
+    bookId: "rouge-noir",
+    name: "Mathilde de La Mole",
+    role: "protagoniste",
+    avatar: "💎",
+    oneLiner: "Aristocrate parisienne, amour d'orgueil.",
+    description:
+      "Fille du marquis de La Mole. S'ennuie dans son salon, cherche l'exceptionnel. Tombe amoureuse de Julien comme on cite Corneille. Après l'exécution, elle rachète la tête tranchée et l'enterre elle-même — en hommage à son ancêtre Boniface.",
+  },
+
+  // ─── Bel-Ami ──
+  {
+    id: "ch-belami-1",
+    bookId: "bel-ami",
+    name: "Georges Duroy",
+    role: "protagoniste",
+    avatar: "👔",
+    oneLiner: "Ex-sous-officier séducteur, devient magnat de presse par canapé-stratégie.",
+    description:
+      "Maupassant le décrit pauvre, beau, vide. Il monte à Paris, plagie sa première femme Madeleine, séduit l'épouse de son patron, puis sa fille. Se marie à la Madeleine en clou de roman. Incarne l'arrivisme cynique de la IIIe République.",
+    relations: [
+      { to: "Madeleine Forestier", link: "épouse puis ex, cerveau politique" },
+      { to: "Clotilde de Marelle", link: "maîtresse récurrente" },
+      { to: "Mme Walter", link: "femme de son patron, manipulée" },
+      { to: "Suzanne Walter", link: "fille du patron, enlevée et mariée" },
+    ],
+    keyQuote: "Il faut être fort, plus fort que les autres.",
+  },
+  {
+    id: "ch-belami-2",
+    bookId: "bel-ami",
+    name: "Madeleine Forestier",
+    role: "protagoniste",
+    avatar: "✒️",
+    oneLiner: "Journaliste fantôme, plume de Duroy, esprit politique aiguisé.",
+    description:
+      "Veuve de Charles Forestier, elle écrit en réalité les articles de Duroy. Brève épouse de Duroy. Répudiée quand il vise plus haut. Figure rare chez Maupassant : une femme intellectuelle sans illusion.",
+  },
+  {
+    id: "ch-belami-3",
+    bookId: "bel-ami",
+    name: "Clotilde de Marelle",
+    role: "secondaire",
+    avatar: "🍷",
+    oneLiner: "Maîtresse libre, seule à aimer Duroy pour lui-même.",
+    description:
+      "Bourgeoise mariée, libre d'esprit, la seule femme que Duroy n'arrive pas à jeter. Ils se retrouvent de rupture en rupture. Sait qui il est et couche quand même avec lui — lucidité tragique.",
+  },
+
+  // ─── Voyage au bout de la nuit ──
+  {
+    id: "ch-voyage-1",
+    bookId: "voyage",
+    name: "Ferdinand Bardamu",
+    role: "protagoniste",
+    avatar: "🌑",
+    oneLiner: "Médecin raté, anti-héros absolu, voix célinienne crue.",
+    description:
+      "S'engage par bêtise en 14-18, fuit les tranchées. Traverse l'Afrique coloniale, les USA de Ford, le Paris des banlieues misérables. Médecin de pauvres à Clichy. Trahit Molly, trahit Robinson, trahit lui-même. Son parcours est un effondrement méthodique de l'idéalisme.",
+    relations: [
+      { to: "Léon Robinson", link: "double maléfique qu'il croise partout" },
+      { to: "Molly", link: "prostituée américaine qui l'aime, qu'il quitte" },
+      { to: "Lola", link: "Américaine patriote qu'il exaspère" },
+    ],
+    keyQuote: "La vérité de ce monde c'est la mort.",
+  },
+  {
+    id: "ch-voyage-2",
+    bookId: "voyage",
+    name: "Léon Robinson",
+    role: "antagoniste",
+    avatar: "🎭",
+    oneLiner: "Ombre de Bardamu, tueur raté, miroir du ratage.",
+    description:
+      "Rencontré sur le front, retrouvé en Afrique puis en Amérique puis à Paris. Essaie de tuer une vieille pour de l'argent, finit par être tué par sa fiancée Madelon qui lui tire dessus dans un taxi. Bardamu assiste à sa mort sans pouvoir rien faire — sinon partir.",
+  },
+  {
+    id: "ch-voyage-3",
+    bookId: "voyage",
+    name: "Molly",
+    role: "secondaire",
+    avatar: "💐",
+    oneLiner: "Prostituée américaine, seule incarnation de bonté du roman.",
+    description:
+      "Rencontrée à Detroit. Elle veut garder Bardamu près d'elle, paye ses dépenses. Il la quitte sans raison claire — juste pour ne pas être sauvé. Elle reste, dans le livre, comme la seule figure que Céline épargne.",
+  },
+
+  // ─── Les Fleurs du Mal — pas de personnages de roman mais des figures poétiques
+  {
+    id: "ch-fleurs-1",
+    bookId: "fleurs-mal",
+    name: "Le Spleen",
+    role: "secondaire",
+    avatar: "🌫️",
+    oneLiner: "Ennemi intime du poète, figure centrale du recueil.",
+    description:
+      "Personnification baudelairienne du mal-être moderne. Dépasse la mélancolie romantique : c'est un ciel de plomb qui écrase, un couvercle. 'Quand le ciel bas et lourd pèse comme un couvercle.' Figure récurrente, nommée dans quatre poèmes éponymes.",
+  },
+  {
+    id: "ch-fleurs-2",
+    bookId: "fleurs-mal",
+    name: "L'Idéal",
+    role: "secondaire",
+    avatar: "⚡",
+    oneLiner: "Pendant lumineux du spleen, élévation et pure beauté.",
+    description:
+      "Moitié de la première section 'Spleen et Idéal'. Accessible par la poésie, l'amour exalté, la beauté absolue. Jamais atteint durablement — Baudelaire oscille entre les deux pôles dans tout le recueil.",
+  },
+  {
+    id: "ch-fleurs-3",
+    bookId: "fleurs-mal",
+    name: "Jeanne Duval",
+    role: "protagoniste",
+    avatar: "👁️",
+    oneLiner: "Muse noire, compagne tourmentée, objet de la 'Vénus noire'.",
+    description:
+      "Actrice haïtienne, maîtresse de Baudelaire pendant plus de vingt ans. Inspire le cycle des poèmes de la 'Vénus noire' : 'La Chevelure', 'Parfum exotique', 'Sed non satiata'. Ambivalence totale : adoration et dégoût, présence charnelle et menace.",
   },
 ];
 
