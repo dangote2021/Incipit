@@ -10,6 +10,18 @@ html, body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Safe-area iPhone / Capacitor : on expose env() pour que BottomNav
+   et les CTA sticky ne passent pas sous le home indicator. */
+:root {
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+}
+
+.safe-pt { padding-top: calc(env(safe-area-inset-top, 0px)); }
+.safe-pb { padding-bottom: calc(env(safe-area-inset-bottom, 0px)); }
+
 body {
   font-family: 'Inter', system-ui, sans-serif;
 }

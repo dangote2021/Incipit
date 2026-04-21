@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import BottomNav from "@/components/BottomNav";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
+import CapacitorBridge from "@/components/CapacitorBridge";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -13,8 +14,26 @@ export const metadata: Metadata = {
     "L'app qui redonne envie de lire les classiques. Pitches Boloss, passages clés, book clubs, reading buddies, Rap & Lit, domaine public. Sobre, anti-gamification, pro-plaisir.",
   manifest: "/manifest.json",
   icons: {
-    icon: "/icon-192.svg",
-    apple: "/icon-192.svg",
+    icon: [
+      { url: "/favicon-16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
+      { url: "/icon-192.svg", type: "image/svg+xml" },
+    ],
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+  },
+  appleWebApp: {
+    capable: true,
+    title: "Incipit",
+    statusBarStyle: "black-translucent",
+  },
+  formatDetection: {
+    telephone: false,
+    address: false,
+    email: false,
   },
   openGraph: {
     title: "Incipit — Les premières lignes qui donnent envie",
@@ -50,10 +69,11 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#FAF7F0",
+  themeColor: "#1A1A2E",
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
@@ -64,9 +84,12 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <body className="min-h-screen paper-texture">
-        <div className="max-w-xl mx-auto min-h-screen pb-24">{children}</div>
+        <div className="max-w-xl mx-auto min-h-screen pb-[calc(6rem+env(safe-area-inset-bottom))]">
+          {children}
+        </div>
         <BottomNav />
         <ServiceWorkerRegister />
+        <CapacitorBridge />
       </body>
     </html>
   );

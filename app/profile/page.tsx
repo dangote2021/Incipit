@@ -374,7 +374,13 @@ export default function ProfilePage() {
             href="/about"
             className="block text-center text-xs uppercase tracking-widest font-bold text-ink/60 py-3 border border-ink/10 rounded-full"
           >
-            À propos & mentions
+            À propos & manifeste
+          </Link>
+          <Link
+            href="/legal"
+            className="block text-center text-xs uppercase tracking-widest font-bold text-ink/60 py-3 border border-ink/10 rounded-full"
+          >
+            Confidentialité & conditions
           </Link>
         </section>
       </main>

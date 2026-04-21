@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Icône maskable : le contenu est dans la safe zone (80% centré) pour
+       supporter les masks Android adaptatifs sans être coupé. -->
+  <rect width="512" height="512" fill="#1A1A2E"/>
+  <text x="256" y="330" font-family="Georgia, serif" font-size="240" font-weight="900" fill="#C9A961" text-anchor="middle">I</text>
+  <rect x="180" y="370" width="152" height="10" rx="5" fill="#8B1E3F"/>
+</svg>

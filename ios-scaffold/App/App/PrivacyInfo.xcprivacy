@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  Incipit — Privacy Manifest (obligatoire pour toute soumission App Store
+  depuis mai 2024). Politique produit = zéro collecte serveur, stockage
+  strictement local (localStorage + cookie first-party non-tracking).
+
+  NSPrivacyTracking: false — aucun tracking cross-app/cross-site.
+  NSPrivacyTrackingDomains: vide.
+  NSPrivacyCollectedDataTypes: vide (on ne collecte rien côté serveur).
+  NSPrivacyAccessedAPITypes: on déclare UserDefaults (utilisée par le
+  WebView pour persister le localStorage) avec la reason CA92.1
+  ("Access info from same app"), qui est la valeur standard pour un usage
+  interne à l'app sans transmission.
+-->
+<plist version="1.0">
+<dict>
+    <key>NSPrivacyTracking</key>
+    <false/>
+    <key>NSPrivacyTrackingDomains</key>
+    <array/>
+    <key>NSPrivacyCollectedDataTypes</key>
+    <array/>
+    <key>NSPrivacyAccessedAPITypes</key>
+    <array>
+        <dict>
+            <key>NSPrivacyAccessedAPIType</key>
+            <string>NSPrivacyAccessedAPICategoryUserDefaults</string>
+            <key>NSPrivacyAccessedAPITypeReasons</key>
+            <array>
+                <string>CA92.1</string>
+            </array>
+        </dict>
+        <dict>
+            <key>NSPrivacyAccessedAPIType</key>
+            <string>NSPrivacyAccessedAPICategoryFileTimestamp</string>
+            <key>NSPrivacyAccessedAPITypeReasons</key>
+            <array>
+                <string>C617.1</string>
+            </array>
+        </dict>
+    </array>
+</dict>
+</plist>
