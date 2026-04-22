@@ -53,7 +53,7 @@ export default function HomePage() {
           <BrandPronunciation />
           <Link
             href="/onboarding"
-            className="text-[11px] uppercase tracking-widest font-semibold text-ink/80 bg-paper/70 backdrop-blur-md border border-ink/10 px-3 py-2 rounded-full shadow-sm"
+            className="text-[11px] uppercase tracking-widest font-semibold text-ink/90 bg-paper/90 backdrop-blur-md border border-ink/20 px-3 py-2 rounded-full shadow-md hover:border-ink/40 transition"
           >
             Préférences
           </Link>

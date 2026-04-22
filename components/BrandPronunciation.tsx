@@ -37,7 +37,7 @@ export default function BrandPronunciation() {
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         aria-label="Incipit — découvrir la prononciation"
-        className="flex items-baseline gap-1 px-3 py-1.5 rounded-full bg-paper/70 backdrop-blur-md border border-ink/10 shadow-sm hover:border-ink/25 transition"
+        className="flex items-baseline gap-1 px-3 py-1.5 rounded-full bg-paper/90 backdrop-blur-md border border-ink/20 shadow-md hover:border-ink/40 transition"
       >
         <span className="font-serif font-black text-xl tracking-tight text-ink">
           Incipit
