@@ -9,6 +9,7 @@ import NextSuggestion from "@/components/NextSuggestion";
 import ReEngagementBanner from "@/components/ReEngagementBanner";
 import NotifOptIn from "@/components/NotifOptIn";
 import DailyNotifKicker from "@/components/DailyNotifKicker";
+import BrandPronunciation from "@/components/BrandPronunciation";
 import {
   GENRES_COOKIE_NAME,
   parseGenresCookie,
@@ -49,15 +50,7 @@ export default function HomePage() {
       {/* Header flottant */}
       <div className="fixed top-0 left-1/2 -translate-x-1/2 z-40 w-full max-w-xl px-5 pt-4 pointer-events-none">
         <div className="flex items-center justify-between pointer-events-auto">
-          <Link
-            href="/"
-            className="flex items-baseline gap-1 px-3 py-1.5 rounded-full bg-paper/70 backdrop-blur-md border border-ink/10 shadow-sm"
-          >
-            <span className="font-serif font-black text-xl tracking-tight text-ink">
-              Incipit
-            </span>
-            <span className="text-bordeaux text-lg leading-none">.</span>
-          </Link>
+          <BrandPronunciation />
           <Link
             href="/onboarding"
             className="text-[11px] uppercase tracking-widest font-semibold text-ink/80 bg-paper/70 backdrop-blur-md border border-ink/10 px-3 py-2 rounded-full shadow-sm"
