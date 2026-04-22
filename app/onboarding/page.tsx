@@ -27,13 +27,18 @@ export default function OnboardingPage() {
   const [firstName, setFirstName] = useState("");
 
   // Pré-remplit avec les prefs existantes si l'utilisateur revient
-  // modifier ses choix.
+  // modifier ses choix. Dans ce cas on saute le splash + le welcome + le
+  // firstName (intro marketing) pour atterrir directement sur les genres :
+  // c'est la raison qui ramène un utilisateur déjà onboardé, pas la
+  // découverte de la marque. Retour panel : "le bouton Préférences me
+  // ramène à l'intro, c'est bizarre".
   useEffect(() => {
     const prefs = getPrefs();
     if (prefs.onboarded) {
       setSelected(new Set(prefs.genres));
       setTone(prefs.tone);
       setFirstName(prefs.firstName || "");
+      setStep("genres");
     }
   }, []);
 
