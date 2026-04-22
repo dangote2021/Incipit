@@ -40,14 +40,14 @@ export default function WelcomeBanner() {
           Bienvenue<span className="text-bordeaux">.</span>
         </h2>
         <p className="font-serif italic text-ink/80 text-lg max-w-xs mb-8">
-          Tu peux scroller pour découvrir le feed, ou calibrer ton expérience en 2 étapes.
+          Tu peux parcourir le fil pour découvrir les pitches, ou régler ta boussole littéraire en 2 étapes.
         </p>
         <div className="flex gap-3 w-full max-w-sm">
           <Link
             href="/onboarding"
             className="flex-1 py-3.5 rounded-full bg-ink text-paper font-serif font-bold text-sm hover:bg-bordeaux transition"
           >
-            Calibrer mon feed
+            Régler ma boussole littéraire
           </Link>
           <button
             type="button"

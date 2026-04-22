@@ -243,7 +243,7 @@ export default function OnboardingPage() {
           Qu&apos;est-ce qui te parle ?
         </h1>
         <p className="text-ink/60 text-sm mb-6">
-          Choisis au moins deux univers. On calibrera ton feed.
+          Choisis au moins deux univers. On orientera ta boussole.
         </p>
 
         <div className="grid grid-cols-2 gap-3 flex-1">

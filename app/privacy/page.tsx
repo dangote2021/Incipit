@@ -86,7 +86,7 @@ export default function PrivacyPage() {
         </h2>
         <p className="text-ink/75 leading-relaxed mb-6">
           Un unique cookie first-party nommé <code>incipit_genres</code> est
-          écrit localement pour pré-trier le feed d'accueil selon tes goûts, dès
+          écrit localement pour pré-trier le fil d'accueil selon tes goûts, dès
           le premier chargement. Il ne contient que la liste des genres
           littéraires que tu as choisis, n'est pas partagé avec des tiers, et sa
           durée de vie est d'un an glissant. Aucun cookie publicitaire, aucun
