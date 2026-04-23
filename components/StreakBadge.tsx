@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { recordOpen, streakLabel, type StreakState } from "@/lib/streak";
+import { getPrefs } from "@/lib/prefs";
 
 /**
  * Badge streak affiché en haut de la home. À chaque ouverture :
@@ -20,13 +21,23 @@ export default function StreakBadge() {
   const [milestone, setMilestone] = useState<number | null>(null);
   const [broken, setBroken] = useState(false);
   const [dismissed, setDismissed] = useState(false);
+  const [hidden, setHidden] = useState(false);
 
   useEffect(() => {
+    // On enregistre la visite dans tous les cas (le compte tourne en
+    // arrière-plan même si le user a masqué la flamme, pour qu'il puisse
+    // ré-afficher sa série sans perdre sa progression).
     const res = recordOpen();
     setState(res.state);
     setMilestone(res.milestoneReached);
     setBroken(res.broken);
+    setHidden(getPrefs().hideStreak === true);
   }, []);
+
+  if (hidden) {
+    // Slot vide, zéro hauteur : la home se recompose proprement.
+    return null;
+  }
 
   if (!state) {
     // Slot stable pendant le chargement pour ne pas push le contenu.

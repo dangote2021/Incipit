@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { usePremium, FEATURES } from "@/lib/premium";
 import type { KeyPassage } from "@/lib/types";
+import FavoriteButton from "@/components/FavoriteButton";
+import { favId } from "@/lib/favorites";
 
 // ─── Gate Premium des passages clés (feature passagesFull).
 // ─── Règle : 2 passages en gratuit, 5 pour les Premium.
@@ -12,9 +14,17 @@ import type { KeyPassage } from "@/lib/types";
 type Props = {
   passages: KeyPassage[];
   freeCount?: number;
+  /** Pour construire un ID de favori stable par passage. */
+  bookId?: string;
+  bookTitle?: string;
 };
 
-export default function PassagesList({ passages, freeCount = 2 }: Props) {
+export default function PassagesList({
+  passages,
+  freeCount = 2,
+  bookId,
+  bookTitle,
+}: Props) {
   const { isPremium, hydrated } = usePremium();
 
   // Avant hydratation on montre le comportement gratuit (le plus restrictif)
@@ -97,6 +107,20 @@ export default function PassagesList({ passages, freeCount = 2 }: Props) {
               <blockquote className="border-l-2 border-bordeaux/60 pl-3 font-serif text-[14px] text-ink/90 italic leading-relaxed">
                 {p.excerpt}
               </blockquote>
+              {bookId && (
+                <div className="mt-3 flex justify-end">
+                  <FavoriteButton
+                    fav={{
+                      id: favId.passage(bookId, p.order),
+                      kind: "passage",
+                      label: `${p.title}${bookTitle ? " · " + bookTitle : ""}`,
+                      sub: p.chapter,
+                      href: `/book/${bookId}`,
+                    }}
+                    variant="chip"
+                  />
+                </div>
+              )}
             </li>
           );
         })}

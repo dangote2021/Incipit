@@ -6,6 +6,8 @@ import AppHeader from "@/components/AppHeader";
 import { RAP_PUNCHLINES, getBook } from "@/lib/mock-data";
 import type { RapEra, RapPunchline } from "@/lib/types";
 import { usePremium, FREE_QUOTAS } from "@/lib/premium";
+import FavoriteButton from "@/components/FavoriteButton";
+import { favId } from "@/lib/favorites";
 
 const ERAS: { key: RapEra | "all"; label: string }[] = [
   { key: "all", label: "Tout" },
@@ -227,17 +229,46 @@ function PunchlineCard({ p }: { p: RapPunchline }) {
               </a>
             </div>
           )}
-          <div className="flex gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             {p.listenUrl && (
               <a
                 href={p.listenUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-1 inline-flex items-center justify-center gap-2 bg-gold text-ink text-sm font-bold px-4 py-3 rounded-full hover:bg-gold/90 transition"
+                className="flex-1 min-w-[140px] inline-flex items-center justify-center min-h-[44px] gap-2 bg-gold text-ink text-sm font-bold px-4 py-3 rounded-full hover:bg-gold/90 transition"
               >
                 Écouter sur Spotify ↗
               </a>
             )}
+            {p.youtubeUrl && (
+              <a
+                href={p.youtubeUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Écouter le passage sur YouTube (timestamp)"
+                className="inline-flex items-center justify-center min-h-[44px] gap-2 bg-paper/10 border border-paper/25 text-paper text-[12px] font-bold px-4 py-3 rounded-full hover:bg-paper/15 transition"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  aria-hidden
+                  className="w-[14px] h-[14px]"
+                >
+                  <path fill="currentColor" d="M8 5v14l11-7z" />
+                </svg>
+                Écouter le passage
+              </a>
+            )}
+            <FavoriteButton
+              fav={{
+                id: favId.punchline(p.id),
+                kind: "punchline",
+                label: `${p.artist} — ${p.song}`,
+                sub: p.literaryParallel.author,
+                href: "/punchlines",
+              }}
+              variant="icon"
+              onDark
+            />
           </div>
         </div>
       </div>

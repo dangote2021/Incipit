@@ -22,6 +22,12 @@ export type IncipitPrefs = {
   tone: IncipitTone;
   /** Nombre total de visites */
   visits: number;
+  /**
+   * L'utilisateur a demandé à masquer la flamme streak (Q4 panel v9).
+   * On garde quand même le compte en arrière-plan, on n'affiche juste
+   * plus le badge ni les célébrations de jalon.
+   */
+  hideStreak: boolean;
 };
 
 const KEY = "incipit:prefs:v1";
@@ -53,6 +59,7 @@ export const DEFAULT_PREFS: IncipitPrefs = {
   genres: [],
   tone: "boloss",
   visits: 0,
+  hideStreak: false,
 };
 
 function safeGet(): IncipitPrefs | null {

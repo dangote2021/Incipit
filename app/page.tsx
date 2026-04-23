@@ -10,6 +10,8 @@ import ReEngagementBanner from "@/components/ReEngagementBanner";
 import NotifOptIn from "@/components/NotifOptIn";
 import DailyNotifKicker from "@/components/DailyNotifKicker";
 import BrandPronunciation from "@/components/BrandPronunciation";
+import FlashToast from "@/components/FlashToast";
+import FeedProgress from "@/components/FeedProgress";
 import {
   GENRES_COOKIE_NAME,
   parseGenresCookie,
@@ -47,6 +49,14 @@ export default function HomePage() {
 
   return (
     <div className="relative">
+      {/* Toast one-shot (ex: "Préférences mises à jour"). Self-mute s'il
+          n'y a rien à consommer. */}
+      <FlashToast />
+
+      {/* Compteur de position dans le feed, sous le header. Se montre
+          après le premier scroll uniquement. */}
+      <FeedProgress />
+
       {/* Header flottant */}
       <div className="fixed top-0 left-1/2 -translate-x-1/2 z-40 w-full max-w-xl px-5 pt-4 pointer-events-none">
         <div className="flex items-center justify-between pointer-events-auto">

@@ -85,14 +85,88 @@ export default function PremiumPage() {
                 Activer Premium
               </div>
               <div className="text-sm mt-2 opacity-80">
-                Puis 4,99 € / mois. Résiliable en 2 clics. (Paiement non activé
-                en bêta — c'est une démo, pas de débit.)
+                Résiliable en 2 clics. (Paiement non activé en bêta — c'est
+                une démo, pas de débit.)
               </div>
               <div className="mt-4 inline-flex items-center gap-2 text-[11px] uppercase tracking-widest font-bold">
                 Débloquer maintenant →
               </div>
             </button>
           )}
+        </section>
+      )}
+
+      {/* ─── Tarifs indicatifs — retour panel v9 (Aïssatou) : sans prix
+          visible, le CTA paraissait un piège. On affiche 3 paliers avec
+          mention explicite "prix indicatif, lancement Q3" pour rester
+          honnête en bêta. */}
+      {!isPremium && (
+        <section className="px-6 pb-10">
+          <div className="text-[10px] uppercase tracking-[0.3em] text-ink/50 font-bold mb-4">
+            Tarifs · lancement prévu Q3 2026
+          </div>
+          <div className="grid grid-cols-1 gap-3">
+            <div className="bg-paper border border-ink/10 rounded-2xl p-5 flex items-baseline justify-between">
+              <div>
+                <div className="font-serif text-lg font-black text-ink">
+                  Mensuel
+                </div>
+                <div className="text-xs text-ink/60 mt-0.5">
+                  Sans engagement, résiliable en 2 clics.
+                </div>
+              </div>
+              <div className="font-serif text-2xl font-black text-ink shrink-0 ml-3">
+                4,99 €
+                <span className="text-xs font-normal text-ink/50"> / mois</span>
+              </div>
+            </div>
+
+            <div className="bg-ink text-paper rounded-2xl p-5 shadow-lg relative overflow-hidden">
+              <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full bg-gold/20 blur-2xl" />
+              <div className="relative flex items-baseline justify-between">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <div className="font-serif text-lg font-black">Annuel</div>
+                    <span className="text-[9px] uppercase tracking-[0.25em] text-gold font-black bg-gold/15 border border-gold/40 px-2 py-0.5 rounded-full">
+                      Économise 33 %
+                    </span>
+                  </div>
+                  <div className="text-xs text-paper/70 mt-0.5">
+                    Soit 3,33 € / mois. Notre recommandation.
+                  </div>
+                </div>
+                <div className="font-serif text-2xl font-black shrink-0 ml-3">
+                  39,99 €
+                  <span className="text-xs font-normal text-paper/50"> / an</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-paper border border-bordeaux/30 rounded-2xl p-5 flex items-baseline justify-between">
+              <div>
+                <div className="flex items-center gap-2">
+                  <div className="font-serif text-lg font-black text-ink">
+                    À vie
+                  </div>
+                  <span className="text-[9px] uppercase tracking-[0.25em] text-bordeaux font-black">
+                    Premier cercle
+                  </span>
+                </div>
+                <div className="text-xs text-ink/60 mt-0.5">
+                  Tu payes une fois, tu as tout, pour toujours.
+                </div>
+              </div>
+              <div className="font-serif text-2xl font-black text-bordeaux shrink-0 ml-3">
+                79 €
+              </div>
+            </div>
+          </div>
+
+          <p className="mt-4 text-[11px] leading-relaxed text-ink/50 italic">
+            Prix indicatifs — aucun paiement n'est activé pendant la bêta. Les
+            tarifs définitifs seront annoncés avant l'ouverture du paiement,
+            et les membres bêta auront accès à une remise fondatrice.
+          </p>
         </section>
       )}
 

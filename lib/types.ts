@@ -364,6 +364,11 @@ export type RapPunchline = {
   // Lien vers les paroles annotées (Genius) — on ne reproduit pas les paroles
   // dans l'app, on envoie vers la source sous licence.
   geniusUrl?: string;
+  // Lien YouTube avec timestamp pointant sur le moment exact de la punchline
+  // (retour panel v9 Q8 : "l'écoute est la moitié de l'expérience, emmène-moi
+  // directement au bon endroit, pas à la seconde 0"). Format attendu :
+  // "https://youtu.be/XXXXX?t=42" ou "https://www.youtube.com/watch?v=XXXXX&t=42s".
+  youtubeUrl?: string;
   // Palette / vibe visuelle
   vibe: "street" | "mélancolique" | "politique" | "virtuose" | "mystique";
 };

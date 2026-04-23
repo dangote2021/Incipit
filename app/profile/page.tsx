@@ -6,6 +6,8 @@ import AppHeader from "@/components/AppHeader";
 import BookCover from "@/components/BookCover";
 import PremiumBadge from "@/components/PremiumBadge";
 import BadgePanel from "@/components/BadgePanel";
+import FavoritesSection from "@/components/FavoritesSection";
+import HideStreakToggle from "@/components/HideStreakToggle";
 import IOSInstallCard from "@/components/IOSInstallCard";
 import { getPrefs } from "@/lib/prefs";
 import {
@@ -195,6 +197,9 @@ export default function ProfilePage() {
           </div>
         </section>
 
+        {/* Marque-pages — favoris persistés côté client (E3 panel v9). */}
+        <FavoritesSection />
+
         {/* Jalons culturels — vrai système, lié aux quiz */}
         <section>
           <h2 className="text-[11px] uppercase tracking-[0.25em] font-bold text-ink/50 mb-3">
@@ -381,6 +386,7 @@ export default function ProfilePage() {
 
         {/* Actions */}
         <section className="pt-2 space-y-2">
+          <HideStreakToggle />
           <Link
             href="/onboarding"
             className="block text-center text-xs uppercase tracking-widest font-bold text-ink/60 py-3 border border-ink/10 rounded-full"

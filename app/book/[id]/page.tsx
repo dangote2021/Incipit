@@ -113,9 +113,6 @@ export default async function BookPage({ params }: Props) {
                 </span>
               ) : null}
             </div>
-            <div className="text-xs text-paper/70 mt-1 uppercase tracking-widest">
-              {book.year} · {book.pages} p · {book.genre}
-            </div>
             {book.publicDomain && (
               <div className="mt-3 inline-flex items-center gap-1.5 bg-gold/90 text-ink text-[10px] uppercase tracking-[0.25em] font-bold px-2.5 py-1 rounded-full">
                 ★ Domaine public · lecture gratuite
@@ -127,6 +124,30 @@ export default async function BookPage({ params }: Props) {
                 fiche — retour panel v8, Mehdi. */}
             <MarkAsReadButton bookId={book.id} />
           </div>
+        </div>
+      </section>
+
+      {/* Bandeau contexte — année · genre · thème principal. Placé
+          immédiatement sous le hero pour ancrer la fiche (retour panel v9,
+          Rébecca : "je rentre sur la fiche et je sais pas où je suis"). */}
+      <section
+        aria-label="Contexte du livre"
+        className="bg-paper border-b border-ink/10 px-5 py-3"
+      >
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] uppercase tracking-[0.2em] font-bold text-ink/70">
+          <span>{book.year}</span>
+          <span className="text-ink/25">·</span>
+          <span>{book.genre}</span>
+          {book.themes[0] && (
+            <>
+              <span className="text-ink/25">·</span>
+              <span className="text-bordeaux">{book.themes[0]}</span>
+            </>
+          )}
+          <span className="text-ink/25">·</span>
+          <span className="text-ink/60 normal-case tracking-normal text-[12px]">
+            {book.pages} pages
+          </span>
         </div>
       </section>
 
@@ -262,7 +283,11 @@ export default async function BookPage({ params }: Props) {
                 FEATURES.passagesFull dans lib/premium). On laisse le composant
                 rendre tous les passages (SEO) et appliquer le floutage au
                 hydrate. */}
-            <PassagesList passages={passages} />
+            <PassagesList
+              passages={passages}
+              bookId={book.id}
+              bookTitle={book.title}
+            />
 
           </section>
         )}

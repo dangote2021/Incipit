@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { GENRES } from "@/lib/mock-data";
 import type { Genre } from "@/lib/types";
 import { completeOnboarding, getPrefs } from "@/lib/prefs";
+import { setFlash } from "@/lib/flash";
 import {
   getDailyIncipit,
   incipitTeaser,
@@ -43,10 +44,18 @@ export default function OnboardingPage() {
   }, []);
 
   const finish = () => {
+    const selectedGenres = Array.from(selected);
     completeOnboarding({
-      genres: Array.from(selected),
+      genres: selectedGenres,
       tone,
       firstName: firstName.trim(),
+    });
+    const n = selectedGenres.length;
+    setFlash({
+      message:
+        n > 0
+          ? `Préférences mises à jour — ${n} univers sélectionné${n > 1 ? "s" : ""}.`
+          : "Préférences mises à jour.",
     });
     router.push("/");
   };
@@ -72,6 +81,10 @@ export default function OnboardingPage() {
       genres: [],
       tone: "boloss",
       firstName: firstName.trim(),
+    });
+    setFlash({
+      message: "On commence léger — tu pourras affiner plus tard.",
+      tone: "info",
     });
     router.push("/");
   };

@@ -363,7 +363,7 @@ export default function QuoteStoryCard({ quote, book, open, onClose }: Props) {
           </div>
           <button
             onClick={onClose}
-            className="text-ink/50 text-2xl font-bold w-8 h-8 flex items-center justify-center"
+            className="text-ink/50 text-2xl font-bold w-11 h-11 flex items-center justify-center hover:text-ink transition"
             aria-label="Fermer"
           >
             ×
@@ -393,20 +393,20 @@ export default function QuoteStoryCard({ quote, book, open, onClose }: Props) {
           <div className="grid grid-cols-1 gap-2">
             <button
               onClick={handleShare}
-              className="w-full bg-bordeaux text-paper py-3 rounded-xl text-sm uppercase tracking-widest font-bold hover:bg-red-800 transition flex items-center justify-center gap-2"
+              className="w-full min-h-[44px] bg-bordeaux text-paper py-3 rounded-xl text-sm uppercase tracking-widest font-bold hover:bg-red-800 transition flex items-center justify-center gap-2"
             >
               <span>📲</span> Partager
             </button>
             <div className="grid grid-cols-2 gap-2">
               <button
                 onClick={handleDownload}
-                className="bg-ink/10 text-ink py-3 rounded-xl text-xs uppercase tracking-widest font-bold hover:bg-ink/20 transition"
+                className="min-h-[44px] bg-ink/10 text-ink py-3 rounded-xl text-xs uppercase tracking-widest font-bold hover:bg-ink/20 transition"
               >
                 ⬇ Télécharger
               </button>
               <button
                 onClick={handleCopyText}
-                className="bg-ink/10 text-ink py-3 rounded-xl text-xs uppercase tracking-widest font-bold hover:bg-ink/20 transition"
+                className="min-h-[44px] bg-ink/10 text-ink py-3 rounded-xl text-xs uppercase tracking-widest font-bold hover:bg-ink/20 transition"
               >
                 {copied ? "✓ Copié" : "📋 Copier texte"}
               </button>

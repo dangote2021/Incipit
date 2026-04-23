@@ -821,7 +821,7 @@ function Done({
         )}
         <button
           onClick={onPickMode}
-          className="w-full py-3 text-xs uppercase tracking-widest text-ink/55 font-bold hover:text-ink transition"
+          className="w-full min-h-[44px] py-3 text-xs uppercase tracking-widest text-ink/55 font-bold hover:text-ink transition"
         >
           Changer de catégorie
         </button>

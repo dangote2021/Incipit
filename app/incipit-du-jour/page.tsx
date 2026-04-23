@@ -4,6 +4,8 @@ import AppHeader from "@/components/AppHeader";
 import IncipitArchiveList, {
   type ArchiveEntry,
 } from "@/components/IncipitArchiveList";
+import FavoriteButton from "@/components/FavoriteButton";
+import { favId } from "@/lib/favorites-ids";
 import {
   getDailyIncipit,
   getRecentDailyIncipits,
@@ -62,7 +64,7 @@ export default function IncipitArchivePage() {
           <div className="mt-6 flex flex-wrap gap-3">
             <Link
               href={`/book/${today.book.id}`}
-              className="inline-flex items-center gap-2 bg-ink text-paper px-5 py-3 rounded-full text-[11px] uppercase tracking-widest font-bold hover:bg-bordeaux transition"
+              className="inline-flex items-center justify-center min-h-[44px] gap-2 bg-ink text-paper px-5 py-3 rounded-full text-[11px] uppercase tracking-widest font-bold hover:bg-bordeaux transition"
             >
               Ouvrir la fiche
             </Link>
@@ -70,10 +72,20 @@ export default function IncipitArchivePage() {
               href={`/api/incipit-card/${today.book.id}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 border-2 border-bordeaux text-bordeaux px-5 py-3 rounded-full text-[11px] uppercase tracking-widest font-bold hover:bg-bordeaux hover:text-paper transition"
+              className="inline-flex items-center justify-center min-h-[44px] gap-2 border-2 border-bordeaux text-bordeaux px-5 py-3 rounded-full text-[11px] uppercase tracking-widest font-bold hover:bg-bordeaux hover:text-paper transition"
             >
               Télécharger la carte ↓
             </a>
+            <FavoriteButton
+              fav={{
+                id: favId.incipit(today.book.id, today.date.toISOString()),
+                kind: "incipit",
+                label: `Incipit de ${today.book.title}`,
+                sub: `${today.book.author} · ${formatShortDate(today.date)}`,
+                href: `/book/${today.book.id}`,
+              }}
+              variant="icon"
+            />
           </div>
         </div>
       </section>

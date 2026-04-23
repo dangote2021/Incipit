@@ -144,7 +144,7 @@ export default function DailyMiniQuizPage() {
                     type="button"
                     disabled={resolved}
                     onClick={() => choose(opt)}
-                    className={`w-full text-left rounded-2xl border-2 px-4 py-3 font-serif text-[15px] transition ${
+                    className={`w-full min-h-[44px] text-left rounded-2xl border-2 px-4 py-3 font-serif text-[15px] transition ${
                       state === "idle"
                         ? "border-ink/15 bg-cream/60 text-ink hover:border-bordeaux"
                         : state === "correct"
@@ -205,7 +205,7 @@ export default function DailyMiniQuizPage() {
               </Link>
               <Link
                 href="/"
-                className="block w-full text-center border-2 border-ink/15 text-ink py-3.5 rounded-full text-xs uppercase tracking-widest font-bold bg-paper hover:border-bordeaux transition"
+                className="flex items-center justify-center w-full min-h-[44px] text-center border-2 border-ink/15 text-ink py-3.5 rounded-full text-xs uppercase tracking-widest font-bold bg-paper hover:border-bordeaux transition"
               >
                 Retour à l'accueil
               </Link>

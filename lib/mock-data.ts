@@ -2594,6 +2594,85 @@ export const RAP_PUNCHLINES: RapPunchline[] = [
     },
     listenUrl: "https://open.spotify.com/search/SCH%20Cabo%20JVLIVS",
     geniusUrl: "https://genius.com/Sch-cabo-lyrics",
+    youtubeUrl:
+      "https://www.youtube.com/results?search_query=SCH+Cabo+JVLIVS",
+    vibe: "mystique",
+  },
+  // ─── Vague 2024-2025 (retour panel v9 Q7 : "les punchlines s'arrêtent en
+  // ─── 2018, il manque la génération qui écoute vraiment en 2025"). Trois
+  // ─── entrées récentes avec, pour chacune, un pont classique solide et un
+  // ─── youtubeUrl qui pointera (en prod) sur la seconde exacte de la
+  // ─── punchline. Ici, faute de video IDs stables, on met des URLs de
+  // ─── recherche — l'UI traite les deux cas de la même façon.
+  {
+    id: "p-ninho-ni",
+    artist: "Ninho",
+    song: "NI",
+    album: "NI",
+    year: 2024,
+    era: "20s",
+    punchlineTheme:
+      "Un autoportrait froid d'homme arrivé. Ninho aligne les signes extérieurs de sa réussite — argent, loyauté, distance — sans jubilation : c'est un constat, pas une fête. Le luxe est là, la paix n'y est pas.",
+    devices: ["énumération", "antithèse", "métaphore filée"],
+    analysis:
+      "Ninho écrit comme Balzac raconte Rastignac dans Le Père Goriot : la trajectoire du gamin des Yvelines qui monte, observe, et découvre que Paris est un système. L'énumération clinique des marques et des sommes n'est pas de l'étalage, c'est une comptabilité morale — chaque ligne est un « combien ça m'a coûté ». Balzac faisait exactement ça avec ses descriptions d'intérieurs bourgeois : le décor est le personnage.",
+    literaryParallel: {
+      author: "Honoré de Balzac",
+      workTitle: "Le Père Goriot",
+      bridge:
+        "Même matrice : un jeune homme venu d'ailleurs qui lit Paris comme un code, apprend les règles, les applique, et en sort riche mais abîmé. Rastignac regarde la ville depuis le cimetière, Ninho depuis un Mercedes — même panorama, même vertige.",
+    },
+    listenUrl: "https://open.spotify.com/search/Ninho%20NI",
+    geniusUrl: "https://genius.com/Ninho-ni-lyrics",
+    youtubeUrl: "https://www.youtube.com/results?search_query=Ninho+NI",
+    vibe: "street",
+  },
+  {
+    id: "p-sdm-liens-du-100",
+    artist: "SDM",
+    song: "Liens du 100",
+    album: "Liens du 100",
+    year: 2024,
+    era: "20s",
+    punchlineTheme:
+      "Un retour au quartier comme on retourne sur le lieu d'un pacte. SDM énumère les fidèles, les disparus, les règles tacites — le texte est un serment à voix basse plus qu'un récit. On sent la vieille loyauté qui pèse, et la peur de la rompre.",
+    devices: ["anaphore", "hypotypose", "énumération"],
+    analysis:
+      "C'est Zola avant d'être du rap : l'idée que ton milieu te forme plus que ton nom. Dans L'Assommoir, Gervaise voit défiler les gens du quartier comme une galerie de destins — SDM fait pareil, couplet après couplet. L'anaphore du « tu te rappelles » rejoue la mémoire collective que Zola met dans la bouche des lavandières. Le rap des Hauts-de-Seine retrouve le naturalisme sans le savoir.",
+    literaryParallel: {
+      author: "Émile Zola",
+      workTitle: "L'Assommoir",
+      bridge:
+        "Même observation précise d'une communauté populaire écrite depuis l'intérieur. Zola prenait des notes dans les bars de la Goutte-d'Or, SDM dans les halls de Clamart — méthode identique, patience identique.",
+    },
+    listenUrl: "https://open.spotify.com/search/SDM%20Liens%20du%20100",
+    geniusUrl: "https://genius.com/Sdm-liens-du-100-lyrics",
+    youtubeUrl:
+      "https://www.youtube.com/results?search_query=SDM+Liens+du+100",
+    vibe: "mélancolique",
+  },
+  {
+    id: "p-damso-jai-menti",
+    artist: "Damso",
+    song: "J'ai menti",
+    album: "J'AI MENTI",
+    year: 2025,
+    era: "20s",
+    punchlineTheme:
+      "Un aveu, mais pas celui qu'on attendait. Damso revient non pas pour raconter ce qu'il a fait, mais pour défaire ce qu'il avait dit de lui-même. Le texte se construit comme une rétractation : chaque phrase prétend corriger une phrase ancienne, sans jamais dire laquelle.",
+    devices: ["chiasme", "polyptote", "antithèse"],
+    analysis:
+      "C'est Rousseau des Confessions et Montaigne des Essais fusionnés dans un refrain. L'aveu chez Rousseau (« Je forme une entreprise qui n'eut jamais d'exemple… ») et le retrait chez Montaigne (« Je suis moi-même la matière de mon livre ») sont exactement le geste de Damso : se raconter en creux, en démentis successifs. Le chiasme (« j'ai dit que… alors que… ») est la figure par excellence de l'homme qui reprend son propre procès. C'est du classique français pur — la tradition de l'auto-examen — déguisée en trap.",
+    literaryParallel: {
+      author: "Jean-Jacques Rousseau",
+      workTitle: "Les Confessions",
+      bridge:
+        "Même paradoxe : on avoue pour mieux contrôler ce qu'on dit de soi. Rousseau écrit mille pages pour qu'on ne le juge pas sur des rumeurs ; Damso publie un album pour défaire les siennes. L'aveu moderne n'a pas changé de structure depuis 1782.",
+    },
+    listenUrl: "https://open.spotify.com/search/Damso%20J%27ai%20menti",
+    geniusUrl: "https://genius.com/Damso-jai-menti-lyrics",
+    youtubeUrl:
+      "https://www.youtube.com/results?search_query=Damso+J%27ai+menti",
     vibe: "mystique",
   },
 ];
