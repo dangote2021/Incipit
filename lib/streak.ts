@@ -80,6 +80,8 @@ function safeWrite(s: StreakState) {
   if (typeof window === "undefined") return;
   try {
     window.localStorage.setItem(KEY, JSON.stringify(s));
+    // Notify SyncProvider (backend v2) to push state to server.
+    window.dispatchEvent(new CustomEvent("incipit:streak:change"));
   } catch {
     // ignore
   }

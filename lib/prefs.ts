@@ -78,6 +78,8 @@ function safeSet(prefs: IncipitPrefs) {
   if (typeof window === "undefined") return;
   try {
     window.localStorage.setItem(KEY, JSON.stringify(prefs));
+    // Émis pour que SyncProvider déclenche un push debounced vers le serveur.
+    window.dispatchEvent(new CustomEvent("incipit:prefs:change"));
   } catch {
     // ignore (quota, mode privé, etc.)
   }

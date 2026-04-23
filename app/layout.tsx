@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import BottomNav from "@/components/BottomNav";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 import CapacitorBridge from "@/components/CapacitorBridge";
+import SyncProvider from "@/components/SyncProvider";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -90,6 +91,7 @@ export default function RootLayout({
         <BottomNav />
         <ServiceWorkerRegister />
         <CapacitorBridge />
+        <SyncProvider />
       </body>
     </html>
   );
