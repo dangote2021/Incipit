@@ -21,6 +21,6 @@ export async function POST(req: Request) {
   }
 
   const admin = adminSupabase()!;
-  await admin.from("push_subscriptions").delete().eq("endpoint", body.endpoint);
+  await admin.from("incipit_push_subscriptions").delete().eq("endpoint", body.endpoint);
   return NextResponse.json({ ok: true });
 }

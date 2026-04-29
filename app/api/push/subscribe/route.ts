@@ -43,7 +43,7 @@ export async function POST(req: Request) {
   const admin = adminSupabase()!;
   const ua = req.headers.get("user-agent") ?? null;
 
-  const { error } = await admin.from("push_subscriptions").upsert(
+  const { error } = await admin.from("incipit_push_subscriptions").upsert(
     {
       user_id: userId,
       endpoint,

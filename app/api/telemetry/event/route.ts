@@ -81,7 +81,7 @@ export async function POST(req: Request) {
   }
 
   const admin = adminSupabase()!;
-  const { error } = await admin.from("telemetry_events").insert({
+  const { error } = await admin.from("incipit_telemetry_events").insert({
     event,
     session_id: sessionId.slice(0, 64),
     metadata,

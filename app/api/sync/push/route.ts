@@ -68,7 +68,7 @@ export async function POST(req: Request) {
     patch.last_seen_at = new Date().toISOString();
 
     const { error } = await supabase
-      .from("profiles")
+      .from("incipit_profiles")
       .upsert(patch, { onConflict: "id" });
     results.profile = error ? "error" : "ok";
     if (error) console.error("[sync/push] profile:", error.message);
@@ -103,7 +103,7 @@ export async function POST(req: Request) {
 
     if (list.length > 0) {
       const { error } = await supabase
-        .from("favorites")
+        .from("incipit_favorites")
         .upsert(list, { onConflict: "user_id,fav_id" });
       results.favorites = error ? "error" : "ok";
       if (error) console.error("[sync/push] favorites:", error.message);
@@ -117,7 +117,7 @@ export async function POST(req: Request) {
   // ─── streak ───────────────────────────────────────────────────────────
   if (body.streak && typeof body.streak === "object") {
     const s = body.streak as Record<string, unknown>;
-    const { error } = await supabase.rpc("upsert_streak", {
+    const { error } = await supabase.rpc("upsert_incipit_streak", {
       p_current: typeof s.current === "number" ? Math.max(0, Math.floor(s.current)) : 0,
       p_longest: typeof s.longest === "number" ? Math.max(0, Math.floor(s.longest)) : 0,
       p_last_open:

@@ -28,14 +28,14 @@ export async function checkRate(
   // ─── Backend persistant (préféré) ──────────────────────────────────────
   if (admin) {
     const { data } = await admin
-      .from("rate_limits")
+      .from("incipit_rate_limits")
       .select("count, window_start")
       .eq("key", key)
       .maybeSingle();
 
     if (!data) {
       await admin
-        .from("rate_limits")
+        .from("incipit_rate_limits")
         .insert({ key, count: 1, window_start: new Date(now).toISOString() });
       return { ok: true, remaining: limit - 1 };
     }
@@ -44,7 +44,7 @@ export async function checkRate(
     if (now - winStart > WINDOW_MS) {
       // Reset fenêtre
       await admin
-        .from("rate_limits")
+        .from("incipit_rate_limits")
         .update({ count: 1, window_start: new Date(now).toISOString() })
         .eq("key", key);
       return { ok: true, remaining: limit - 1 };
@@ -55,7 +55,7 @@ export async function checkRate(
     }
 
     await admin
-      .from("rate_limits")
+      .from("incipit_rate_limits")
       .update({ count: data.count + 1 })
       .eq("key", key);
     return { ok: true, remaining: limit - data.count - 1 };

@@ -31,7 +31,7 @@ async function upsertPremium(
     const customerId =
       typeof sub.customer === "string" ? sub.customer : sub.customer.id;
     const { data } = await admin
-      .from("premium")
+      .from("incipit_premium")
       .select("user_id")
       .eq("stripe_customer_id", customerId)
       .maybeSingle();
@@ -51,7 +51,7 @@ async function writePremium(
   sub: Stripe.Subscription
 ) {
   const active = sub.status === "active" || sub.status === "trialing";
-  await admin.from("premium").upsert(
+  await admin.from("incipit_premium").upsert(
     {
       user_id: userId,
       is_premium: active,
@@ -128,7 +128,7 @@ export async function POST(req: Request) {
           (await resolveUserFromCustomer(admin, sub.customer));
         if (userId) {
           await admin
-            .from("premium")
+            .from("incipit_premium")
             .update({
               is_premium: false,
               stripe_subscription_id: null,
@@ -158,7 +158,7 @@ async function resolveUserFromCustomer(
 ): Promise<string> {
   const customerId = typeof customer === "string" ? customer : customer.id;
   const { data } = await admin
-    .from("premium")
+    .from("incipit_premium")
     .select("user_id")
     .eq("stripe_customer_id", customerId)
     .maybeSingle();

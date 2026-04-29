@@ -54,7 +54,7 @@ export async function GET(req: Request) {
 
   while (true) {
     const { data: subs, error } = await admin
-      .from("push_subscriptions")
+      .from("incipit_push_subscriptions")
       .select("endpoint, p256dh, auth")
       .range(offset, offset + BATCH_SIZE - 1);
 
@@ -81,7 +81,7 @@ export async function GET(req: Request) {
           // 404/410 = abonnement mort, on le supprime.
           if (code === 404 || code === 410) {
             await admin
-              .from("push_subscriptions")
+              .from("incipit_push_subscriptions")
               .delete()
               .eq("endpoint", s.endpoint);
             cleaned++;

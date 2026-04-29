@@ -42,7 +42,7 @@ export async function POST() {
 
   // 1. Récupère ou crée le customer Stripe.
   const { data: prem } = await admin
-    .from("premium")
+    .from("incipit_premium")
     .select("stripe_customer_id")
     .eq("user_id", user.id)
     .maybeSingle();
@@ -54,7 +54,7 @@ export async function POST() {
       metadata: { user_id: user.id },
     });
     customerId = customer.id;
-    await admin.from("premium").upsert({
+    await admin.from("incipit_premium").upsert({
       user_id: user.id,
       stripe_customer_id: customerId,
       is_premium: false,

@@ -22,7 +22,7 @@ export async function POST() {
   if (!stripe || !admin) return NextResponse.json({ error: "misconfigured" }, { status: 503 });
 
   const { data: prem } = await admin
-    .from("premium")
+    .from("incipit_premium")
     .select("stripe_customer_id")
     .eq("user_id", user.id)
     .maybeSingle();

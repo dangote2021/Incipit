@@ -24,13 +24,13 @@ export async function GET() {
 
   // Appels parallèles — chaque table est RLS-filtrée.
   const [profileRes, favRes, streakRes, premiumRes] = await Promise.all([
-    supabase.from("profiles").select("*").eq("id", user.id).maybeSingle(),
+    supabase.from("incipit_profiles").select("*").eq("id", user.id).maybeSingle(),
     supabase
-      .from("favorites")
+      .from("incipit_favorites")
       .select("*")
       .order("added_at", { ascending: false }),
-    supabase.from("streaks").select("*").eq("user_id", user.id).maybeSingle(),
-    supabase.from("premium").select("*").eq("user_id", user.id).maybeSingle(),
+    supabase.from("incipit_streaks").select("*").eq("user_id", user.id).maybeSingle(),
+    supabase.from("incipit_premium").select("*").eq("user_id", user.id).maybeSingle(),
   ]);
 
   return NextResponse.json({
