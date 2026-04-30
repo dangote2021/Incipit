@@ -39,8 +39,9 @@ export default function RootError({
 
         <div className="flex flex-col gap-3">
           <button
+            type="button"
             onClick={reset}
-            className="inline-flex items-center justify-center bg-ink text-paper text-sm font-bold uppercase tracking-widest px-6 py-3.5 rounded-full hover:bg-ink/90 transition"
+            className="inline-flex items-center justify-center bg-ink text-paper text-sm font-bold uppercase tracking-widest min-h-[44px] px-6 py-3.5 rounded-full hover:bg-ink/90 transition"
           >
             Recharger la page
           </button>

@@ -142,6 +142,7 @@ export default function OnboardingPage() {
           </p>
 
           <button
+            type="button"
             onClick={() => setStep("welcome")}
             className="mt-12 w-full bg-ink text-paper py-4 rounded-full text-sm font-bold uppercase tracking-widest shadow-lg hover:bg-bordeaux transition"
           >
@@ -188,6 +189,7 @@ export default function OnboardingPage() {
         </div>
 
         <button
+          type="button"
           onClick={() => setStep("firstName")}
           className="mt-10 w-full max-w-sm mx-auto bg-ink text-paper py-4 rounded-full text-sm font-bold uppercase tracking-widest shadow-lg hover:bg-bordeaux transition"
         >
@@ -290,6 +292,7 @@ export default function OnboardingPage() {
             return (
               <button
                 key={g.key}
+                type="button"
                 onClick={() => toggle(g.key)}
                 className={`relative text-left p-4 rounded-2xl border-2 transition ${
                   active
@@ -330,6 +333,7 @@ export default function OnboardingPage() {
             Passer
           </button>
           <button
+            type="button"
             onClick={() => setStep("tone")}
             disabled={selected.size < 1}
             className="bg-ink text-paper px-6 py-3 rounded-full text-sm font-bold uppercase tracking-widest disabled:opacity-30 hover:bg-bordeaux transition"
@@ -375,6 +379,7 @@ export default function OnboardingPage() {
 
       <div className="flex-1 space-y-4">
         <button
+          type="button"
           onClick={() => setTone("boloss")}
           className={`w-full text-left p-5 rounded-2xl border-2 transition ${
             tone === "boloss"
@@ -397,6 +402,7 @@ export default function OnboardingPage() {
         </button>
 
         <button
+          type="button"
           onClick={() => setTone("neutre")}
           className={`w-full text-left p-5 rounded-2xl border-2 transition ${
             tone === "neutre"
