@@ -1,11 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import AppHeader from "@/components/AppHeader";
 import { usePremium, FEATURES, formatTrialRemaining } from "@/lib/premium";
 import { useAuth } from "@/lib/supabase/use-auth";
+import { track } from "@/lib/telemetry";
+import { pullAndMerge } from "@/lib/sync/engine";
 
 // ─── Page /premium : paywall — Stripe checkout si configuré, sinon
 // ─── activate local (pour la démo). Le portail (cancel) est wired aussi.
@@ -29,8 +31,37 @@ function PremiumInner() {
   const [portalBusy, setPortalBusy] = useState(false);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
 
+  // Track le view de la paywall (anonyme).
+  useEffect(() => {
+    if (!isPremium) track("premium_view_paywall");
+  }, [isPremium]);
+
+  // Au retour de Stripe avec ?success=1, on force un pullAndMerge pour que
+  // l'état Premium remonté du webhook serveur soit reflété immédiatement
+  // côté client (sinon il faut attendre le sync de la prochaine session).
+  // On guard par sessionStorage pour ne pas re-tirer en boucle si l'user
+  // recharge la page avec le query param encore présent.
+  useEffect(() => {
+    if (!stripeSuccess || !authConfigured) return;
+    const flag = "incipit:stripe:success-pulled";
+    try {
+      if (sessionStorage.getItem(flag)) return;
+      sessionStorage.setItem(flag, "1");
+    } catch {
+      /* sessionStorage indispo (private mode) — on tire quand même */
+    }
+    track("premium_checkout_succeeded");
+    pullAndMerge().catch(() => {
+      /* le merge est best-effort, on laisse passer */
+    });
+  }, [stripeSuccess, authConfigured]);
+
   const handleSubscribe = async () => {
     setCheckoutError(null);
+    track("premium_checkout_started", {
+      has_auth: !!user,
+      configured: authConfigured,
+    });
 
     // Si Supabase n'est pas câblé → pas de Stripe possible, on retombe sur
     // l'activation locale (mode démo / V1).

@@ -6,6 +6,7 @@ import { GENRES } from "@/lib/mock-data";
 import type { Genre } from "@/lib/types";
 import { completeOnboarding, getPrefs } from "@/lib/prefs";
 import { setFlash } from "@/lib/flash";
+import { track } from "@/lib/telemetry";
 import {
   getDailyIncipit,
   incipitTeaser,
@@ -51,6 +52,12 @@ export default function OnboardingPage() {
       firstName: firstName.trim(),
     });
     const n = selectedGenres.length;
+    track("onboarding_completed", {
+      tone,
+      genre_count: n,
+      has_name: firstName.trim().length > 0,
+      variant: "default",
+    });
     setFlash({
       message:
         n > 0
@@ -65,10 +72,17 @@ export default function OnboardingPage() {
   // Yanis demandait qu'on l'oriente explicitement à la sortie de
   // l'onboarding ("je viens de m'inscrire, je fais quoi maintenant ?").
   const finishAsBeginner = () => {
+    const selectedGenres = Array.from(selected);
     completeOnboarding({
-      genres: Array.from(selected),
+      genres: selectedGenres,
       tone,
       firstName: firstName.trim(),
+    });
+    track("onboarding_completed", {
+      tone,
+      genre_count: selectedGenres.length,
+      has_name: firstName.trim().length > 0,
+      variant: "beginner",
     });
     router.push("/debutant");
   };
@@ -81,6 +95,12 @@ export default function OnboardingPage() {
       genres: [],
       tone: "boloss",
       firstName: firstName.trim(),
+    });
+    track("onboarding_completed", {
+      tone: "boloss",
+      genre_count: 0,
+      has_name: firstName.trim().length > 0,
+      variant: "skip",
     });
     setFlash({
       message: "On commence léger — tu pourras affiner plus tard.",

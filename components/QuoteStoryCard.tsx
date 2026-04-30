@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { Book, Quote } from "@/lib/types";
+import { track } from "@/lib/telemetry";
 
 type Props = {
   quote: Quote;
@@ -300,6 +301,11 @@ export default function QuoteStoryCard({ quote, book, open, onClose }: Props) {
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
+    track("share_clicked", {
+      surface: "quote_card",
+      method: "download",
+      book_id: book.id,
+    });
   };
 
   const handleShare = async () => {
@@ -322,12 +328,17 @@ export default function QuoteStoryCard({ quote, book, open, onClose }: Props) {
             title: `« ${quote.text} »`,
             text: `— ${book.author}, ${book.title} · via Incipit`,
           });
+          track("share_clicked", {
+            surface: "quote_card",
+            method: "native_share",
+            book_id: book.id,
+          });
           return;
         } catch {
           /* user cancelled */
         }
       }
-      // Fallback : download
+      // Fallback : download (track inside handleDownload).
       handleDownload();
     }, "image/png");
   };
@@ -338,6 +349,11 @@ export default function QuoteStoryCard({ quote, book, open, onClose }: Props) {
       await navigator.clipboard.writeText(line);
       setCopied(true);
       setTimeout(() => setCopied(false), 1800);
+      track("share_clicked", {
+        surface: "quote_card",
+        method: "copy_text",
+        book_id: book.id,
+      });
     } catch {
       /* ignore */
     }

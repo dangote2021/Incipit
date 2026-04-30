@@ -24,6 +24,7 @@ import {
   getQuizRoundCounter,
   bumpQuizRoundCounter,
 } from "@/lib/daily-content";
+import { track } from "@/lib/telemetry";
 
 // Ancien : sessionStorage → reset à la fermeture de l'onglet, paywall
 // contournable en 2 clics. Remonté par Mehdi (panel beta).
@@ -205,6 +206,13 @@ export default function QuizPage() {
         total: state.questions.length,
         bestStreak: state.bestStreak,
         answers: roundAnswers,
+      });
+      track("quiz_completed", {
+        mode: state.mode,
+        score: state.score,
+        total: state.questions.length,
+        best_streak: state.bestStreak,
+        unlocked_count: newlyUnlocked.length,
       });
       // Pour adoucir le ton du verdict lors de la toute première partie :
       // après applyRound(), sessionsCompleted a déjà été incrémenté, donc

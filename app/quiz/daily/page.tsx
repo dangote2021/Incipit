@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import AppHeader from "@/components/AppHeader";
 import {
   LIT_QUESTIONS,
@@ -9,6 +9,7 @@ import {
   CATEGORY_LABELS,
 } from "@/lib/quiz-literature";
 import { dayOffset, todayUTC } from "@/lib/daily-content";
+import { track } from "@/lib/telemetry";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Mini-quiz du jour — 3 questions courtes, rotation quotidienne déterministe.
@@ -46,6 +47,20 @@ export default function DailyMiniQuizPage() {
 
   const done = answers.every((a) => a !== "pending");
   const score = answers.filter((a) => a === "correct").length;
+
+  // Track la complétion du mini-quiz une fois (le useEffect dépend de done,
+  // mais on a un ref pour garantir l'unicité même en strict mode dev).
+  const trackedRef = useRef(false);
+  useEffect(() => {
+    if (done && !trackedRef.current) {
+      trackedRef.current = true;
+      track("daily_quiz_completed", {
+        score,
+        total: 3,
+        date: todayUTC(),
+      });
+    }
+  }, [done, score]);
 
   const current = triad[index];
   const cat = CATEGORY_LABELS[current.q.category];

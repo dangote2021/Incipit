@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useFavorites, type Favorite } from "@/lib/favorites";
+import { track } from "@/lib/telemetry";
 
 // ─── Bouton marque-page générique : star pleine si favori, contour sinon.
 // ─── Accepte le "fav" à persister (sans addedAt qui est rempli par le hook).
@@ -40,6 +41,13 @@ export default function FavoriteButton({
     e.stopPropagation();
     const nowActive = toggle(fav);
     if (nowActive) setJustAdded(true);
+    // Telemetry — anonymisé, on capture juste l'action et le type d'objet
+    // pour mesurer le funnel "j'ai aimé → je reviens".
+    track("favorite_toggled", {
+      action: nowActive ? "added" : "removed",
+      kind: fav.kind,
+      surface: variant,
+    });
   };
 
   // Étoile pleine / contour en SVG pour netteté sur petit format.
