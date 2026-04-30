@@ -210,9 +210,10 @@ function PremiumInner() {
                 </div>
               )}
               <button
+                type="button"
                 onClick={handleManage}
                 disabled={portalBusy}
-                className="mt-6 w-full text-center border border-paper/20 text-paper/70 py-3 rounded-full text-[11px] uppercase tracking-widest font-bold hover:text-paper hover:border-paper/50 transition disabled:opacity-50"
+                className="mt-6 w-full text-center border border-paper/20 text-paper/70 min-h-[44px] py-3 rounded-full text-[11px] uppercase tracking-widest font-bold hover:text-paper hover:border-paper/50 transition disabled:opacity-50"
               >
                 {portalBusy ? "Ouverture du portail…" : "Gérer mon abonnement"}
               </button>
@@ -220,6 +221,7 @@ function PremiumInner() {
           ) : (
             <>
               <button
+                type="button"
                 onClick={handleSubscribe}
                 disabled={checkoutBusy}
                 className="w-full bg-gold text-ink rounded-3xl p-6 shadow-xl hover:bg-gold/90 transition text-left disabled:opacity-60"
