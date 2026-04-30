@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useId, useState } from "react";
 import type { Character } from "@/lib/types";
 
 type Props = {
@@ -26,6 +26,20 @@ const ROLE_COLOR: Record<Character["role"], string> = {
 export default function CharacterSheet({ characters, open, onClose }: Props) {
   const [activeId, setActiveId] = useState<string | null>(null);
   const active = characters.find((c) => c.id === activeId);
+  const titleId = useId();
+
+  // Echap pour fermer le drawer (sinon piège clavier sur desktop)
+  useEffect(() => {
+    if (!open) return;
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        if (active) setActiveId(null);
+        else onClose();
+      }
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open, onClose, active]);
 
   if (!open) return null;
 
@@ -35,6 +49,9 @@ export default function CharacterSheet({ characters, open, onClose }: Props) {
       onClick={onClose}
     >
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
         className="bg-paper w-full max-h-[85vh] overflow-auto rounded-t-3xl shadow-2xl animate-fade-up"
         onClick={(e) => e.stopPropagation()}
       >
@@ -43,22 +60,24 @@ export default function CharacterSheet({ characters, open, onClose }: Props) {
             <div className="text-[10px] uppercase tracking-widest text-bordeaux font-bold">
               {active ? "Fiche personnage" : "Personnages"}
             </div>
-            <h3 className="font-serif text-xl font-bold text-ink leading-tight">
+            <h3 id={titleId} className="font-serif text-xl font-bold text-ink leading-tight">
               {active ? active.name : `${characters.length} fiches`}
             </h3>
           </div>
           <div className="flex items-center gap-2">
             {active && (
               <button
+                type="button"
                 onClick={() => setActiveId(null)}
-                className="text-xs uppercase tracking-widest text-ink/60 font-bold px-2 py-1"
+                className="text-xs uppercase tracking-widest text-ink/60 font-bold min-h-[44px] px-3"
               >
                 ← Liste
               </button>
             )}
             <button
+              type="button"
               onClick={onClose}
-              className="text-ink/50 text-2xl font-bold w-8 h-8 flex items-center justify-center"
+              className="text-ink/50 text-2xl font-bold w-11 h-11 flex items-center justify-center"
               aria-label="Fermer"
             >
               ×
@@ -71,6 +90,7 @@ export default function CharacterSheet({ characters, open, onClose }: Props) {
             {characters.map((c) => (
               <li key={c.id}>
                 <button
+                  type="button"
                   onClick={() => setActiveId(c.id)}
                   className="w-full text-left px-5 py-4 flex items-start gap-4 hover:bg-cream/50 transition"
                 >

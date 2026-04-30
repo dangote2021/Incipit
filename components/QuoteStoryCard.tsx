@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import type { Book, Quote } from "@/lib/types";
 import { track } from "@/lib/telemetry";
 
@@ -130,6 +130,17 @@ export default function QuoteStoryCard({ quote, book, open, onClose }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [ready, setReady] = useState(false);
   const [copied, setCopied] = useState(false);
+  const titleId = useId();
+
+  // Echap pour fermer le modal
+  useEffect(() => {
+    if (!open) return;
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") onClose();
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open, onClose]);
 
   useEffect(() => {
     if (!open) return;
@@ -365,6 +376,9 @@ export default function QuoteStoryCard({ quote, book, open, onClose }: Props) {
       onClick={onClose}
     >
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
         className="bg-paper w-full sm:max-w-md max-h-[92vh] overflow-auto rounded-t-3xl sm:rounded-3xl shadow-2xl animate-fade-up"
         onClick={(e) => e.stopPropagation()}
       >
@@ -373,11 +387,12 @@ export default function QuoteStoryCard({ quote, book, open, onClose }: Props) {
             <div className="text-[10px] uppercase tracking-widest text-bordeaux font-bold">
               Carte à partager
             </div>
-            <h3 className="font-serif text-xl font-bold text-ink leading-tight">
+            <h3 id={titleId} className="font-serif text-xl font-bold text-ink leading-tight">
               Format Stories
             </h3>
           </div>
           <button
+            type="button"
             onClick={onClose}
             className="text-ink/50 text-2xl font-bold w-11 h-11 flex items-center justify-center hover:text-ink transition"
             aria-label="Fermer"
@@ -408,6 +423,7 @@ export default function QuoteStoryCard({ quote, book, open, onClose }: Props) {
           {/* Actions */}
           <div className="grid grid-cols-1 gap-2">
             <button
+              type="button"
               onClick={handleShare}
               className="w-full min-h-[44px] bg-bordeaux text-paper py-3 rounded-xl text-sm uppercase tracking-widest font-bold hover:bg-red-800 transition flex items-center justify-center gap-2"
             >
@@ -415,12 +431,14 @@ export default function QuoteStoryCard({ quote, book, open, onClose }: Props) {
             </button>
             <div className="grid grid-cols-2 gap-2">
               <button
+                type="button"
                 onClick={handleDownload}
                 className="min-h-[44px] bg-ink/10 text-ink py-3 rounded-xl text-xs uppercase tracking-widest font-bold hover:bg-ink/20 transition"
               >
                 ⬇ Télécharger
               </button>
               <button
+                type="button"
                 onClick={handleCopyText}
                 className="min-h-[44px] bg-ink/10 text-ink py-3 rounded-xl text-xs uppercase tracking-widest font-bold hover:bg-ink/20 transition"
               >
