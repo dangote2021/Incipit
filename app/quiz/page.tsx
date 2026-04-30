@@ -682,6 +682,15 @@ function Done({
   const pct = total > 0 ? Math.round((score / total) * 100) : 0;
   const modeLabel = MODE_META[mode].title;
 
+  // Toast non-bloquant qui remplace l'alert() native — moins agressif sur
+  // mobile (l'alert bloque tout l'OS jusqu'au tap OK).
+  const [toast, setToast] = useState<string | null>(null);
+  useEffect(() => {
+    if (!toast) return;
+    const t = window.setTimeout(() => setToast(null), 2500);
+    return () => window.clearTimeout(t);
+  }, [toast]);
+
   // Mehdi (panel beta) : "se faire rentrer dedans au premier essai, c'est la
   // sortie garantie". On adoucit la première partie — même verdict, tonalité
   // d'accueil. Les mauvais scores restent signalés, mais sans condescendance.
@@ -754,8 +763,10 @@ function Done({
     }
     try {
       await navigator.clipboard.writeText(`${shareText}\n${url}`);
-      alert("Score copié dans le presse-papier.");
+      setToast("Score copié dans le presse-papier.");
     } catch {
+      // Dernier recours : prompt natif. Pas idéal, mais permet la sélection
+      // manuelle du texte si clipboard et Web Share sont tous deux indispos.
       window.prompt("Copie ton score :", `${shareText}\n${url}`);
     }
   };
@@ -828,11 +839,21 @@ function Done({
 
       <section className="px-6 py-6 space-y-3">
         <button
+          type="button"
           onClick={share}
           className="w-full py-4 rounded-full bg-bordeaux text-paper font-serif font-bold text-sm uppercase tracking-widest hover:bg-ink transition"
         >
           Partager mon score
         </button>
+        {toast && (
+          <div
+            role="status"
+            aria-live="polite"
+            className="text-center text-[12px] text-ink/70 bg-cream border border-ink/10 rounded-xl px-3 py-2"
+          >
+            {toast}
+          </div>
+        )}
         {reachedFreeCap ? (
           <Link
             href="/premium"
@@ -842,6 +863,7 @@ function Done({
           </Link>
         ) : (
           <button
+            type="button"
             onClick={onReplay}
             className="w-full py-4 rounded-full border-2 border-ink text-ink font-serif font-bold text-sm uppercase tracking-widest hover:bg-ink/5 transition"
           >
@@ -852,6 +874,7 @@ function Done({
           </button>
         )}
         <button
+          type="button"
           onClick={onPickMode}
           className="w-full min-h-[44px] py-3 text-xs uppercase tracking-widest text-ink/55 font-bold hover:text-ink transition"
         >
