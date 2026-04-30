@@ -23,14 +23,17 @@ export default function LibraryStatusPicker({ initialStatus = null }: Props) {
       {STATUS_OPTIONS.map((o) => (
         <button
           key={o.key}
+          type="button"
           onClick={() => setStatus(o.key)}
-          className={`flex flex-col items-center py-3 rounded-2xl border-2 transition ${
+          aria-pressed={status === o.key}
+          aria-label={`Marquer comme : ${o.label}`}
+          className={`flex flex-col items-center min-h-[44px] py-3 rounded-2xl border-2 transition ${
             status === o.key
               ? "border-bordeaux bg-bordeaux text-paper shadow"
               : "border-ink/10 bg-paper text-ink hover:border-ink/30"
           }`}
         >
-          <span className="text-xl mb-1">{o.emoji}</span>
+          <span className="text-xl mb-1" aria-hidden="true">{o.emoji}</span>
           <span className="text-[11px] uppercase tracking-widest font-bold">
             {o.label}
           </span>
