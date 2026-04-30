@@ -467,22 +467,28 @@ function BookFoundView({
           Ouvrir la fiche complète →
         </Link>
         <button
+          type="button"
           onClick={onAddToLib}
           disabled={addedToLib}
-          className="w-full bg-sage/20 text-sage py-4 rounded-2xl text-xs uppercase tracking-widest font-bold flex items-center justify-center gap-2 hover:bg-sage/30 transition disabled:opacity-60"
+          aria-label={addedToLib ? "Livre déjà ajouté à votre bibliothèque" : "Ajouter ce livre à votre bibliothèque"}
+          className="w-full min-h-[44px] bg-sage/20 text-sage py-4 rounded-2xl text-xs uppercase tracking-widest font-bold flex items-center justify-center gap-2 hover:bg-sage/30 transition disabled:opacity-60"
         >
           {addedToLib ? "✓ Ajouté à ta bibli" : "📚 Ajouter à ma bibli"}
         </button>
         <div className="grid grid-cols-2 gap-2">
           <button
+            type="button"
             onClick={onReshoot}
-            className="bg-ink/5 text-ink py-3 rounded-2xl text-xs uppercase tracking-widest font-bold hover:bg-ink/10 transition"
+            aria-label="Refaire un scan"
+            className="min-h-[44px] bg-ink/5 text-ink py-3 rounded-2xl text-xs uppercase tracking-widest font-bold hover:bg-ink/10 transition"
           >
             ↻ Refaire un scan
           </button>
           <button
+            type="button"
             onClick={onReset}
-            className="bg-ink/5 text-ink py-3 rounded-2xl text-xs uppercase tracking-widest font-bold hover:bg-ink/10 transition"
+            aria-label="Retour à l'écran de scan"
+            className="min-h-[44px] bg-ink/5 text-ink py-3 rounded-2xl text-xs uppercase tracking-widest font-bold hover:bg-ink/10 transition"
           >
             ← Retour
           </button>
@@ -517,6 +523,8 @@ function PassageFoundView({
   onReset: () => void;
   onReshoot: () => void;
 }) {
+  const [copied, setCopied] = useState(false);
+
   const confidenceLabel =
     confidence >= 0.9
       ? "excellente"
@@ -574,9 +582,11 @@ function PassageFoundView({
       {/* Actions */}
       <div className="space-y-2">
         <button
+          type="button"
           onClick={onSaveNote}
           disabled={noted}
-          className="w-full bg-bordeaux text-paper py-4 rounded-2xl text-xs uppercase tracking-widest font-bold flex items-center justify-center gap-2 hover:bg-red-800 transition disabled:opacity-60"
+          aria-label={noted ? "Annotation déjà enregistrée" : "Enregistrer comme annotation"}
+          className="w-full min-h-[44px] bg-bordeaux text-paper py-4 rounded-2xl text-xs uppercase tracking-widest font-bold flex items-center justify-center gap-2 hover:bg-red-800 transition disabled:opacity-60"
         >
           {noted ? "✓ Enregistré dans tes annotations" : "✎ Ajouter à mes annotations"}
         </button>
@@ -591,24 +601,38 @@ function PassageFoundView({
         )}
 
         <button
-          onClick={() => {
-            navigator.clipboard?.writeText(`« ${excerpt} »`).catch(() => {});
+          type="button"
+          onClick={async () => {
+            try {
+              await navigator.clipboard.writeText(`« ${excerpt} »`);
+              setCopied(true);
+              window.setTimeout(() => setCopied(false), 2500);
+            } catch {
+              // Pas de clipboard API (vieux Safari, contexte non sécurisé) :
+              // on ne peut pas vraiment copier, donc on ne ment pas.
+              setCopied(false);
+            }
           }}
-          className="w-full bg-ink/5 text-ink py-3 rounded-2xl text-xs uppercase tracking-widest font-bold hover:bg-ink/10 transition"
+          aria-label="Copier le passage dans le presse-papier"
+          className="w-full min-h-[44px] bg-ink/5 text-ink py-3 rounded-2xl text-xs uppercase tracking-widest font-bold hover:bg-ink/10 transition"
         >
-          📋 Copier le texte
+          {copied ? "✓ Copié" : "📋 Copier le texte"}
         </button>
 
         <div className="grid grid-cols-2 gap-2">
           <button
+            type="button"
             onClick={onReshoot}
-            className="bg-ink/5 text-ink py-3 rounded-2xl text-xs uppercase tracking-widest font-bold hover:bg-ink/10 transition"
+            aria-label="Refaire un scan"
+            className="min-h-[44px] bg-ink/5 text-ink py-3 rounded-2xl text-xs uppercase tracking-widest font-bold hover:bg-ink/10 transition"
           >
             ↻ Refaire un scan
           </button>
           <button
+            type="button"
             onClick={onReset}
-            className="bg-ink/5 text-ink py-3 rounded-2xl text-xs uppercase tracking-widest font-bold hover:bg-ink/10 transition"
+            aria-label="Retour à l'écran de scan"
+            className="min-h-[44px] bg-ink/5 text-ink py-3 rounded-2xl text-xs uppercase tracking-widest font-bold hover:bg-ink/10 transition"
           >
             ← Retour
           </button>
