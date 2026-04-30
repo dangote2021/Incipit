@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useId, useState } from "react";
 import Link from "next/link";
 import CharacterSheet from "@/components/CharacterSheet";
 import type { Book, Character } from "@/lib/types";
@@ -23,6 +23,7 @@ export default function BookActionPanel({ book, characters, passagesCount }: Pro
     <>
       <div className="grid grid-cols-2 gap-3">
         <button
+          type="button"
           onClick={() => setAiOpen(true)}
           className="bg-ink text-paper rounded-2xl p-4 text-left hover:bg-ink/90 transition"
         >
@@ -36,6 +37,7 @@ export default function BookActionPanel({ book, characters, passagesCount }: Pro
         </button>
         {characters.length > 0 && (
           <button
+            type="button"
             onClick={() => setCharsOpen(true)}
             className="bg-sage text-paper rounded-2xl p-4 text-left hover:bg-sage/90 transition"
           >
@@ -64,6 +66,7 @@ export default function BookActionPanel({ book, characters, passagesCount }: Pro
           </Link>
         )}
         <button
+          type="button"
           onClick={() => setLibrairiesOpen(true)}
           className="bg-bordeaux text-paper rounded-2xl p-4 text-left hover:bg-bordeaux/90 transition"
         >
@@ -93,7 +96,10 @@ export default function BookActionPanel({ book, characters, passagesCount }: Pro
           </div>
           <div className="bg-cream border border-ink/10 rounded-xl p-3">
             <input
+              type="text"
+              aria-label={`Pose une question sur ${book.title}`}
               placeholder="Ta question…"
+              enterKeyHint="send"
               className="w-full bg-transparent text-sm text-ink placeholder:text-ink/40 focus:outline-none"
             />
           </div>
@@ -255,18 +261,35 @@ function Modal({
   onClose: () => void;
   children: React.ReactNode;
 }) {
+  // Fermeture clavier (Escape) — l'overlay est cliquable mais sans clavier
+  // l'utilisateur était bloqué sans souris.
+  const titleId = useId();
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") onClose();
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
   return (
     <div
       className="fixed inset-0 z-50 bg-ink/60 backdrop-blur-sm flex items-end sm:items-center justify-center"
       onClick={onClose}
     >
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
         className="bg-paper rounded-t-3xl sm:rounded-3xl w-full sm:max-w-md max-h-[85vh] overflow-auto p-6 shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-4">
-          <h3 className="font-serif text-xl font-bold text-ink">{title}</h3>
+          <h3 id={titleId} className="font-serif text-xl font-bold text-ink">
+            {title}
+          </h3>
           <button
+            type="button"
             onClick={onClose}
             className="text-ink/50 text-xl font-bold px-2"
             aria-label="Fermer"
@@ -282,7 +305,10 @@ function Modal({
 
 function Suggestion({ text }: { text: string }) {
   return (
-    <button className="w-full text-left text-sm bg-ink/5 hover:bg-ink/10 text-ink/80 px-3 py-2 rounded-xl transition">
+    <button
+      type="button"
+      className="w-full text-left text-sm bg-ink/5 hover:bg-ink/10 text-ink/80 px-3 py-2 rounded-xl transition"
+    >
       {text}
     </button>
   );
