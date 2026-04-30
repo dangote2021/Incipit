@@ -84,7 +84,9 @@ function LoginInner() {
               </span>
               <input
                 type="email"
+                inputMode="email"
                 autoComplete="email"
+                enterKeyHint="send"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -94,7 +96,11 @@ function LoginInner() {
             </label>
 
             {err && (
-              <div className="text-sm text-bordeaux bg-bordeaux/5 border border-bordeaux/20 rounded-xl px-4 py-3">
+              <div
+                role="alert"
+                aria-live="assertive"
+                className="text-sm text-bordeaux bg-bordeaux/5 border border-bordeaux/20 rounded-xl px-4 py-3"
+              >
                 {err}
               </div>
             )}
