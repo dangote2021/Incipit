@@ -86,6 +86,21 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <body className="min-h-screen paper-texture">
+        {/* Skip-link global — premier focus au tab depuis l'URL bar.
+            Rapporté par Théo (panel beta v6, NVDA + clavier) : sur les pages
+            avec header, il fallait tabuler 5+ fois avant d'atteindre le
+            contenu. Le lien est masqué visuellement (sr-only) tant qu'il
+            n'a pas le focus, puis vient se poser en haut à gauche en
+            écriture sobre. Cible #main-content que toutes les pages
+            (App Router) résolvent vers leur premier <main>.
+            Note : on cible aussi par fragment URL — un partage de lien
+            avec #main-content amène directement au contenu. */}
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:bg-ink focus:text-paper focus:px-4 focus:py-2 focus:rounded-full focus:text-[11px] focus:uppercase focus:tracking-widest focus:font-bold focus:shadow-2xl focus:outline focus:outline-2 focus:outline-gold"
+        >
+          Aller au contenu
+        </a>
         <AppShell>{children}</AppShell>
         <BottomNav />
         <ServiceWorkerRegister />

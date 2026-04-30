@@ -70,8 +70,15 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Carrousel vertical de pitches (scroll snap) */}
-      <main className="snap-y snap-mandatory overflow-y-scroll h-screen no-scrollbar -mt-0">
+      {/* Carrousel vertical de pitches (scroll snap).
+          Mobile (pointer:coarse) → snap-mandatory : le swipe mérite un
+          arrêt franc, le geste est natif.
+          Desktop (pointer:fine) → snap-proximity : la roulette de Magic
+          Mouse / scroll continu déclenche des sauts désorientants en
+          mandatory (retour panel beta v6, Marion). En proximity, le
+          scroll reste fluide mais accroche encore les ancres si on
+          s'arrête près d'une section. */}
+      <main className="snap-y snap-mandatory [@media(pointer:fine)]:snap-proximity overflow-y-scroll h-screen no-scrollbar -mt-0">
         {/* Banner "bon retour" — se monte uniquement si l'utilisateur a
             été absent ≥ 3 jours (signal posé par recordOpen, consommé au
             dismiss). Placé en toute première section pour être vu — c'est

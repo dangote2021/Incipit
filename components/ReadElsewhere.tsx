@@ -90,9 +90,10 @@ function ConnectorGroup({
             href={c.url}
             target="_blank"
             rel="noopener noreferrer"
+            aria-label={`${c.label} — ouvre dans un nouvel onglet`}
             className={`inline-flex items-center gap-1.5 text-[12px] font-semibold px-3.5 py-2 rounded-full transition hover:opacity-85 ${c.accent}`}
           >
-            {c.label} <span className="opacity-70">↗</span>
+            {c.label} <span className="opacity-70" aria-hidden="true">↗</span>
           </a>
         ))}
       </div>

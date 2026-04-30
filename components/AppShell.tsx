@@ -21,7 +21,18 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const widthClass = fullBleed ? "w-full" : "max-w-xl mx-auto";
   const padClass = noPad ? "" : "pb-[calc(6rem+env(safe-area-inset-bottom))]";
 
+  // ─── id="main-content" + tabIndex=-1 : cible du skip-link global posé
+  // ─── dans layout.tsx. Le tabIndex=-1 rend ce conteneur focusable
+  // ─── programmatiquement sans le mettre dans l'ordre de tabulation
+  // ─── normal — c'est le pattern WCAG 2.4.1 quand on n'a pas de <main>
+  // ─── unique au layout (chaque page apporte son propre <main>).
   return (
-    <div className={`${widthClass} min-h-screen ${padClass}`}>{children}</div>
+    <div
+      id="main-content"
+      tabIndex={-1}
+      className={`${widthClass} min-h-screen ${padClass} focus:outline-none`}
+    >
+      {children}
+    </div>
   );
 }
