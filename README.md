@@ -1,113 +1,127 @@
-# Incipit — V1.2
+# Incipit
 
-> L'app qui te fait kiffer Balzac comme TikTok t'a fait kiffer la danse.
+> *Les premières lignes qui donnent envie.*
 
-**Baseline :** *Les premières lignes qui donnent envie.*
+L'app qui redonne envie de lire les classiques. Pitches Boloss-style, passages
+clés authentiques, quiz, book clubs, reading buddies, Rap & Lit, lecture
+intégrale du domaine public, mode prof imprimable. Sobre, anti-gamification,
+pro-plaisir.
 
-Pitches punchy de grands classiques de la littérature, bibliothèque perso, notes de lecture publiques, feed social, book clubs interactifs, parcours thématiques, citations swipeables **partageables en Stories**, passages clés authentiques, défis saisonniers, reading buddies, compagnon IA, **fiches personnages accessibles en mode lecture**, **scanner OCR de livres papier**, **redirection prioritaire vers Placedeslibraires.fr**, badges et stats intimes. Ton tranchant, irrévérencieux — mais respect absolu du texte.
+---
 
 ## Stack
 
-- Next.js 14 (App Router, Server Components)
-- TypeScript 5
+- Next.js 14 (App Router, Server Components, Edge Functions)
+- TypeScript 5 strict
 - Tailwind CSS
-- PWA : `manifest.json` + service worker minimaliste (cache-first)
+- Supabase (auth magic link, Postgres, RLS) — DB partagée avec Adventurer,
+  tables préfixées `incipit_*`
+- Stripe Checkout + Customer Portal + webhooks pour le Premium
+- Web Push API + Service Worker + VAPID pour les notifications quotidiennes
+- PWA + Capacitor (cible iOS / Android, en cours)
 - Déploiement Vercel — projet `incipit` distinct d'Adventurer
-- V2 prévue : Supabase (auth, DB, realtime), génération de pitches via Claude avec relecture humaine
+
+L'app fonctionne **sans** backend (mode V1 localStorage). Le backend est
+purement additif : si une variable d'environnement manque, la feature
+correspondante se désactive sans casser le reste. Voir `SETUP.md` pour câbler
+auth, Stripe et push en ~20 minutes.
 
 ## Lancer en local
 
 ```bash
 npm install
-npm run dev
+npm run dev          # http://localhost:3000
+npm run build        # build prod
 ```
 
-Puis ouvre http://localhost:3000.
-
-## Déploiement
-
-Le projet est prêt à être déployé en standalone sur Vercel. Aucune variable d'environnement n'est requise pour la V1 — toutes les données sont mockées dans `lib/mock-data.ts`.
-
-> Important : le projet est déployé sous le nom `incipit`, indépendant d'Adventurer. Les deux projets sont strictement séparés côté Vercel.
-
-## Les 12 classiques du MVP
-
-Pitches 100 % originaux, incipits et passages clés en droit de courte citation (art. L.122-5 CPI), œuvres dans le domaine public.
-
-1. **L'Étranger** — Camus
-2. **Madame Bovary** — Flaubert
-3. **Germinal** — Zola
-4. **Les Liaisons dangereuses** — Laclos
-5. **Le Rouge et le Noir** — Stendhal
-6. **Bel-Ami** — Maupassant
-7. **Notre-Dame de Paris** — Hugo
-8. **Voyage au bout de la nuit** — Céline
-9. **Candide** — Voltaire
-10. **Le Père Goriot** — Balzac
-11. **Les Fleurs du Mal** — Baudelaire
-12. **Du côté de chez Swann** — Proust
-
-## Routes & écrans
+## Routes principales
 
 ```
-incipit/
-├── /                              → Feed de pitches en carrousel vertical + bannière contextuelle
-├── /onboarding                    → Choix genres + ton (persistés localement)
-├── /explore                       → 4 onglets : Thèmes / Citations / Passages clés / Défis
-├── /punchlines                    → Rap & Lit : 8 punchlines annotées littérairement + lien Genius
-├── /domaine-public                → Catalogue des 10 livres libres + liens Gutenberg / Wikisource / Gallica
-├── /library                       → Bibliothèque perso
-├── /book/[id]                     → Fiche livre (pitch, incipit, passages clés, reco, annotations,
-│                                    compagnon IA, libraires, buddy, mode "je reprends",
-│                                    connecteurs Audible / Kindle / Kobo / Apple Books / Google Play
-│                                    et lecture intégrale si domaine public)
-├── /book/[id]/read                → Mode lecture : passages clés + tailles de typo + fiches perso
-├── /buddy/[bookId]                → Lecture partagée avec spoiler-guard
-├── /scan                          → Incipit Lens : OCR livre papier (couverture ou passage)
-├── /clubs                         → Liste des book clubs
-├── /clubs/[id]                    → Détail club : livre du mois + discussions
-├── /feed                          → Feed social (activités de la communauté)
-├── /profile                       → Profil : stats intimes, badges, étagère 3D, annotations
-├── /about                         → Manifeste + crédits + mentions légales
-├── /robots.txt                    → Indexation autorisée
-└── /sitemap.xml                   → 11 routes statiques + livres + clubs + buddies
+/                     → Home : incipit du jour + carrousel
+/onboarding           → Choix genres + ton (persistés localement)
+/explore              → Thèmes / Citations / Passages clés / Défis
+/punchlines           → Rap & Lit — punchlines annotées
+/domaine-public       → Catalogue libre + liens Gutenberg/Wikisource/Gallica
+/library              → Bibliothèque perso
+/book/[id]            → Fiche livre complète (pitch, incipit, passages,
+                        contexte, bio, libraire, recos, connecteurs lecture,
+                        OG image dynamique avec l'incipit)
+/book/[id]/read       → Mode lecture (passages clés + fiches personnages)
+/buddy/[bookId]       → Lecture partagée avec spoiler-guard
+/scan                 → Incipit Lens — OCR livre papier
+/clubs · /clubs/[id]  → Book clubs
+/feed                 → Activités communauté
+/profile              → Stats, badges, étagère, annotations
+/quiz                 → Quiz littérature multi-modes
+/quiz/daily           → Quiz quotidien (3 questions sur l'incipit du jour)
+/quiz/badges          → Galerie des jalons culturels débloqués
+/incipit-du-jour      → Incipit du jour + archive 30 jours
+/debutant             → Parcours gradué 30 jours pour démarrer
+/premium              → Paywall + Stripe checkout
+/prof                 → Mode prof : quiz imprimable A4 + fiche classe (CC BY-NC)
+/auth/login           → Magic link
+/about · /legal · /privacy · /terms
+/api/health           → Santé : booléens config (sans fuiter les valeurs)
+/robots.txt · /sitemap.xml
 ```
 
-## Features V1
+## Ce qui est dans l'app aujourd'hui
 
-### Paquet 1 — exploration intelligente
-- **Feed de pitches** : carrousel vertical scroll-snap (signature).
-- **Incipits** : premières lignes dépliables sur chaque fiche livre.
-- **Passages clés** : 3 à 5 extraits authentiques par livre (domaine public) accompagnés d'un pitch de mise en contexte. Tu lis du vrai texte, pas une paraphrase.
-- **Parcours thématiques** : 8 moods transversaux (Romance / Aventure / Histoire / Psychologique / Social / Voyage initiatique / Noir / Métaphysique).
-- **Recommandations** : « si tu aimes X, tente Y » avec raison éditoriale.
-- **Citations swipeables** : phrases qui tiennent seules.
-- **Défis saisonniers** : 4 parcours thématiques (4 livres max), sans logique de streak.
+### Lecture & exploration
+- **Feed de pitches** : carrousel vertical scroll-snap.
+- **Incipits** : premières lignes dépliables sur chaque fiche.
+- **Passages clés** : 3-5 extraits authentiques par livre (domaine public),
+  pitchés en contexte. On lit du vrai texte, pas une paraphrase.
+- **Parcours thématiques** : 8 moods transversaux.
+- **Recommandations éditoriales** : « si tu aimes X, tente Y ».
+- **Citations swipeables** + cartes Stories 1080×1920 partageables.
+- **Mode lecture** : typo ajustable, fiches personnages en drawer.
 
-### Paquet 2 — social & lecture
-- **Reading buddies** : progression synchronisée + messages avec spoiler-guard (filtre sur l'avancée).
+### Social & guidance
+- **Reading buddies** : progression synchronisée + spoiler-guard.
 - **Book clubs** : livre du mois, discussions, événements.
-- **Annotations publiques** : passages soulignés + réaction.
-- **Feed social** : activités de la communauté.
-- **Compagnon IA** : modale de questions sur le livre (bêta, relecture humaine avant publication).
-- **Mode "je reprends"** : recap « Précédemment dans… » pour les livres en cours.
-- **Badges & stats intimes** : temps de lecture, histogramme 30 jours, badges rares sans streak Duolingo.
-- **Étagère 3D** : vitrine des livres lus.
+- **Annotations publiques** + feed social.
+- **Compagnon IA** : modale Q/R relue avant publication.
+- **Mode "je reprends"** : recap pour les livres en cours.
+- **Mode débutant** : 10 incipits gradués sur 30 jours.
 
-### Paquet 3 — V1.1 : lecture immersive + partage + scan + indés
-- **Fiches personnages** : drawer bottom-sheet accessible en un clic pendant la lecture. Pitch d'une phrase, description sans spoiler, citation-signature, relations. 38 fiches écrites pour les 12 classiques (y compris figures poétiques pour les Fleurs du Mal).
-- **Cartes citations Stories** : chaque citation se transforme en image 1080×1920 en un tap. Gradient du livre, Playfair Display, wordmark Incipit, URL watermark. Téléchargement PNG + `navigator.share` natif si supporté.
-- **Incipit Lens (OCR)** : scanner via `/scan`. Photo de couverture → reconnaissance + fiche livre. Photo de passage → extraction + sauvegarde dans les annotations. Flow complet avec state `idle` / `processing` (barre de progression + scan-line animée) / `book-found` / `passage-found`.
-- **Placedeslibraires.fr en priorité** : modale "Chez ton libraire" refondue. Bannière bordeaux-gold CTA principal qui envoie vers placedeslibraires.fr (2 800 libraires indés). Liste des librairies proches avec deep-links vers le réseau. Autres plateformes éthiques (Lalibrairie.com, Leslibraires.fr, Mollat) repliées dans `<details>`. **Aucun lien Amazon, aucun lien Fnac.**
+### Quiz & engagement
+- **Quiz littérature** multi-types (incipit, auteur, personnage, date,
+  figures de style) — corpus 40+ incipits.
+- **Quiz quotidien** : 3 questions sur l'incipit du jour.
+- **Badges** : jalons culturels (sans XP ni streak Duolingo).
+- **Streak** avec flamme + jalons 7/30/100 jours, masquable.
+- **Re-engagement** J+3/J+7 pour les absents.
+- **Mode prof** : génère un quiz A4 imprimable, options mélangées
+  déterministe, corrigé optionnel, licence CC BY-NC 4.0.
 
-### Paquet 4 — V1.2 : hub d'inspiration + SEO + persistance
-- **Rap & Lit** : 8 punchlines analysées à travers figures de style, avec lien direct vers les paroles annotées sur Genius. On ne reproduit pas les paroles (copyright).
-- **Connecteurs de lecture** : chaque fiche livre renvoie vers Audible, Kindle, Kobo, Apple Books, Google Play Books et les libraires indépendants. Pour les œuvres du domaine public, bloc dédié "Lecture intégrale · gratuite" avec Project Gutenberg, Wikisource et Gallica.
-- **Domaine public** : page `/domaine-public` dédiée aux 10 classiques libres (Bovary, Germinal, Les Liaisons, Rouge et Noir, Bel-Ami, Notre-Dame, Candide, Père Goriot, Fleurs du Mal, Du côté de chez Swann). Manifeste lecture libre + 3 sources officielles.
-- **SEO & crawl** : `generateMetadata` dynamique par livre et par club (OpenGraph book, Twitter summary). `robots.ts` + `sitemap.ts` générant 39+ URLs priorisées.
-- **Persistance onboarding** : préférences stockées en `localStorage` (jamais envoyées côté serveur). Bannière d'accueil contextuelle : nouveau visiteur → CTA calibrer ; retour → message adapté à l'écart de jours.
-- **Pages d'erreur éditorialisées** : `not-found.tsx` ton Proust, `error.tsx` ton Camus, `loading.tsx` pulsé.
-- **Page À propos** : manifeste, 6 principes, crédits Gutenberg/Wikisource/Gallica/Genius/Placedeslibraires, mentions légales RGPD-friendly.
+### Hub d'inspiration
+- **Rap & Lit** : punchlines de rap analysées en figures de style + lien
+  Genius timecodé. On ne reproduit pas les paroles (copyright).
+- **Connecteurs lecture** : Audible, Kindle, Kobo, Apple Books, Google Play,
+  + libraires indépendants (priorité Placedeslibraires.fr, **aucun** lien
+  Amazon/Fnac).
+- **Domaine public** : page dédiée + lecture intégrale via Gutenberg /
+  Wikisource / Gallica.
+
+### Backend v2 (optionnel, désactivable feature par feature)
+- **Auth** Supabase magic link, sessions sécurisées via cookies.
+- **Sync** favoris / streak / préférences / premium entre appareils.
+- **Premium** Stripe Checkout + Customer Portal + webhooks signés.
+- **Push** notifications quotidiennes (cron Vercel `/api/cron/daily-push`).
+- **Telemetry** anonyme (onboarding, quiz, partage, favoris, premium).
+- **Rate limiting** côté DB.
+
+### SEO & polish
+- `generateMetadata` dynamique par livre / club.
+- **OG images dynamiques** générées à l'edge : image par défaut
+  (`/opengraph-image`) + image par livre (`/book/[id]/opengraph-image`)
+  qui met en scène l'incipit, l'auteur et l'année.
+- `robots.ts` + `sitemap.ts` (39+ URLs).
+- Headers de sécurité (X-Frame-Options, HSTS, Permissions-Policy, etc.) via
+  `next.config.js`.
+- `/api/health` pour vérifier la config en prod.
+- Pages 404/500 éditorialisées (ton Proust / ton Camus).
 
 ## Design system
 
@@ -123,25 +137,31 @@ Palette éditoriale inspirée des vieux livres reliés :
 | cream     | `#F3E9D2`  | Fond secondaire                 |
 | dust      | `#E8DFC9`  | Bordures discrètes              |
 
-Typographies : **Playfair Display** (titres, serif littéraire) + **Inter** (corps).
+Typographies : **Playfair Display** (titres, serif littéraire) + **Inter**
+(corps).
 
 ## Principes produit
 
-1. **L'app sert la lecture, pas l'inverse.** Pas de streak Duolingo, pas de compteurs creux.
+1. **L'app sert la lecture, pas l'inverse.** Pas de streak Duolingo, pas de
+   compteurs creux.
 2. **Le ton est un moat.** Boloss assumé dans les pitches, littéraire ailleurs.
-3. **Respect absolu du texte.** On donne à lire du vrai Zola, pas du Zola remâché. Les Passages clés sont authentiques (art. L.122-5 CPI), encadrés d'un contexte éditorial.
-4. **Social organique.** Les rencontres naissent autour des livres (clubs, buddies, notes).
+3. **Respect absolu du texte.** Vrai Zola, pas du Zola remâché. Passages
+   clés authentiques (art. L.122-5 CPI), encadrés d'un contexte éditorial.
+4. **Social organique.** Les rencontres naissent autour des livres.
 5. **Mobile-first absolu.** Si ça marche pas sur iPhone SE, c'est pas bon.
+6. **Ajouter ≠ casser.** Le backend est additif — sans variables d'env,
+   l'app reste 100 % fonctionnelle en mode local.
 
-## Roadmap V2
+## Documentation
 
-- Auth Supabase + bibliothèque persistée par utilisateur
-- Génération de pitches via Claude avec garde-fous éditoriaux (un humain relit avant publication)
-- 100 classiques au lancement
-- Notifications push pour sessions book club
-- Integration publique librairies (liens d'achat, disponibilité en temps réel)
-- Feature "extraits quotidiens" : un passage beau à lire chaque matin
+- `SETUP.md` — câblage Supabase / Stripe / VAPID en ~20 min, règles de
+  cohabitation avec la base Adventurer.
+- `supabase/migrations/0001_incipit_init.sql` — schéma DB Incipit.
 
 ## Crédits
+
+Pitches Boloss-style 100 % originaux, écrits pour Incipit.
+Incipits et passages clés en droit de courte citation (art. L.122-5 CPI),
+œuvres majoritairement dans le domaine public.
 
 Guillaume Coulon · Incipit · 2026
