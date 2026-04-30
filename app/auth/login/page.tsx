@@ -125,7 +125,7 @@ function LoginInner() {
         <div className="mt-10 text-[11px] text-ink/50 leading-relaxed">
           On n'utilise ton email que pour te reconnecter. Pas de newsletter, pas
           de partage tiers. Voir la{" "}
-          <Link href="/legal/privacy" className="underline text-bordeaux">
+          <Link href="/privacy" className="underline text-bordeaux">
             politique de confidentialité
           </Link>
           .
