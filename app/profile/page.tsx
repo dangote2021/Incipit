@@ -60,7 +60,11 @@ export default function ProfilePage() {
       <AppHeader
         title="Profil"
         action={
-          <button className="text-xs uppercase tracking-widest font-bold text-ink/60">
+          <button
+            type="button"
+            aria-label="Modifier le profil (bientôt — bêta)"
+            className="text-xs uppercase tracking-widest font-bold text-ink/60 min-h-[44px] px-3"
+          >
             Modifier
           </button>
         }

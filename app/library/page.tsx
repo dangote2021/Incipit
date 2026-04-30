@@ -69,8 +69,9 @@ export default function LibraryPage() {
           {TABS.map((t) => (
             <button
               key={t.key}
+              type="button"
               onClick={() => setTab(t.key)}
-              className={`shrink-0 text-xs uppercase tracking-widest font-bold px-4 py-2 rounded-full transition ${
+              className={`shrink-0 text-xs uppercase tracking-widest font-bold min-h-[44px] px-4 py-2 rounded-full transition ${
                 tab === t.key
                   ? "bg-ink text-paper"
                   : "bg-ink/5 text-ink/70 hover:bg-ink/10"
