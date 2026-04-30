@@ -1,7 +1,7 @@
 "use client";
 
 import { notFound } from "next/navigation";
-import { use, useState } from "react";
+import { use, useEffect, useState } from "react";
 import Link from "next/link";
 import AppHeader from "@/components/AppHeader";
 import BookCover from "@/components/BookCover";
@@ -87,6 +87,14 @@ export default function ClubPage({
   const joined = ME.joinedClubs.includes(club.id);
   const [isJoined, setJoined] = useState(joined);
   const [draft, setDraft] = useState("");
+  const [posted, setPosted] = useState(false);
+
+  // Auto-clear "publié" toast après 2.5s
+  useEffect(() => {
+    if (!posted) return;
+    const t = window.setTimeout(() => setPosted(false), 2500);
+    return () => window.clearTimeout(t);
+  }, [posted]);
 
   const posts = MOCK_POSTS[club.id] ?? [];
   // Sample members = 5 first users
@@ -119,8 +127,9 @@ export default function ClubPage({
         </p>
 
         <button
+          type="button"
           onClick={() => setJoined(!isJoined)}
-          className={`mt-5 w-full py-3 rounded-full text-xs font-bold uppercase tracking-widest transition ${
+          className={`mt-5 w-full min-h-[44px] py-3 rounded-full text-xs font-bold uppercase tracking-widest transition ${
             isJoined
               ? "bg-paper/15 text-paper border border-paper/30"
               : "bg-gold text-ink hover:scale-[1.02]"
@@ -176,7 +185,11 @@ export default function ClubPage({
                   {formatDate(club.nextMeeting)}
                 </div>
               </div>
-              <button className="text-xs uppercase tracking-widest font-bold text-bordeaux">
+              <button
+                type="button"
+                aria-label="Confirmer ta présence (bientôt — bêta)"
+                className="text-xs uppercase tracking-widest font-bold text-bordeaux min-h-[44px] px-3"
+              >
                 Je viens
               </button>
             </div>
@@ -222,12 +235,28 @@ export default function ClubPage({
               />
               <div className="flex justify-end gap-2 mt-2">
                 <button
-                  onClick={() => setDraft("")}
-                  className="text-xs uppercase tracking-widest font-bold bg-ink text-paper px-4 py-2 rounded-full"
+                  type="button"
+                  onClick={() => {
+                    if (!draft.trim()) return;
+                    setDraft("");
+                    setPosted(true);
+                  }}
+                  disabled={!draft.trim()}
+                  className="text-xs uppercase tracking-widest font-bold bg-ink text-paper min-h-[44px] px-4 py-2 rounded-full disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Publier
                 </button>
               </div>
+              {posted && (
+                <div
+                  role="status"
+                  aria-live="polite"
+                  className="mt-3 text-[11px] text-ink/70 bg-cream border border-ink/10 rounded-xl px-3 py-2"
+                >
+                  Discussion lancée — bêta : pas encore de back-end clubs, ton
+                  brouillon est juste vidé en local.
+                </div>
+              )}
             </div>
           )}
 
@@ -254,8 +283,20 @@ export default function ClubPage({
                     {p.text}
                   </p>
                   <div className="mt-3 flex items-center gap-4 text-[11px] text-ink/50 font-semibold">
-                    <button className="hover:text-bordeaux">♡ {p.likes}</button>
-                    <button className="hover:text-ink">💬 Répondre</button>
+                    <button
+                      type="button"
+                      aria-label={`Aimer (${p.likes} j'aime — bientôt)`}
+                      className="hover:text-bordeaux min-h-[44px] px-2"
+                    >
+                      ♡ {p.likes}
+                    </button>
+                    <button
+                      type="button"
+                      aria-label="Répondre (bientôt — bêta)"
+                      className="hover:text-ink min-h-[44px] px-2"
+                    >
+                      💬 Répondre
+                    </button>
                   </div>
                 </li>
               );

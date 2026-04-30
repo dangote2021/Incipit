@@ -82,7 +82,7 @@ est utilisée uniquement dans les routes `/api/stripe/webhook`, `/api/push/*`,
 STRIPE_SECRET_KEY=sk_live_...
 STRIPE_WEBHOOK_SECRET=whsec_...
 NEXT_PUBLIC_STRIPE_PRICE_ID=price_XXX
-NEXT_PUBLIC_SITE_URL=https://incipit.vercel.app
+NEXT_PUBLIC_SITE_URL=https://incipit-navy.vercel.app
 ```
 
 > Les abonnements Incipit sont stockés dans `incipit_premium` — totalement

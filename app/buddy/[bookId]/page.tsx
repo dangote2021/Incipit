@@ -2,7 +2,7 @@
 
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { useMemo, useState, use } from "react";
+import { useEffect, useMemo, useState, use } from "react";
 import AppHeader from "@/components/AppHeader";
 import BookCover from "@/components/BookCover";
 import {
@@ -30,6 +30,15 @@ export default function BuddyPage({
   const [progress, setProgress] = useState(myProgress);
   const [draft, setDraft] = useState("");
   const [unlocked, setUnlocked] = useState(false);
+  const [sent, setSent] = useState(false);
+
+  // Auto-clear "envoyé" toast après 2.5s — la rétention dépend de l'attention
+  // visuelle, pas d'un dismiss manuel.
+  useEffect(() => {
+    if (!sent) return;
+    const t = window.setTimeout(() => setSent(false), 2500);
+    return () => window.clearTimeout(t);
+  }, [sent]);
 
   // Messages visibles = ceux dont atProgress <= mon progrès
   // (sauf si on a volontairement déverrouillé les spoilers)
@@ -149,8 +158,9 @@ export default function BuddyPage({
             </h2>
             {hiddenCount > 0 && (
               <button
+                type="button"
                 onClick={() => setUnlocked((v) => !v)}
-                className="text-[11px] uppercase tracking-widest font-bold text-ink/50"
+                className="text-[11px] uppercase tracking-widest font-bold text-ink/50 min-h-[44px] px-2"
               >
                 {unlocked
                   ? "Reprotéger"
@@ -219,12 +229,28 @@ export default function BuddyPage({
               Ton message ne sera visible que des lecteurs arrivés à {progress}%.
             </span>
             <button
-              onClick={() => setDraft("")}
-              className="bg-paper text-ink text-xs uppercase tracking-widest font-bold px-4 py-2 rounded-full"
+              type="button"
+              onClick={() => {
+                if (!draft.trim()) return;
+                setDraft("");
+                setSent(true);
+              }}
+              disabled={!draft.trim()}
+              className="bg-paper text-ink text-xs uppercase tracking-widest font-bold min-h-[44px] px-4 py-2 rounded-full disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Envoyer
             </button>
           </div>
+          {sent && (
+            <div
+              role="status"
+              aria-live="polite"
+              className="mt-3 text-[11px] text-paper/80 bg-paper/10 border border-paper/20 rounded-xl px-3 py-2"
+            >
+              Message envoyé — visible aux lecteurs à ≥ {progress}%. (bêta : pas
+              encore de back-end buddy, ton brouillon est juste vidé)
+            </div>
+          )}
         </section>
 
         <div className="pt-2">
