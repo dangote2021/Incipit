@@ -1,8 +1,10 @@
 // Incipit — Service Worker minimaliste
 // Stratégie : cache-first pour les assets statiques, network-first pour le HTML.
 // Objectif MVP : permettre la relecture offline des pages déjà visitées.
+// Ajout v4 : push event handler pour Web Push (VAPID) — notif quotidienne
+// envoyée par /api/cron/daily-push.
 
-const CACHE_VERSION = "incipit-v3";
+const CACHE_VERSION = "incipit-v4";
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 
@@ -76,6 +78,50 @@ self.addEventListener("fetch", (event) => {
           return resp;
         })
         .catch(() => cached || new Response("", { status: 408 }));
+    })
+  );
+});
+
+// ─── Push notifications (Web Push / VAPID) ───────────────────────────────
+// Le serveur envoie un payload JSON :
+//   { title, body, url, tag }
+// On l'affiche, et on memorise l'URL pour la relancer au clic.
+self.addEventListener("push", (event) => {
+  let data = { title: "Incipit du jour", body: "Un nouveau classique t'attend.", url: "/", tag: "incipit-daily" };
+  try {
+    if (event.data) {
+      const json = event.data.json();
+      data = { ...data, ...json };
+    }
+  } catch (e) {
+    // payload non-JSON → on garde le défaut
+    if (event.data) data.body = event.data.text();
+  }
+
+  event.waitUntil(
+    self.registration.showNotification(data.title, {
+      body: data.body,
+      icon: "/icon-192.png",
+      badge: "/icon-192.png",
+      tag: data.tag,
+      data: { url: data.url || "/" },
+    })
+  );
+});
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const url = (event.notification.data && event.notification.data.url) || "/";
+  event.waitUntil(
+    self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((clients) => {
+      for (const c of clients) {
+        if ("focus" in c) {
+          c.focus();
+          if ("navigate" in c) c.navigate(url);
+          return;
+        }
+      }
+      if (self.clients.openWindow) return self.clients.openWindow(url);
     })
   );
 });

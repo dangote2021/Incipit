@@ -9,6 +9,7 @@ import BadgePanel from "@/components/BadgePanel";
 import FavoritesSection from "@/components/FavoritesSection";
 import HideStreakToggle from "@/components/HideStreakToggle";
 import IOSInstallCard from "@/components/IOSInstallCard";
+import AccountSection from "@/components/AccountSection";
 import { getPrefs } from "@/lib/prefs";
 import {
   ME,
@@ -383,6 +384,9 @@ export default function ProfilePage() {
             sur iOS Safari hors mode standalone). Sur Android / Chrome / déjà
             installé : le composant retourne null, zéro impact visuel. */}
         <IOSInstallCard />
+
+        {/* Compte + sync + push — visible uniquement si Supabase configuré. */}
+        <AccountSection />
 
         {/* Actions */}
         <section className="pt-2 space-y-2">

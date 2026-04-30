@@ -19,7 +19,7 @@ export async function POST(req: Request) {
     );
   }
 
-  let body: { email?: string } = {};
+  let body: { email?: string; next?: string } = {};
   try {
     body = await req.json();
   } catch {
@@ -32,6 +32,21 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "invalid_email" }, { status: 400 });
   }
 
+  // Sanitisation du next : on accepte uniquement des paths internes
+  // (commençant par /, sans //, sans \\, longueur raisonnable).
+  let next = "/";
+  if (typeof body.next === "string") {
+    const candidate = body.next.trim();
+    if (
+      candidate.startsWith("/") &&
+      !candidate.startsWith("//") &&
+      !candidate.includes("\\") &&
+      candidate.length < 200
+    ) {
+      next = candidate;
+    }
+  }
+
   const supabase = serverSupabase();
   if (!supabase) {
     return NextResponse.json(
@@ -40,10 +55,15 @@ export async function POST(req: Request) {
     );
   }
 
+  // On embarque le next dans l'URL de callback pour que /auth/callback
+  // sache où rediriger après exchangeCodeForSession.
+  const callbackUrl = new URL(`${siteUrl()}/auth/callback`);
+  if (next !== "/") callbackUrl.searchParams.set("next", next);
+
   const { error } = await supabase.auth.signInWithOtp({
     email,
     options: {
-      emailRedirectTo: `${siteUrl()}/auth/callback`,
+      emailRedirectTo: callbackUrl.toString(),
       // Crée un compte si nécessaire (comportement attendu : on ne distingue
       // pas signup/signin, on envoie toujours un magic link).
       shouldCreateUser: true,

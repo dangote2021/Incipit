@@ -1,18 +1,30 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import AppHeader from "@/components/AppHeader";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // /auth/login — écran magic link.
 // Pas de mot de passe : l'utilisateur entre son email, on envoie un lien,
-// il clique, on le ramène sur /auth/callback puis la home.
+// il clique, on le ramène sur /auth/callback puis (selon ?next=) sur la
+// page d'origine ou la home.
 // ─────────────────────────────────────────────────────────────────────────────
 
 type Status = "idle" | "sending" | "sent" | "error";
 
 export default function LoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginInner />
+    </Suspense>
+  );
+}
+
+function LoginInner() {
+  const params = useSearchParams();
+  const next = params.get("next") || "/";
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<Status>("idle");
   const [err, setErr] = useState<string | null>(null);
@@ -25,7 +37,7 @@ export default function LoginPage() {
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ email: email.trim() }),
+        body: JSON.stringify({ email: email.trim(), next }),
       });
       if (res.status === 503) {
         setStatus("error");

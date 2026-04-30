@@ -1,18 +1,130 @@
 "use client";
 
 import Link from "next/link";
+import { Suspense, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import AppHeader from "@/components/AppHeader";
 import { usePremium, FEATURES, formatTrialRemaining } from "@/lib/premium";
+import { useAuth } from "@/lib/supabase/use-auth";
 
-// ─── Page /premium : paywall mock + value prop Boloss.
-// ─── Tout est côté client parce que l'état Premium vit en localStorage.
+// ─── Page /premium : paywall — Stripe checkout si configuré, sinon
+// ─── activate local (pour la démo). Le portail (cancel) est wired aussi.
 export default function PremiumPage() {
+  return (
+    <Suspense fallback={null}>
+      <PremiumInner />
+    </Suspense>
+  );
+}
+
+function PremiumInner() {
+  const params = useSearchParams();
+  const stripeSuccess = params.get("success") === "1";
+  const stripeCanceled = params.get("canceled") === "1";
   const { isPremium, activatedAt, trialEndsAt, activate, deactivate, hydrated } =
     usePremium();
+  const { user, configured: authConfigured } = useAuth();
+  const router = useRouter();
+  const [checkoutBusy, setCheckoutBusy] = useState(false);
+  const [portalBusy, setPortalBusy] = useState(false);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
+
+  const handleSubscribe = async () => {
+    setCheckoutError(null);
+
+    // Si Supabase n'est pas câblé → pas de Stripe possible, on retombe sur
+    // l'activation locale (mode démo / V1).
+    if (!authConfigured) {
+      activate();
+      return;
+    }
+
+    // Pas connecté → on dirige vers le login en gardant le retour vers /premium.
+    if (!user) {
+      router.push("/auth/login?next=/premium");
+      return;
+    }
+
+    setCheckoutBusy(true);
+    try {
+      const res = await fetch("/api/stripe/checkout", { method: "POST" });
+      if (res.status === 503) {
+        // Backend Stripe pas configuré → fallback démo.
+        activate();
+        return;
+      }
+      if (!res.ok) {
+        setCheckoutError("Impossible de démarrer le paiement, réessaie.");
+        return;
+      }
+      const json = (await res.json()) as { url?: string };
+      if (json.url) {
+        window.location.href = json.url;
+      } else {
+        setCheckoutError("Réponse invalide du serveur.");
+      }
+    } catch (e) {
+      console.warn("[premium] checkout error:", e);
+      setCheckoutError("Connexion impossible, réessaie plus tard.");
+    } finally {
+      setCheckoutBusy(false);
+    }
+  };
+
+  const handleManage = async () => {
+    if (!authConfigured || !user) {
+      deactivate();
+      return;
+    }
+    setPortalBusy(true);
+    try {
+      const res = await fetch("/api/stripe/portal", { method: "POST" });
+      if (!res.ok) {
+        deactivate();
+        return;
+      }
+      const json = (await res.json()) as { url?: string };
+      if (json.url) {
+        window.location.href = json.url;
+      } else {
+        deactivate();
+      }
+    } catch {
+      deactivate();
+    } finally {
+      setPortalBusy(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-paper via-cream to-dust">
       <AppHeader title="Premium" subtitle="Débloquer l'app au complet" back />
+
+      {/* Bandeau retour Stripe — afficher feedback paiement. */}
+      {stripeSuccess && (
+        <section className="px-6 pt-4">
+          <div className="rounded-2xl border-2 border-sage/40 bg-sage/10 px-4 py-3 text-sm">
+            <div className="text-[10px] uppercase tracking-[0.25em] text-sage font-bold">
+              Paiement reçu
+            </div>
+            <div className="font-serif text-ink mt-1">
+              Bienvenue dans Premium. Ton accès est activé — bonne lecture.
+            </div>
+          </div>
+        </section>
+      )}
+      {stripeCanceled && (
+        <section className="px-6 pt-4">
+          <div className="rounded-2xl border-2 border-bordeaux/30 bg-bordeaux/5 px-4 py-3 text-sm">
+            <div className="text-[10px] uppercase tracking-[0.25em] text-bordeaux font-bold">
+              Paiement annulé
+            </div>
+            <div className="font-serif text-ink mt-1">
+              Pas de débit. Tu peux réessayer quand tu veux.
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Hero */}
       <section className="px-6 pt-8 pb-10 relative overflow-hidden">
@@ -67,31 +179,46 @@ export default function PremiumPage() {
                 </div>
               )}
               <button
-                onClick={deactivate}
-                className="mt-6 w-full text-center border border-paper/20 text-paper/70 py-3 rounded-full text-[11px] uppercase tracking-widest font-bold hover:text-paper hover:border-paper/50 transition"
+                onClick={handleManage}
+                disabled={portalBusy}
+                className="mt-6 w-full text-center border border-paper/20 text-paper/70 py-3 rounded-full text-[11px] uppercase tracking-widest font-bold hover:text-paper hover:border-paper/50 transition disabled:opacity-50"
               >
-                Revenir à la version gratuite
+                {portalBusy ? "Ouverture du portail…" : "Gérer mon abonnement"}
               </button>
             </div>
           ) : (
-            <button
-              onClick={activate}
-              className="w-full bg-gold text-ink rounded-3xl p-6 shadow-xl hover:bg-gold/90 transition text-left"
-            >
-              <div className="text-[10px] uppercase tracking-[0.3em] font-black">
-                7 jours offerts
-              </div>
-              <div className="font-serif text-2xl font-black mt-1">
-                Activer Premium
-              </div>
-              <div className="text-sm mt-2 opacity-80">
-                Résiliable en 2 clics. (Paiement non activé en bêta — c'est
-                une démo, pas de débit.)
-              </div>
-              <div className="mt-4 inline-flex items-center gap-2 text-[11px] uppercase tracking-widest font-bold">
-                Débloquer maintenant →
-              </div>
-            </button>
+            <>
+              <button
+                onClick={handleSubscribe}
+                disabled={checkoutBusy}
+                className="w-full bg-gold text-ink rounded-3xl p-6 shadow-xl hover:bg-gold/90 transition text-left disabled:opacity-60"
+              >
+                <div className="text-[10px] uppercase tracking-[0.3em] font-black">
+                  7 jours offerts
+                </div>
+                <div className="font-serif text-2xl font-black mt-1">
+                  {checkoutBusy ? "Préparation…" : "Activer Premium"}
+                </div>
+                <div className="text-sm mt-2 opacity-80">
+                  {authConfigured
+                    ? "Paiement sécurisé via Stripe. Résiliable en 2 clics."
+                    : "Résiliable en 2 clics. (Démo locale — paiement pas branché.)"}
+                </div>
+                <div className="mt-4 inline-flex items-center gap-2 text-[11px] uppercase tracking-widest font-bold">
+                  {checkoutBusy ? "…" : "Débloquer maintenant →"}
+                </div>
+              </button>
+              {checkoutError && (
+                <p className="mt-3 text-center text-xs text-bordeaux">
+                  {checkoutError}
+                </p>
+              )}
+              {authConfigured && !user && (
+                <p className="mt-3 text-center text-[11px] text-ink/60 italic">
+                  Tu seras redirigé pour te connecter avant le paiement.
+                </p>
+              )}
+            </>
           )}
         </section>
       )}

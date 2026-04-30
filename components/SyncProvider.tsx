@@ -20,9 +20,13 @@ export default function SyncProvider() {
   useEffect(() => {
     if (!ready || !configured || !user) return;
 
-    // Pull une fois par session (sessionStorage flag pour éviter redondance).
-    if (!sessionStorage.getItem("incipit:sync:v1")) {
-      pullAndMerge();
+    // Pull une fois par session ET par user (clé inclut user.id pour
+    // re-puller si on change de compte sur le même appareil).
+    const flagKey = `incipit:sync:user:${user.id}`;
+    if (!sessionStorage.getItem(flagKey)) {
+      pullAndMerge().then((ok) => {
+        if (ok) sessionStorage.setItem(flagKey, "1");
+      });
     }
 
     // Écoute les events de mutation → push serveur (debounced).
