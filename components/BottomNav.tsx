@@ -138,10 +138,17 @@ const TABS: Tab[] = [
   { href: "/profile", label: "Moi", Icon: IconMe },
 ];
 
+// Routes où la BottomNav est masquée : surfaces qui réclament la pleine
+// hauteur d'écran (onboarding pas-à-pas) ou qui s'adressent à un public
+// "outil" plutôt que "lecteur quotidien" (mode prof, pages d'auth).
+const HIDDEN_ROUTES = ["/onboarding", "/prof", "/auth"];
+
 export default function BottomNav() {
   const pathname = usePathname();
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
+
+  if (HIDDEN_ROUTES.some((r) => pathname.startsWith(r))) return null;
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-40 bg-paper/95 backdrop-blur-md border-t border-ink/10">

@@ -410,6 +410,30 @@ function Intro({
         </div>
       </section>
 
+      {/* Carte mode prof — discrete, à la fin pour ne pas distraire les
+          joueurs casual mais visible pour les enseignants qui scrollent. */}
+      <section className="px-6 pt-2">
+        <Link
+          href="/prof"
+          className="block bg-cream/40 border border-ink/10 rounded-2xl p-4 hover:border-bordeaux transition"
+        >
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <div className="text-[10px] uppercase tracking-[0.25em] text-bordeaux font-bold">
+                Tu enseignes ?
+              </div>
+              <div className="font-serif text-base font-bold text-ink leading-snug mt-1">
+                Génère un quiz à imprimer pour ta classe
+              </div>
+              <div className="text-xs text-ink/60 mt-1">
+                CC BY-NC 4.0 · libre de réutilisation
+              </div>
+            </div>
+            <span className="text-ink/40 text-lg">→</span>
+          </div>
+        </Link>
+      </section>
+
       <section className="px-6 pb-12">
         <Link
           href="/explore"
