@@ -151,7 +151,10 @@ export default function BottomNav() {
   if (HIDDEN_ROUTES.some((r) => pathname.startsWith(r))) return null;
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 bg-paper/95 backdrop-blur-md border-t border-ink/10">
+    <nav
+      aria-label="Navigation principale"
+      className="fixed bottom-0 left-0 right-0 z-40 bg-paper/95 backdrop-blur-md border-t border-ink/10"
+    >
       <div className="max-w-xl mx-auto flex justify-between px-2 pb-[env(safe-area-inset-bottom)]">
         {TABS.map(({ href, label, Icon }) => {
           const active = isActive(href);
@@ -159,7 +162,9 @@ export default function BottomNav() {
             <Link
               key={href}
               href={href}
-              className={`relative flex-1 flex flex-col items-center gap-1 py-2 text-[11px] font-medium transition ${
+              aria-current={active ? "page" : undefined}
+              aria-label={label}
+              className={`relative flex-1 flex flex-col items-center justify-center gap-1 min-h-[44px] py-2 text-[11px] font-medium transition ${
                 active ? "text-bordeaux" : "text-ink/55 hover:text-ink/85"
               }`}
             >
