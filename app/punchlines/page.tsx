@@ -75,8 +75,11 @@ export default function PunchlinesPage() {
           {ERAS.map((e) => (
             <button
               key={e.key}
+              type="button"
               onClick={() => setEra(e.key)}
-              className={`shrink-0 text-xs uppercase tracking-widest font-bold px-4 py-2 rounded-full transition ${
+              aria-pressed={era === e.key}
+              aria-label={`Filtrer les punchlines : ${e.label}`}
+              className={`shrink-0 text-xs uppercase tracking-widest font-bold min-h-[44px] px-4 py-2 rounded-full transition ${
                 era === e.key
                   ? "bg-gold text-ink"
                   : "bg-paper/10 text-paper/70 hover:bg-paper/20"

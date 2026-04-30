@@ -195,10 +195,12 @@ function IdleView({ onTrigger }: { onTrigger: () => void }) {
 
       {/* CTA principal */}
       <button
+        type="button"
         onClick={onTrigger}
-        className="w-full bg-bordeaux text-paper rounded-3xl p-8 flex flex-col items-center gap-3 shadow-xl hover:scale-[1.01] transition mb-5"
+        aria-label="Ouvrir l'appareil photo pour scanner un livre"
+        className="w-full min-h-[44px] bg-bordeaux text-paper rounded-3xl p-8 flex flex-col items-center gap-3 shadow-xl hover:scale-[1.01] transition mb-5"
       >
-        <div className="w-20 h-20 rounded-full bg-paper/15 flex items-center justify-center text-5xl">
+        <div className="w-20 h-20 rounded-full bg-paper/15 flex items-center justify-center text-5xl" aria-hidden="true">
           📸
         </div>
         <div className="font-serif text-xl font-bold">
@@ -211,10 +213,12 @@ function IdleView({ onTrigger }: { onTrigger: () => void }) {
 
       {/* Galerie option */}
       <button
+        type="button"
         onClick={onTrigger}
-        className="w-full bg-ink/5 text-ink rounded-2xl p-4 flex items-center justify-center gap-2 hover:bg-ink/10 transition mb-6"
+        aria-label="Choisir une image depuis la galerie"
+        className="w-full min-h-[44px] bg-ink/5 text-ink rounded-2xl p-4 flex items-center justify-center gap-2 hover:bg-ink/10 transition mb-6"
       >
-        <span className="text-xl">🖼</span>
+        <span className="text-xl" aria-hidden="true">🖼</span>
         <span className="text-xs uppercase tracking-widest font-bold">
           Choisir depuis la galerie
         </span>

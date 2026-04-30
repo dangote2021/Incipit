@@ -55,8 +55,11 @@ export default function ReadPage({
           {(["sm", "md", "lg"] as const).map((s) => (
             <button
               key={s}
+              type="button"
               onClick={() => setFontSize(s)}
-              className={`w-7 h-7 rounded-full text-xs font-bold transition ${
+              aria-label={`Taille de police ${s === "sm" ? "petite" : s === "lg" ? "grande" : "moyenne"}`}
+              aria-pressed={fontSize === s}
+              className={`min-w-[44px] min-h-[44px] rounded-full text-xs font-bold transition ${
                 fontSize === s
                   ? "bg-ink text-paper"
                   : "bg-ink/5 text-ink/60"
@@ -101,21 +104,25 @@ export default function ReadPage({
         {/* Nav passages */}
         <div className="mt-12 flex items-center justify-between">
           <button
+            type="button"
             onClick={() => setPassageIdx((i) => Math.max(0, i - 1))}
             disabled={passageIdx === 0}
-            className="text-xs uppercase tracking-widest font-bold text-ink/60 disabled:opacity-30 px-3 py-2"
+            aria-label="Passage précédent"
+            className="min-h-[44px] text-xs uppercase tracking-widest font-bold text-ink/60 disabled:opacity-30 px-3 py-2"
           >
             ← Précédent
           </button>
-          <span className="text-xs text-ink/50">
+          <span className="text-xs text-ink/50" aria-live="polite">
             {passageIdx + 1} / {passages.length}
           </span>
           <button
+            type="button"
             onClick={() =>
               setPassageIdx((i) => Math.min(passages.length - 1, i + 1))
             }
             disabled={passageIdx === passages.length - 1}
-            className="text-xs uppercase tracking-widest font-bold text-bordeaux disabled:opacity-30 px-3 py-2"
+            aria-label="Passage suivant"
+            className="min-h-[44px] text-xs uppercase tracking-widest font-bold text-bordeaux disabled:opacity-30 px-3 py-2"
           >
             Suivant →
           </button>
@@ -125,8 +132,11 @@ export default function ReadPage({
       {/* Bouton flottant Personnages */}
       {characters.length > 0 && (
         <button
+          type="button"
           onClick={() => setCharsOpen(true)}
-          className="fixed right-6 z-20 bg-sage text-paper rounded-full shadow-xl px-5 py-3 flex items-center gap-2 hover:scale-105 transition"
+          aria-label="Ouvrir la fiche des personnages"
+          aria-expanded={charsOpen}
+          className="fixed right-6 z-20 min-h-[44px] bg-sage text-paper rounded-full shadow-xl px-5 py-3 flex items-center gap-2 hover:scale-105 transition"
           style={{ bottom: `calc(2rem + env(safe-area-inset-bottom, 0px))` }}
         >
           <span className="text-xl">🎭</span>

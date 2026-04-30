@@ -40,14 +40,16 @@ export default function ExplorePage() {
           {TABS.map((t) => (
             <button
               key={t.key}
+              type="button"
               onClick={() => setTab(t.key)}
-              className={`shrink-0 text-xs uppercase tracking-widest font-bold px-4 py-2 rounded-full transition ${
+              aria-pressed={tab === t.key}
+              className={`shrink-0 text-xs uppercase tracking-widest font-bold min-h-[44px] px-4 py-2 rounded-full transition ${
                 tab === t.key
                   ? "bg-ink text-paper"
                   : "bg-ink/5 text-ink/70 hover:bg-ink/10"
               }`}
             >
-              <span className="mr-1.5">{t.emoji}</span>
+              <span className="mr-1.5" aria-hidden="true">{t.emoji}</span>
               {t.label}
             </button>
           ))}
@@ -167,16 +169,19 @@ function ThemesTab() {
           return (
             <button
               key={m.key}
+              type="button"
               onClick={() =>
                 setActiveMood((prev) => (prev === m.key ? null : m.key))
               }
-              className={`group relative overflow-hidden rounded-2xl p-4 text-left border transition ${
+              aria-pressed={activeMood === m.key}
+              aria-label={`Filtrer par ambiance : ${m.label} (${count} livre${count > 1 ? "s" : ""})`}
+              className={`group relative overflow-hidden rounded-2xl p-4 text-left border min-h-[44px] transition ${
                 activeMood === m.key
                   ? "border-ink/40 bg-ink text-paper"
                   : "border-ink/10 bg-paper hover:border-ink/25"
               }`}
             >
-              <div className="text-2xl mb-1.5">{m.emoji}</div>
+              <div className="text-2xl mb-1.5" aria-hidden="true">{m.emoji}</div>
               <div className="font-serif text-lg font-bold leading-tight">
                 {m.label}
               </div>
@@ -199,8 +204,10 @@ function ThemesTab() {
               {MOODS.find((m) => m.key === activeMood)?.label}
             </h3>
             <button
+              type="button"
               onClick={() => setActiveMood(null)}
-              className="text-xs uppercase tracking-widest text-ink/50 font-bold"
+              aria-label="Fermer le filtre d'ambiance"
+              className="min-h-[44px] text-xs uppercase tracking-widest text-ink/50 font-bold px-3"
             >
               Fermer
             </button>
@@ -290,33 +297,38 @@ function QuotesTab() {
 
       {/* CTA Story */}
       <button
+        type="button"
         onClick={() => setStoryOpen(true)}
-        className="mt-4 w-full bg-ink text-paper rounded-2xl py-4 flex items-center justify-center gap-3 hover:bg-bordeaux transition group"
+        aria-label="Partager cette citation en story"
+        aria-expanded={storyOpen}
+        className="mt-4 w-full min-h-[44px] bg-ink text-paper rounded-2xl py-4 flex items-center justify-center gap-3 hover:bg-bordeaux transition group"
       >
-        <span className="text-xl">📲</span>
+        <span className="text-xl" aria-hidden="true">📲</span>
         <span className="text-xs uppercase tracking-widest font-bold">
           Partager en story
         </span>
-        <span className="text-paper/60 text-xs group-hover:translate-x-1 transition">
+        <span className="text-paper/60 text-xs group-hover:translate-x-1 transition" aria-hidden="true">
           →
         </span>
       </button>
 
       <div className="mt-5 flex items-center justify-between">
         <button
+          type="button"
           onClick={() => setI((prev) => (prev - 1 + QUOTES.length) % QUOTES.length)}
-          className="text-xs uppercase tracking-widest font-bold text-ink/60 px-3 py-2"
-          aria-label="Précédent"
+          className="min-h-[44px] text-xs uppercase tracking-widest font-bold text-ink/60 px-3 py-2"
+          aria-label="Citation précédente"
         >
           ← Précédent
         </button>
-        <span className="text-xs text-ink/50">
+        <span className="text-xs text-ink/50" aria-live="polite">
           {i + 1} / {QUOTES.length}
         </span>
         <button
+          type="button"
           onClick={() => setI((prev) => (prev + 1) % QUOTES.length)}
-          className="text-xs uppercase tracking-widest font-bold text-bordeaux px-3 py-2"
-          aria-label="Suivant"
+          className="min-h-[44px] text-xs uppercase tracking-widest font-bold text-bordeaux px-3 py-2"
+          aria-label="Citation suivante"
         >
           Suivante →
         </button>
@@ -366,8 +378,11 @@ function PassagesTab() {
           return (
             <button
               key={id}
+              type="button"
               onClick={() => setActiveBookId(id)}
-              className={`shrink-0 text-xs uppercase tracking-widest font-bold px-3 py-2 rounded-full transition ${
+              aria-pressed={activeBookId === id}
+              aria-label={`Voir les passages de ${b.title}`}
+              className={`shrink-0 text-xs uppercase tracking-widest font-bold min-h-[44px] px-3 py-2 rounded-full transition ${
                 activeBookId === id
                   ? "bg-bordeaux text-paper"
                   : "bg-ink/5 text-ink/70 hover:bg-ink/10"
@@ -515,7 +530,11 @@ function ChallengesTab() {
                   </>
                 )}
               </div>
-              <button className="bg-paper text-ink text-xs uppercase tracking-widest font-bold px-3 py-2 rounded-full hover:bg-paper/90 transition">
+              <button
+                type="button"
+                aria-label={`${typeof c.myProgress === "number" ? "Continuer" : "Rejoindre"} le défi : ${c.title} (bientôt — bêta)`}
+                className="min-h-[44px] bg-paper text-ink text-xs uppercase tracking-widest font-bold px-3 py-2 rounded-full hover:bg-paper/90 transition"
+              >
                 {typeof c.myProgress === "number" ? "Continuer" : "Rejoindre"}
               </button>
             </div>
