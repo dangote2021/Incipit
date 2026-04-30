@@ -26,8 +26,8 @@ export default function AppHeader({ title, subtitle, back, action }: Props) {
                   router.push("/");
                 }
               }}
-              aria-label="Retour"
-              className="w-9 h-9 flex items-center justify-center rounded-full bg-ink/5 hover:bg-ink/10 transition text-ink/80"
+              aria-label="Retour à la page précédente"
+              className="w-11 h-11 flex items-center justify-center rounded-full bg-ink/5 hover:bg-ink/10 transition text-ink/80 text-lg"
             >
               ←
             </button>
