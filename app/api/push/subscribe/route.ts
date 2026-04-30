@@ -32,6 +32,33 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "missing_keys" }, { status: 400 });
   }
 
+  // Validation de l'endpoint : on n'accepte que des URLs https provenant d'un
+  // service push connu (FCM côté Chrome/Edge/Firefox, Apple Push). Évite de
+  // polluer la table avec des entrées malformées qui rateront ensuite leur
+  // envoi silencieusement.
+  let endpointUrl: URL;
+  try {
+    endpointUrl = new URL(endpoint);
+  } catch {
+    return NextResponse.json({ error: "invalid_endpoint" }, { status: 400 });
+  }
+  if (endpointUrl.protocol !== "https:") {
+    return NextResponse.json({ error: "invalid_endpoint" }, { status: 400 });
+  }
+  const allowedHosts = [
+    "fcm.googleapis.com",
+    "updates.push.services.mozilla.com",
+    "updates-autopush.stage.mozaws.net",
+    "updates-autopush.dev.mozaws.net",
+  ];
+  const okHost =
+    allowedHosts.includes(endpointUrl.hostname) ||
+    endpointUrl.hostname.endsWith(".push.apple.com") ||
+    endpointUrl.hostname.endsWith(".notify.windows.com");
+  if (!okHost) {
+    return NextResponse.json({ error: "invalid_endpoint" }, { status: 400 });
+  }
+
   // Optionnel : lie au user_id si connecté.
   let userId: string | null = null;
   const supabase = serverSupabase();

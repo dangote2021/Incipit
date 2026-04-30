@@ -27,17 +27,21 @@ export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 export async function GET() {
+  // On expose seulement les modules qui ont une présence visible côté UX
+  // (auth, premium, push). Le `cron_secret` est intentionnellement omis :
+  // sa présence n'est utile à aucun consommateur externe (status pages),
+  // et la divulguer renseignerait gratuitement un attaquant cherchant
+  // à brute-forcer /api/cron/*.
   const config = {
     supabase: hasSupabase(),
     supabase_admin: hasSupabaseAdmin(),
     stripe: hasStripe(),
     push_vapid: hasVapid(),
-    cron_secret: Boolean(process.env.CRON_SECRET),
     site_url: Boolean(process.env.NEXT_PUBLIC_SITE_URL),
   };
 
   // L'app reste ok même si rien n'est configuré (V1 mode dégradé).
-  // Le statut "warning" signale juste que des modules sont off.
+  // Le statut "partial" signale juste que des modules sont off.
   const allOk = Object.values(config).every(Boolean);
   const noneOk = Object.values(config).every((v) => !v);
 

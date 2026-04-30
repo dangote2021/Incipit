@@ -256,12 +256,13 @@ function PremiumInner() {
 
       {/* ─── Tarifs indicatifs — retour panel v9 (Aïssatou) : sans prix
           visible, le CTA paraissait un piège. On affiche 3 paliers avec
-          mention explicite "prix indicatif, lancement Q3" pour rester
-          honnête en bêta. */}
+          mention "prix indicatif" pour rester honnête en bêta. Pas de
+          date de lancement codée en dur (panel v5 : la date "Q3 2026"
+          était devenue ambiguë). */}
       {!isPremium && (
         <section className="px-6 pb-10">
           <div className="text-[10px] uppercase tracking-[0.3em] text-ink/50 font-bold mb-4">
-            Tarifs · lancement prévu Q3 2026
+            Tarifs · prix indicatifs
           </div>
           <div className="grid grid-cols-1 gap-3">
             <div className="bg-paper border border-ink/10 rounded-2xl p-5 flex items-baseline justify-between">
