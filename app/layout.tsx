@@ -3,6 +3,7 @@ import BottomNav from "@/components/BottomNav";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 import CapacitorBridge from "@/components/CapacitorBridge";
 import SyncProvider from "@/components/SyncProvider";
+import AppShell from "@/components/AppShell";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -85,9 +86,7 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <body className="min-h-screen paper-texture">
-        <div className="max-w-xl mx-auto min-h-screen pb-[calc(6rem+env(safe-area-inset-bottom))]">
-          {children}
-        </div>
+        <AppShell>{children}</AppShell>
         <BottomNav />
         <ServiceWorkerRegister />
         <CapacitorBridge />
