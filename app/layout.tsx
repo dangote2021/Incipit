@@ -1,10 +1,38 @@
 import type { Metadata, Viewport } from "next";
+import { Inter, Playfair_Display, IBM_Plex_Mono } from "next/font/google";
 import BottomNav from "@/components/BottomNav";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 import CapacitorBridge from "@/components/CapacitorBridge";
 import SyncProvider from "@/components/SyncProvider";
 import AppShell from "@/components/AppShell";
 import "./globals.css";
+
+// ─── Polices self-hosted via next/font/google ──────────────────────────
+// next/font télécharge les polices au build, les inline dans le bundle
+// CSS, et expose chaque police comme variable CSS. Avantages vs
+// @import url(googleapis) :
+//   - 0 requête runtime vers fonts.googleapis.com (perf + RGPD)
+//   - Pas de FOIT (flash of invisible text) ni FOUT
+//   - Pas de leak d'IP utilisateur vers Google côté UE
+const fontSans = Inter({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800"],
+  variable: "--font-sans",
+  display: "swap",
+});
+const fontSerif = Playfair_Display({
+  subsets: ["latin"],
+  weight: ["400", "700", "900"],
+  style: ["normal", "italic"],
+  variable: "--font-serif",
+  display: "swap",
+});
+const fontMono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-mono",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://incipit-navy.vercel.app"),
@@ -84,7 +112,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="fr">
+    <html
+      lang="fr"
+      className={`${fontSans.variable} ${fontSerif.variable} ${fontMono.variable}`}
+    >
       <body className="min-h-screen paper-texture">
         {/* Skip-link global — premier focus au tab depuis l'URL bar.
             Rapporté par Théo (panel beta v6, NVDA + clavier) : sur les pages

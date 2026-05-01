@@ -1,4 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Inter:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap');
+/* Polices chargées via next/font/google dans app/layout.tsx (self-hosted
+   au build-time : élimine la requête runtime render-blocking vers
+   fonts.googleapis.com et évite le flash of unstyled text). Les
+   variables --font-sans / --font-serif / --font-mono sont posées sur
+   <html> par next/font et utilisées via tailwind.config.ts. */
 
 @tailwind base;
 @tailwind components;
@@ -23,11 +27,11 @@ html, body {
 .safe-pb { padding-bottom: calc(env(safe-area-inset-bottom, 0px)); }
 
 body {
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: var(--font-sans), 'Inter', system-ui, sans-serif;
 }
 
 h1, h2, h3, h4 {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: var(--font-serif), 'Playfair Display', Georgia, serif;
   letter-spacing: -0.02em;
 }
 
