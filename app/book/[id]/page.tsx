@@ -12,6 +12,7 @@ import LibrairesByPostalCode from "@/components/book/LibrairesByPostalCode";
 import MarkAsReadButton from "@/components/book/MarkAsReadButton";
 import PassagesList from "@/components/book/PassagesList";
 import VideoFeatures from "@/components/book/VideoFeatures";
+import BookJsonLd from "@/components/book/BookJsonLd";
 import {
   BOOKS,
   getBook,
@@ -59,6 +60,9 @@ export default async function BookPage({ params }: Props) {
 
   return (
     <>
+      {/* JSON-LD Book + BreadcrumbList — invisible pour l'utilisateur,
+          utile pour Google rich results et iOS Safari Reader. */}
+      <BookJsonLd book={book} />
       <AppHeader back subtitle="Fiche livre" />
 
       {/* Hero — rendu côté serveur, présent dès le premier paint */}
