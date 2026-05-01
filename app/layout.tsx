@@ -59,6 +59,21 @@ export const metadata: Metadata = {
     capable: true,
     title: "Incipit",
     statusBarStyle: "black-translucent",
+    // Splash screens iOS — affichées au lancement de la PWA installée.
+    // Tailles requises pour chaque modèle iPhone récent (portrait).
+    // Génération suggérée : https://progressier.com/pwa-icons-and-ios-splash-screen-generator
+    // Les fichiers sont attendus dans /public/splash/ — fallback : Safari
+    // affiche un écran blanc jusqu'au 1er paint si fichier absent.
+    startupImage: [
+      { url: "/splash/iphone-se.png",          media: "(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)" },
+      { url: "/splash/iphone-x.png",           media: "(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)" },
+      { url: "/splash/iphone-xr.png",          media: "(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2)" },
+      { url: "/splash/iphone-xs-max.png",      media: "(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3)" },
+      { url: "/splash/iphone-12.png",          media: "(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3)" },
+      { url: "/splash/iphone-12-pro-max.png",  media: "(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3)" },
+      { url: "/splash/iphone-14-pro.png",      media: "(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3)" },
+      { url: "/splash/iphone-14-pro-max.png",  media: "(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3)" },
+    ],
   },
   formatDetection: {
     telephone: false,

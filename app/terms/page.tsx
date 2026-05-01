@@ -32,7 +32,7 @@ export default function TermsPage() {
         </h2>
         <p className="text-ink/75 leading-relaxed mb-6">
           En utilisant l'application Incipit (ci-après « l'Application »),
-          accessible sur le web et via les stores (App Store, Google Play), tu
+          accessible sur le web (PWA installable depuis Safari iOS) et via Google Play (Android), tu
           acceptes les présentes conditions. Si tu n'es pas d'accord, merci de
           ne pas utiliser l'Application.
         </p>

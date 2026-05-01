@@ -35,6 +35,8 @@ export default function AccountSection() {
   const [deleteConfirm, setDeleteConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [deleteErr, setDeleteErr] = useState<string | null>(null);
+  const [exporting, setExporting] = useState(false);
+  const [exportErr, setExportErr] = useState<string | null>(null);
 
   // Charge l'état du push au montage et quand le user change.
   useEffect(() => {
@@ -119,6 +121,41 @@ export default function AccountSection() {
       setDeleteErr("Erreur réseau. Réessaie.");
     } finally {
       setDeleting(false);
+    }
+  };
+
+  // Export RGPD article 20 (portabilité) — symétrique du delete.
+  // Télécharge un JSON avec toutes les données utilisateur lisibles depuis
+  // les tables incipit_*. Pas de confirmation : action non destructive.
+  const handleExportData = async () => {
+    setExportErr(null);
+    setExporting(true);
+    try {
+      const res = await fetch("/api/me/export", { method: "GET" });
+      if (!res.ok) {
+        setExportErr(
+          res.status === 503
+            ? "Export pas activé sur ce déploiement."
+            : "Échec de l'export. Réessaie ou écris-nous."
+        );
+        return;
+      }
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      // Le serveur a déjà mis le bon Content-Disposition mais on force le
+      // download attribute pour les browsers qui ignorent le header.
+      const date = new Date().toISOString().split("T")[0];
+      a.download = `incipit-export-${date}.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    } catch {
+      setExportErr("Erreur réseau. Réessaie.");
+    } finally {
+      setExporting(false);
     }
   };
 
@@ -228,6 +265,32 @@ export default function AccountSection() {
           </div>
         )}
       </div>
+
+      {/* Export RGPD — article 20 droit à la portabilité.
+          Action non destructive, pas de confirmation. Le bouton est
+          séparé du bloc "supprimer" pour éviter les confusions UI. */}
+      {user && (
+        <div className="mt-6">
+          <button
+            type="button"
+            onClick={handleExportData}
+            disabled={exporting}
+            className="text-[11px] uppercase tracking-widest font-bold text-ink/50 hover:text-bordeaux transition disabled:opacity-50"
+          >
+            {exporting ? "Export en cours…" : "Exporter mes données (JSON)"}
+          </button>
+          {exportErr && (
+            <div role="alert" className="mt-2 text-xs text-bordeaux italic">
+              {exportErr}
+            </div>
+          )}
+          <p className="mt-2 text-[11px] text-ink/40 leading-relaxed">
+            Format JSON conforme à l'article&nbsp;20 du RGPD (portabilité).
+            Inclut profil, favoris, streaks, préférences, premium, abonnements
+            push, événements télémétrie.
+          </p>
+        </div>
+      )}
 
       {/* Suppression de compte — visible uniquement si connecté.
           Apple guideline 5.1.1(v) impose un mécanisme in-app pour

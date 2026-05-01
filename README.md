@@ -18,7 +18,7 @@ pro-plaisir.
   tables préfixées `incipit_*`
 - Stripe Checkout + Customer Portal + webhooks pour le Premium
 - Web Push API + Service Worker + VAPID pour les notifications quotidiennes
-- PWA + Capacitor (cible iOS / Android, en cours)
+- PWA Apple (Safari) + Capacitor Android (Google Play)
 - Déploiement Vercel — projet `incipit` distinct d'Adventurer
 
 L'app fonctionne **sans** backend (mode V1 localStorage). Le backend est

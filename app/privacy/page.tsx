@@ -354,7 +354,12 @@ export default function PrivacyPage() {
           </li>
         </ul>
         <p className="text-ink/75 leading-relaxed mb-3">
-          Pour exercer un de ces droits, écris à{" "}
+          <strong>Portabilité et effacement en self-service</strong> — depuis
+          l'app : <em>Profil → Compte & sync → Exporter mes données</em>{" "}
+          (JSON conforme article&nbsp;20 RGPD) ou{" "}
+          <em>Supprimer mon compte</em> (suppression définitive sous 30
+          jours, article&nbsp;17 RGPD). Pour exercer les autres droits ou en
+          cas de souci, écris à{" "}
           <a
             href="mailto:guillaumecoulon1@gmail.com?subject=RGPD%20-%20Incipit"
             className="text-bordeaux underline"
