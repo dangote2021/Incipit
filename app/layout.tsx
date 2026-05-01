@@ -5,6 +5,7 @@ import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 import CapacitorBridge from "@/components/CapacitorBridge";
 import SyncProvider from "@/components/SyncProvider";
 import AppShell from "@/components/AppShell";
+import ThemePreScript from "@/components/ThemePreScript";
 import "./globals.css";
 
 // ─── Polices self-hosted via next/font/google ──────────────────────────
@@ -129,8 +130,12 @@ export default function RootLayout({
   return (
     <html
       lang="fr"
+      suppressHydrationWarning
       className={`${fontSans.variable} ${fontSerif.variable} ${fontMono.variable}`}
     >
+      <head>
+        <ThemePreScript />
+      </head>
       <body className="min-h-screen paper-texture">
         {/* Skip-link global — premier focus au tab depuis l'URL bar.
             Rapporté par Théo (panel beta v6, NVDA + clavier) : sur les pages

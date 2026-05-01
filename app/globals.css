@@ -8,10 +8,47 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ─── Palette Incipit en CSS variables ────────────────────────────────────
+   Les valeurs sont des triplets RGB (sans virgule, séparés par espace) pour
+   que Tailwind puisse injecter l'opacité via <alpha-value>. Ne PAS basculer
+   sur HSL/HEX ici — `bg-ink/5` cesserait de fonctionner.
+
+   Light = défaut historique d'Incipit.
+   Dark  = inversion calibrée pour rester dans l'identité (chaud, papier
+           encré inversé), pas un dark mode générique grisâtre. Contrastes
+           vérifiés WCAG AA (texte normal >= 4.5:1, large >= 3:1). */
+:root {
+  --c-paper: 250 247 240;     /* #FAF7F0  papier ivoire */
+  --c-ink: 26 26 46;          /* #1A1A2E  noir d'encre */
+  --c-bordeaux: 139 30 63;    /* #8B1E3F  rouge reliure */
+  --c-gold: 201 169 97;       /* #C9A961  or dorure */
+  --c-sage: 107 127 92;       /* #6B7F5C  vert biblio */
+  --c-cream: 243 233 210;     /* #F3E9D2  crème (surface card) */
+  --c-dust: 232 223 201;      /* #E8DFC9  poussière de livre (border) */
+}
+
+.dark {
+  --c-paper: 15 15 26;        /* #0F0F1A  fond sombre profond — pas un noir
+                                  pur : on garde une teinte navy chaude */
+  --c-ink: 240 235 220;       /* #F0EBDC  texte clair (presque paper) */
+  --c-cream: 31 31 46;        /* #1F1F2E  surface card dark */
+  --c-dust: 42 42 62;         /* #2A2A3E  borders dark */
+  --c-bordeaux: 212 112 143;  /* #D4708F  bordeaux clair (>4.5:1 sur paper
+                                  dark — contraste accent valide) */
+  --c-gold: 233 211 156;      /* #E9D39C  or doux en dark */
+  --c-sage: 156 175 138;      /* #9CAF8A  sauge clair */
+}
+
 html, body {
-  background: #FAF7F0;
-  color: #1A1A2E;
+  background: rgb(var(--c-paper));
+  color: rgb(var(--c-ink));
   -webkit-font-smoothing: antialiased;
+}
+
+/* Lisser la transition entre modes — sans transition sur transform/layout
+   pour éviter de ralentir les animations Framer-style de l'app. */
+html {
+  transition: background-color 200ms ease, color 200ms ease;
 }
 
 /* Safe-area iPhone / Capacitor : on expose env() pour que BottomNav
@@ -35,14 +72,14 @@ h1, h2, h3, h4 {
   letter-spacing: -0.02em;
 }
 
-/* Scrollbar discrète */
+/* Scrollbar discrète — adapte aussi au dark via currentColor */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
-  background: rgba(26, 26, 46, 0.15);
+  background: rgb(var(--c-ink) / 0.15);
   border-radius: 3px;
 }
 
@@ -50,17 +87,38 @@ h1, h2, h3, h4 {
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-/* Texture papier subtile */
+/* Texture papier subtile — atténuée en dark pour rester chic */
 .paper-texture {
   background-image:
     radial-gradient(circle at 20% 50%, rgba(201, 169, 97, 0.04) 0%, transparent 50%),
     radial-gradient(circle at 80% 80%, rgba(139, 30, 63, 0.03) 0%, transparent 50%);
 }
+.dark .paper-texture {
+  background-image:
+    radial-gradient(circle at 20% 50%, rgba(233, 211, 156, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(212, 112, 143, 0.04) 0%, transparent 50%);
+}
 
 .ink-drop {
-  text-shadow: 0 1px 0 rgba(26, 26, 46, 0.1);
+  text-shadow: 0 1px 0 rgb(var(--c-ink) / 0.1);
 }
 
 .book-shadow {
-  box-shadow: 0 10px 30px -10px rgba(26, 26, 46, 0.25), 0 2px 6px -2px rgba(26, 26, 46, 0.1);
+  box-shadow:
+    0 10px 30px -10px rgb(var(--c-ink) / 0.25),
+    0 2px 6px -2px rgb(var(--c-ink) / 0.10);
+}
+.dark .book-shadow {
+  /* En dark, on remplace l'ombre noire (illisible sur fond noir) par un
+     halo chaud subtil — laisse les couvertures de livres "flotter". */
+  box-shadow:
+    0 10px 30px -10px rgb(0 0 0 / 0.65),
+    0 0 0 1px rgb(var(--c-ink) / 0.12);
+}
+
+/* Images de couvertures : un léger ring en dark pour qu'elles ne se
+   confondent pas avec le fond. */
+.dark img.book-cover,
+.dark .book-cover img {
+  box-shadow: 0 0 0 1px rgb(var(--c-ink) / 0.08);
 }

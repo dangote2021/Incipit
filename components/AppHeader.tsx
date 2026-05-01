@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import ThemeToggle from "@/components/ThemeToggle";
 
 type Props = {
   title?: string;
@@ -52,7 +53,10 @@ export default function AppHeader({ title, subtitle, back, action }: Props) {
             )}
           </div>
         </div>
-        {action}
+        <div className="flex items-center gap-1">
+          <ThemeToggle />
+          {action}
+        </div>
       </div>
     </header>
   );

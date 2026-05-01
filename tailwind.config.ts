@@ -1,6 +1,19 @@
 import type { Config } from "tailwindcss";
 
+// ─── Mode sombre via CSS variables ─────────────────────────────────────────
+//
+// Stratégie : `darkMode: "class"` + couleurs définies via variables CSS sur
+// :root (light) et .dark (dark), exprimées en triplets RGB pour permettre
+// `<alpha-value>` (Tailwind injecte l'opacité automatiquement).
+//
+// Avantages :
+//   - Aucun composant à modifier : `bg-paper`, `text-ink`, `border-ink/5`
+//     fonctionnent dans les 2 modes sans variant `dark:` partout.
+//   - Pas de dépendance externe (next-themes évité — un script bloquant
+//     de 12 lignes dans <head> suffit pour l'anti-flash SSR).
+//   - Roll-back facile : il suffit de retirer la classe `.dark` du <html>.
 const config: Config = {
+  darkMode: "class",
   content: [
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -8,13 +21,13 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        ink: "#1A1A2E",           // noir d'encre profond
-        paper: "#FAF7F0",         // papier ivoire
-        bordeaux: "#8B1E3F",      // rouge reliure
-        gold: "#C9A961",          // or dorure
-        sage: "#6B7F5C",          // vert bibliothèque
-        cream: "#F3E9D2",         // crème
-        dust: "#E8DFC9",          // poussière de livre ancien
+        ink: "rgb(var(--c-ink) / <alpha-value>)",         // texte principal
+        paper: "rgb(var(--c-paper) / <alpha-value>)",     // fond
+        bordeaux: "rgb(var(--c-bordeaux) / <alpha-value>)", // accent rouge
+        gold: "rgb(var(--c-gold) / <alpha-value>)",       // dorure
+        sage: "rgb(var(--c-sage) / <alpha-value>)",       // vert biblio
+        cream: "rgb(var(--c-cream) / <alpha-value>)",     // surface card
+        dust: "rgb(var(--c-dust) / <alpha-value>)",       // borders / surf2
       },
       fontFamily: {
         serif: ['"Playfair Display"', 'Georgia', 'serif'],
