@@ -51,16 +51,41 @@ export default async function OGImage() {
           “
         </div>
 
-        {/* Header — Marque */}
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+        {/* Header — Marque (logo I + point bordeaux + wordmark phonétique) */}
+        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+          {/* Lettrine I + point bordeaux — la marque graphique d'Incipit
+              (cf. components/Logo.tsx + public/icon-*.svg, mêmes proportions
+              transposées en flexbox pour le rendu Satori). */}
           <div
             style={{
-              width: 12,
-              height: 12,
-              backgroundColor: "#8A1234",
-              borderRadius: 2,
+              position: "relative",
+              display: "flex",
+              alignItems: "flex-end",
+              gap: 6,
             }}
-          />
+          >
+            <div
+              style={{
+                fontSize: 64,
+                fontWeight: 900,
+                color: "#1A1A2E",
+                fontFamily: "Georgia, serif",
+                lineHeight: 0.9,
+                display: "flex",
+              }}
+            >
+              I
+            </div>
+            <div
+              style={{
+                width: 14,
+                height: 14,
+                backgroundColor: "#8A1234",
+                borderRadius: 999,
+                marginBottom: 8,
+              }}
+            />
+          </div>
           <div
             style={{
               fontSize: 22,
@@ -69,6 +94,7 @@ export default async function OGImage() {
               fontWeight: 800,
               color: "#1A1A2E",
               opacity: 0.6,
+              display: "flex",
             }}
           >
             Incipit · in-ki-pit

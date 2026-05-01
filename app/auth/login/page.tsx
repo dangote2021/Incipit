@@ -4,6 +4,7 @@ import { Suspense, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import AppHeader from "@/components/AppHeader";
+import Logo from "@/components/Logo";
 import { browserSupabase } from "@/lib/supabase/client";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -106,6 +107,9 @@ function LoginInner() {
       <AppHeader title="Connexion" back />
 
       <main className="flex-1 px-6 py-10 max-w-md mx-auto w-full">
+        {/* Logo de marque — donne du poids visuel à la page d'auth qui
+            sinon est trop sèche (juste un input email). */}
+        <Logo size={64} className="mb-6" />
         <h1 className="font-serif text-3xl font-black text-ink leading-tight mb-2">
           Retrouve ta bibliothèque.
         </h1>
