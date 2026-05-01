@@ -1,7 +1,25 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <!-- Icône maskable : le contenu est dans la safe zone (80% centré) pour
-       supporter les masks Android adaptatifs sans être coupé. -->
-  <rect width="512" height="512" fill="#1A1A2E"/>
-  <text x="256" y="330" font-family="Georgia, serif" font-size="240" font-weight="900" fill="#C9A961" text-anchor="middle">I</text>
-  <rect x="180" y="370" width="152" height="10" rx="5" fill="#8B1E3F"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <title>Incipit (maskable)</title>
+  <desc>Variante maskable Android — contenu dans la safe zone 80% centrée</desc>
+  <!-- Variante maskable : Android peut cropper jusqu'à 20% sur tous les
+       côtés selon le masque (cercle, squircle, rounded square…). On
+       réduit donc le contenu pour qu'il rentre dans la safe zone
+       (inner 80% : x∈[102,922], y∈[102,922]). -->
+  <rect width="1024" height="1024" fill="#FAF7F0"/>
+  <path
+    fill="#1A1A2E"
+    d="M 410 332
+       L 614 332
+       L 614 364
+       L 542 364
+       L 542 660
+       L 614 660
+       L 614 692
+       L 410 692
+       L 410 660
+       L 482 660
+       L 482 364
+       L 410 364
+       Z"/>
+  <circle cx="664" cy="676" r="34" fill="#8A1234"/>
 </svg>
