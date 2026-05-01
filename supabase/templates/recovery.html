@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="fr">
+  <body style="margin:0;padding:0;background:#FAF7F0;font-family:Georgia,'Playfair Display',serif;color:#1A1A2E;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FAF7F0;padding:32px 16px;">
+      <tr>
+        <td align="center">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#FFFCF4;border:1px solid rgba(26,26,46,0.08);border-radius:18px;overflow:hidden;">
+            <tr>
+              <td style="padding:32px 36px 8px;">
+                <div style="font-family:Georgia,serif;font-size:28px;font-weight:900;letter-spacing:-0.02em;color:#1A1A2E;line-height:1;">
+                  Incipit<span style="color:#8A1234;">.</span>
+                </div>
+                <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.25em;color:rgba(26,26,46,0.55);font-family:Inter,Arial,sans-serif;font-weight:700;margin-top:8px;">
+                  Récupération de compte
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:8px 36px 0;">
+                <h1 style="font-family:Georgia,serif;font-size:26px;font-weight:900;line-height:1.15;color:#1A1A2E;margin:16px 0 12px;">
+                  Réinitialise l'accès à ton compte.
+                </h1>
+                <p style="font-size:15px;line-height:1.6;color:rgba(26,26,46,0.85);margin:0 0 20px;">
+                  Tu as demandé à retrouver l'accès à ton compte Incipit. Clique sur le bouton ci-dessous pour repartir.
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <td align="center" style="padding:8px 36px 24px;">
+                <a href="{{ .ConfirmationURL }}"
+                   style="display:inline-block;background:#1A1A2E;color:#FAF7F0;text-decoration:none;font-family:Inter,Arial,sans-serif;font-size:12px;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;padding:14px 28px;border-radius:999px;">
+                  Reprendre l'accès
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:0 36px 24px;">
+                <p style="font-size:12px;line-height:1.6;color:rgba(26,26,46,0.55);margin:0 0 8px;">
+                  Le lien expire dans une heure. Si le bouton ne s'ouvre pas :
+                </p>
+                <p style="font-family:'IBM Plex Mono','Courier New',monospace;font-size:11px;line-height:1.5;color:rgba(26,26,46,0.7);background:#FAF7F0;border:1px solid rgba(26,26,46,0.08);border-radius:8px;padding:10px 12px;word-break:break-all;margin:0;">
+                  {{ .ConfirmationURL }}
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:0 36px 28px;border-top:1px solid rgba(26,26,46,0.08);">
+                <p style="font-size:11px;line-height:1.6;color:rgba(26,26,46,0.55);margin:16px 0 0;font-style:italic;">
+                  Tu n'as rien demandé&nbsp;? Tu peux ignorer cet email en toute sécurité — sans clic, ton compte n'est pas modifié.
+                </p>
+                <p style="font-size:11px;line-height:1.6;color:rgba(26,26,46,0.45);margin:12px 0 0;">
+                  Incipit · Les premières lignes qui donnent envie de lire.
+                </p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
