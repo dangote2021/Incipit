@@ -20,17 +20,10 @@ import {
 // aria-label "ouvre dans un nouvel onglet" pour les lecteurs d'écran
 // (correction Claire, panel beta v6).
 //
-// Cas particulier : si bookId est dans le mapping des "non-exact" (ex.
-// notre-dame → capsule Misérables), on affiche un disclaimer pour ne pas
-// tromper le lecteur — c'est pas une capsule sur SON livre, c'est une
-// capsule sur l'auteur.
+// Une capsule peut être annotée par un `relationNote` quand elle ne porte
+// pas pile-poil sur le livre du corpus (autre œuvre du même auteur, etc.).
+// On affiche alors la note sous la carte pour ne pas tromper le lecteur.
 // ─────────────────────────────────────────────────────────────────────────────
-
-const FUZZY_MAPPING: Record<string, string> = {
-  // bookId → précision sur la nature non-exacte du lien
-  "notre-dame":
-    "Pas de capsule sur Notre-Dame de Paris à ce jour ; voici Busnel sur Les Misérables, autre roman du même auteur — utile pour saisir le geste hugolien.",
-};
 
 type Props = {
   bookId: string;
@@ -40,25 +33,23 @@ export default function VideoFeatures({ bookId }: Props) {
   const features = getVideoFeatures(bookId);
   if (features.length === 0) return null;
 
-  const fuzzyNote = FUZZY_MAPPING[bookId];
-
   return (
     <section aria-labelledby="video-features-heading">
       <h2
         id="video-features-heading"
         className="text-[11px] uppercase tracking-[0.25em] font-bold text-ink/50 mb-3"
       >
-        Vu à la télé
+        Vu à la télé{features.length > 1 ? ` · ${features.length}` : ""}
       </h2>
-      {fuzzyNote ? (
-        <p className="text-[12px] italic text-ink/60 leading-relaxed mb-3">
-          {fuzzyNote}
-        </p>
-      ) : null}
       <ul className="space-y-3">
         {features.map((v) => (
-          <li key={v.youtubeId}>
+          <li key={v.youtubeId} className="space-y-2">
             <VideoCard v={v} />
+            {v.relationNote ? (
+              <p className="text-[12px] italic text-ink/60 leading-relaxed pl-3 border-l-2 border-bordeaux/30">
+                {v.relationNote}
+              </p>
+            ) : null}
           </li>
         ))}
       </ul>

@@ -42,6 +42,12 @@ export type VideoFeature = {
   /** Année de mise en ligne — utile pour signaler "Busnel 2023" vs "Busnel
    *  2018" quand on aura plusieurs capsules par livre. */
   year?: number;
+  /** Si la capsule ne porte PAS sur le livre courant mais sur une autre
+   *  œuvre du même auteur (cas Hugo Misérables sur la fiche Notre-Dame,
+   *  ou les autres Flaubert sur la fiche Bovary), on annote explicitement
+   *  pour ne pas tromper le lecteur. Laissé vide quand c'est la capsule
+   *  pile-poil sur le livre du corpus. */
+  relationNote?: string;
 };
 
 // Mapping book.id → liste de VideoFeature. Un livre peut avoir 0, 1 ou
@@ -58,7 +64,9 @@ export const VIDEO_FEATURES: Record<string, VideoFeature[]> = {
       year: 2023,
     },
   ],
-  // Flaubert — Madame Bovary
+  // Flaubert — Madame Bovary (+ 4 autres capsules Flaubert pour
+  // les lecteurs qui veulent prolonger : L'Éducation, Salammbô,
+  // Un Cœur Simple, Correspondance avec Louise Colet)
   bovary: [
     {
       source: "p-tite-librairie",
@@ -67,6 +75,46 @@ export const VIDEO_FEATURES: Record<string, VideoFeature[]> = {
       youtubeId: "2gKc75Po9oM",
       durationMin: 3,
       year: 2023,
+    },
+    {
+      source: "p-tite-librairie",
+      presenter: "busnel",
+      title:
+        "GUSTAVE FLAUBERT / L'EDUCATION SENTIMENTALE / LA P'TITE LIBRAIRIE",
+      youtubeId: "5fV9hS7Gv40",
+      durationMin: 3,
+      year: 2023,
+      relationNote:
+        "Pour aller plus loin chez Flaubert : la grande désillusion sentimentale et politique de 1848.",
+    },
+    {
+      source: "p-tite-librairie",
+      presenter: "busnel",
+      title: "GUSTAVE FLAUBERT / SALAMMBÔ / LA P'TITE LIBRAIRIE",
+      youtubeId: "gCvK-bEB2lI",
+      durationMin: 3,
+      year: 2023,
+      relationNote:
+        "Le roman antique et orientaliste de Flaubert — face B de Bovary.",
+    },
+    {
+      source: "p-tite-librairie",
+      presenter: "busnel",
+      title: "GUSTAVE FLAUBERT / UN COEUR SIMPLE / LA P'TITE LIBRAIRIE",
+      youtubeId: "fgSF3lI8PIM",
+      durationMin: 3,
+      year: 2023,
+      relationNote: "La nouvelle qui pardonne tout, dans Trois Contes (1877).",
+    },
+    {
+      source: "p-tite-librairie",
+      presenter: "busnel",
+      title: "GUSTAVE FLAUBERT / CORRESPONDANCE / LA P'TITE LIBRAIRIE",
+      youtubeId: "yAFEbJeoMo4",
+      durationMin: 3,
+      year: 2023,
+      relationNote:
+        "Les lettres à Louise Colet pendant l'écriture de Bovary — tout l'atelier mis à nu.",
     },
   ],
   // Zola — Germinal
@@ -80,7 +128,7 @@ export const VIDEO_FEATURES: Record<string, VideoFeature[]> = {
       year: 2023,
     },
   ],
-  // Stendhal — Le Rouge et le Noir
+  // Stendhal — Le Rouge et le Noir (+ Chartreuse de Parme)
   "rouge-noir": [
     {
       source: "p-tite-librairie",
@@ -89,6 +137,16 @@ export const VIDEO_FEATURES: Record<string, VideoFeature[]> = {
       youtubeId: "IYBwduI46WE",
       durationMin: 3,
       year: 2023,
+    },
+    {
+      source: "p-tite-librairie",
+      presenter: "busnel",
+      title: "STENDHAL / LA CHARTREUSE DE PARME / LA P'TITE LIBRAIRIE",
+      youtubeId: "ihOBNavaOJA",
+      durationMin: 3,
+      year: 2023,
+      relationNote:
+        "L'autre grand roman de Stendhal — Italie napoléonienne, intrigues de cour, amour fou.",
     },
   ],
   // Maupassant — Bel-Ami
@@ -148,8 +206,7 @@ export const VIDEO_FEATURES: Record<string, VideoFeature[]> = {
     },
   ],
   // Hugo — Notre-Dame de Paris : pas de capsule dédiée trouvée à ce jour ;
-  // on lie vers Les Misérables, capsule du même auteur sur le geste hugolien
-  // (annotation explicite dans le composant pour ne pas tromper le lecteur).
+  // on lie vers Les Misérables, capsule du même auteur sur le geste hugolien.
   "notre-dame": [
     {
       source: "p-tite-librairie",
@@ -158,6 +215,8 @@ export const VIDEO_FEATURES: Record<string, VideoFeature[]> = {
       youtubeId: "__w1gwpPg9A",
       durationMin: 3,
       year: 2023,
+      relationNote:
+        "Pas de capsule sur Notre-Dame de Paris à ce jour ; voici Busnel sur Les Misérables, autre roman du même auteur — utile pour saisir le geste hugolien.",
     },
   ],
 };

@@ -18,7 +18,8 @@ import { browserSupabase } from "@/lib/supabase/client";
 // ─────────────────────────────────────────────────────────────────────────────
 
 type Status = "idle" | "sending" | "sent" | "error";
-type GoogleStatus = "idle" | "redirecting" | "error";
+type OAuthStatus = "idle" | "redirecting" | "error";
+type OAuthProvider = "google" | "apple";
 
 export default function LoginPage() {
   return (
@@ -34,36 +35,45 @@ function LoginInner() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<Status>("idle");
   const [err, setErr] = useState<string | null>(null);
-  const [googleStatus, setGoogleStatus] = useState<GoogleStatus>("idle");
-  const [googleErr, setGoogleErr] = useState<string | null>(null);
+  const [oauthStatus, setOauthStatus] = useState<{
+    [k in OAuthProvider]: OAuthStatus;
+  }>({ google: "idle", apple: "idle" });
+  const [oauthErr, setOauthErr] = useState<string | null>(null);
 
-  // ─── Google OAuth ───────────────────────────────────────────────
+  // ─── OAuth (Google + Apple) ─────────────────────────────────────
   // On utilise le client Supabase côté navigateur pour déclencher la
-  // redirection Google. Au retour, Supabase ajoute ?code=… sur l'URL
-  // de redirectTo, ce qui re-rentre dans notre callback existant.
-  const handleGoogle = async () => {
-    setGoogleErr(null);
+  // redirection vers le provider. Au retour, Supabase ajoute ?code=…
+  // sur l'URL de redirectTo, ce qui re-rentre dans notre callback
+  // existant (qui échange le code contre une session côté serveur).
+  //
+  // Apple Sign In est obligatoire dès lors qu'un autre provider tiers
+  // est actif (App Store guideline 4.8). On l'expose donc côté flow,
+  // l'activation côté Supabase + Apple Developer reste manuelle.
+  const handleOAuth = async (provider: OAuthProvider) => {
+    setOauthErr(null);
     const supabase = browserSupabase();
     if (!supabase) {
-      setGoogleStatus("error");
-      setGoogleErr(
+      setOauthStatus((s) => ({ ...s, [provider]: "error" }));
+      setOauthErr(
         "Le compte cloud n'est pas encore branché — ton progrès reste sauvegardé sur cet appareil."
       );
       return;
     }
-    setGoogleStatus("redirecting");
+    setOauthStatus((s) => ({ ...s, [provider]: "redirecting" }));
     const callbackUrl = new URL("/auth/callback", window.location.origin);
     callbackUrl.searchParams.set("next", next);
     const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
+      provider,
       options: {
         redirectTo: callbackUrl.toString(),
       },
     });
     if (error) {
-      setGoogleStatus("error");
-      setGoogleErr(
-        "Connexion Google indisponible — vérifie ta connexion ou utilise l'email."
+      setOauthStatus((s) => ({ ...s, [provider]: "error" }));
+      setOauthErr(
+        provider === "google"
+          ? "Connexion Google indisponible — vérifie ta connexion ou utilise l'email."
+          : "Connexion Apple indisponible — vérifie ta connexion ou utilise l'email."
       );
     }
   };
@@ -118,15 +128,43 @@ function LoginInner() {
           retenir. Ton streak et tes favoris te suivent d'un appareil à l'autre.
         </p>
 
-        {/* Bouton Google — placé avant le champ email pour les utilisateurs
-            qui veulent éviter le ping-pong d'email. Les deux chemins
-            atterrissent sur la même session côté serveur. */}
+        {/* Boutons OAuth — Apple en premier (HIG iOS), puis Google. Placés
+            avant le champ email pour les utilisateurs qui veulent éviter
+            le ping-pong d'email. Les trois chemins atterrissent sur la
+            même session côté serveur. */}
         {status !== "sent" && (
-          <div className="mb-6">
+          <div className="mb-6 space-y-3">
+            {/* Apple Sign In — obligatoire si un autre provider tiers est
+                actif (Apple guideline 4.8). Style Apple HIG : noir sur
+                blanc, logo Apple, mêmes proportions. */}
             <button
               type="button"
-              onClick={handleGoogle}
-              disabled={googleStatus === "redirecting"}
+              onClick={() => handleOAuth("apple")}
+              disabled={oauthStatus.apple === "redirecting"}
+              aria-label="Continuer avec Apple"
+              className="w-full min-h-[44px] flex items-center justify-center gap-3 bg-ink text-paper py-3 rounded-full text-sm font-bold hover:bg-ink/90 transition disabled:opacity-60"
+            >
+              <svg
+                viewBox="0 0 18 18"
+                width="18"
+                height="18"
+                aria-hidden="true"
+                className="shrink-0 -mt-0.5"
+              >
+                <path
+                  fill="currentColor"
+                  d="M14.94 13.95c-.27.62-.59 1.2-.97 1.72-.51.71-.93 1.2-1.26 1.47-.5.45-1.04.69-1.62.7-.41 0-.91-.12-1.49-.36-.58-.24-1.11-.36-1.6-.36-.51 0-1.06.12-1.65.36-.59.24-1.07.37-1.43.38-.55.02-1.1-.22-1.65-.72-.36-.3-.8-.81-1.32-1.55-.55-.79-1.01-1.71-1.37-2.76C0.13 11.69-.07 10.6-.07 9.55c0-1.21.26-2.25.79-3.13.41-.7.96-1.26 1.65-1.66.69-.4 1.43-.61 2.23-.62.43 0 1 .14 1.71.4.71.27 1.16.4 1.36.4.15 0 .65-.16 1.49-.47.79-.29 1.46-.41 2.01-.36 1.49.12 2.61.71 3.36 1.78-1.34.81-1.99 1.94-1.98 3.4.01 1.13.42 2.07 1.22 2.81.36.34.77.61 1.22.79-.1.28-.2.55-.31.81zM11.4 1.5c0 .9-.33 1.74-.99 2.51-.79.92-1.74 1.45-2.78 1.37-.01-.11-.02-.22-.02-.34 0-.86.38-1.78 1.05-2.53.34-.38.77-.7 1.29-.95.52-.25 1.01-.39 1.47-.41.01.12.01.24.01.36z"
+                />
+              </svg>
+              {oauthStatus.apple === "redirecting"
+                ? "Redirection vers Apple…"
+                : "Continuer avec Apple"}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => handleOAuth("google")}
+              disabled={oauthStatus.google === "redirecting"}
               aria-label="Continuer avec Google"
               className="w-full min-h-[44px] flex items-center justify-center gap-3 bg-paper border-2 border-ink/15 text-ink py-3 rounded-full text-sm font-bold hover:border-ink/40 transition disabled:opacity-60"
             >
@@ -154,17 +192,18 @@ function LoginInner() {
                   d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.9-2.26c-.8.54-1.85.86-3.06.86-2.38 0-4.4-1.57-5.13-3.74L.96 13.04C2.44 15.98 5.48 18 9 18Z"
                 />
               </svg>
-              {googleStatus === "redirecting"
+              {oauthStatus.google === "redirecting"
                 ? "Redirection vers Google…"
                 : "Continuer avec Google"}
             </button>
-            {googleErr && (
+
+            {oauthErr && (
               <div
                 role="alert"
                 aria-live="assertive"
-                className="mt-3 text-sm text-bordeaux bg-bordeaux/5 border border-bordeaux/20 rounded-xl px-4 py-3"
+                className="text-sm text-bordeaux bg-bordeaux/5 border border-bordeaux/20 rounded-xl px-4 py-3"
               >
-                {googleErr}
+                {oauthErr}
               </div>
             )}
 
