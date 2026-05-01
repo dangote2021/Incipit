@@ -11,6 +11,7 @@ import BookActionPanel from "@/components/book/BookActionPanel";
 import LibrairesByPostalCode from "@/components/book/LibrairesByPostalCode";
 import MarkAsReadButton from "@/components/book/MarkAsReadButton";
 import PassagesList from "@/components/book/PassagesList";
+import VideoFeatures from "@/components/book/VideoFeatures";
 import {
   BOOKS,
   getBook,
@@ -434,6 +435,12 @@ export default async function BookPage({ params }: Props) {
             </ul>
           </section>
         )}
+
+        {/* Vu à la télé — capsules La P'tite Librairie de François Busnel.
+            Service public France 5, lien sortant YouTube uniquement, aucun
+            embed iframe (cf. lib/video-features.ts pour le détail légal).
+            Le composant retourne null si pas de capsule pour ce livre. */}
+        <VideoFeatures bookId={book.id} />
 
         {/* Annotations publiques — SSR, crawlables */}
         {annotations.length > 0 && (
