@@ -10,6 +10,7 @@ import FavoritesSection from "@/components/FavoritesSection";
 import HideStreakToggle from "@/components/HideStreakToggle";
 import IOSInstallCard from "@/components/IOSInstallCard";
 import AccountSection from "@/components/AccountSection";
+import ProfileEditor from "@/components/ProfileEditor";
 import { getPrefs } from "@/lib/prefs";
 import {
   ME,
@@ -26,15 +27,31 @@ import {
 } from "@/lib/mock-data";
 
 export default function ProfilePage() {
-  // Prénom saisi à l'onboarding — lu côté client pour éviter un flash
-  // (SSR ne connaît pas localStorage). On garde ME.name en fallback pour
-  // les utilisateurs qui ont passé l'étape prénom.
-  const [firstName, setFirstName] = useState<string | null>(null);
+  // Profil utilisateur — lu côté client (SSR ne voit pas localStorage).
+  // Pour un nouvel user (toutes valeurs vides), on affiche des placeholders
+  // neutres au lieu de pré-remplir avec le mock 'Guillaume @guillaume
+  // explorateur de pages' (retour panel test Android #4).
+  const [profile, setProfile] = useState<{
+    name: string;
+    handle: string;
+    bio: string;
+    avatar: string;
+  } | null>(null);
+  const [editing, setEditing] = useState(false);
   useEffect(() => {
-    const fn = getPrefs().firstName?.trim();
-    setFirstName(fn && fn.length > 0 ? fn : null);
+    const p = getPrefs();
+    setProfile({
+      name: p.firstName?.trim() ?? "",
+      handle: p.handle?.trim() ?? "",
+      bio: p.bio?.trim() ?? "",
+      avatar: p.avatar?.trim() ?? "",
+    });
   }, []);
-  const displayName = firstName || ME.name;
+  const displayName = profile?.name || "Toi";
+  const displayHandle = profile?.handle ? `@${profile.handle}` : "@";
+  const displayBio = profile?.bio || "Présente-toi en une phrase…";
+  const displayAvatar = profile?.avatar || "📖";
+  const isEmpty = !!profile && !profile.name && !profile.handle && !profile.bio;
   const read = MY_LIBRARY.filter((e) => e.status === "read");
   const reading = MY_LIBRARY.filter((e) => e.status === "reading");
   const myNotes = getNotesByUser(ME.id);
@@ -60,41 +77,69 @@ export default function ProfilePage() {
       <AppHeader
         title="Profil"
         action={
-          <button
-            type="button"
-            aria-label="Modifier le profil (bientôt — bêta)"
-            className="text-xs uppercase tracking-widest font-bold text-ink/60 min-h-[44px] px-3"
-          >
-            Modifier
-          </button>
+          !editing ? (
+            <button
+              type="button"
+              onClick={() => setEditing(true)}
+              aria-label="Modifier le profil"
+              className="text-xs uppercase tracking-widest font-bold text-ink/70 hover:text-bordeaux min-h-[44px] px-3 transition"
+            >
+              Modifier
+            </button>
+          ) : null
         }
       />
 
-      {/* Carte profil */}
+      {/* Carte profil — éditable inline (panel test Android #4) */}
       <section className="px-5 pt-4">
-        <div className="bg-gradient-to-br from-ink via-ink to-bordeaux rounded-3xl p-6 text-paper relative overflow-hidden">
-          <div className="absolute -top-10 -right-10 w-48 h-48 bg-gold/20 rounded-full blur-3xl" />
-          <div className="relative flex items-start gap-4">
-            <div className="w-16 h-16 rounded-full bg-paper/15 backdrop-blur-sm flex items-center justify-center text-3xl shrink-0">
-              {ME.avatar}
+        {editing && profile ? (
+          <ProfileEditor
+            initialName={profile.name}
+            initialHandle={profile.handle}
+            initialBio={profile.bio}
+            initialAvatar={profile.avatar}
+            onSaved={(next) => {
+              setProfile(next);
+              setEditing(false);
+            }}
+            onCancel={() => setEditing(false)}
+          />
+        ) : (
+          <div className="bg-gradient-to-br from-ink via-ink to-bordeaux rounded-3xl p-6 text-paper relative overflow-hidden">
+            <div className="absolute -top-10 -right-10 w-48 h-48 bg-gold/20 rounded-full blur-3xl" />
+            <div className="relative flex items-start gap-4">
+              <div className="w-16 h-16 rounded-full bg-paper/15 backdrop-blur-sm flex items-center justify-center text-3xl shrink-0">
+                {displayAvatar}
+              </div>
+              <div className="flex-1">
+                <h1 className={`font-serif text-2xl font-bold leading-tight ${profile && !profile.name ? "text-paper/55 italic" : ""}`}>
+                  {displayName}
+                </h1>
+                <div className={`text-xs mb-2 ${profile && !profile.handle ? "text-paper/40 italic" : "text-paper/70"}`}>
+                  {profile && !profile.handle ? "Choisis ton pseudo" : displayHandle}
+                </div>
+                <p className={`text-sm font-serif italic leading-snug ${profile && !profile.bio ? "text-paper/45" : "text-paper/90"}`}>
+                  {profile && !profile.bio ? displayBio : `« ${displayBio} »`}
+                </p>
+                {isEmpty && (
+                  <button
+                    type="button"
+                    onClick={() => setEditing(true)}
+                    className="mt-3 inline-flex items-center text-[11px] uppercase tracking-widest font-bold text-gold hover:underline"
+                  >
+                    Compléter mon profil →
+                  </button>
+                )}
+              </div>
             </div>
-            <div className="flex-1">
-              <h1 className="font-serif text-2xl font-bold leading-tight">
-                {displayName}
-              </h1>
-              <div className="text-xs text-paper/70 mb-2">{ME.handle}</div>
-              <p className="text-sm text-paper/90 font-serif italic leading-snug">
-                « {ME.bio} »
-              </p>
-            </div>
-          </div>
 
-          <div className="relative mt-5 grid grid-cols-3 gap-2">
-            <Stat value={read.length} label="Lus" />
-            <Stat value={myNotes.length} label="Notes" />
-            <Stat value={earnedBadges.length} label="Badges" />
+            <div className="relative mt-5 grid grid-cols-3 gap-2">
+              <Stat value={read.length} label="Lus" />
+              <Stat value={myNotes.length} label="Notes" />
+              <Stat value={earnedBadges.length} label="Badges" />
+            </div>
           </div>
-        </div>
+        )}
       </section>
 
       {/* Statut Premium — sous la carte profil */}

@@ -155,7 +155,7 @@ function ThemesTab() {
           L'envie du jour
         </div>
         <h3 className="font-serif text-xl font-bold leading-tight mb-1">
-          Quelle est ton envie du jour ?
+          Quelle est ton humeur du jour ?
         </h3>
         <p className="text-sm text-paper/85 leading-relaxed">
           Choisis une tonalité ci-dessous. On te propose les livres qui

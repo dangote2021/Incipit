@@ -5,6 +5,7 @@ import PitchCard from "./PitchCard";
 import RapLitTeaser from "./RapLitTeaser";
 import QuizTeaser from "./QuizTeaser";
 import DailyQuizCard from "./DailyQuizCard";
+import BusnelCapsuleTeaser from "./BusnelCapsuleTeaser";
 import { getPrefs, updatePrefs, GENRES_COOKIE_NAME } from "@/lib/prefs";
 import type { Book, Genre } from "@/lib/types";
 
@@ -18,8 +19,9 @@ import type { Book, Genre } from "@/lib/types";
 //   2. Edge case "pas encore de cookie" (users d'avant ce déploiement) :
 //      lire localStorage, trier, et écrire le cookie pour que la prochaine
 //      visite soit server-ordered dès le premier paint.
-//   3. Garder les interludes (Quiz du jour, Rap & Lit, Quiz full) à des
-//      positions d'index fixes (1, 3, 7) quel que soit l'ordre effectif.
+//   3. Garder les interludes (Quiz du jour, Rap & Lit, Capsule Busnel,
+//      Quiz full) à des positions d'index fixes (1, 3, 5, 7) quel que soit
+//      l'ordre effectif.
 // ─────────────────────────────────────────────────────────────────────────────
 
 function hasGenresCookie(): boolean {
@@ -66,6 +68,9 @@ export default function PersonalizedPitchFeed({ books }: { books: Book[] }) {
           <PitchCard book={b} />
           {i === 1 && <DailyQuizCard />}
           {i === 3 && <RapLitTeaser />}
+          {/* Capsule Busnel — levier rétention #1 (panel test Android).
+              Position 5 = milieu du feed, après RapLit et avant QuizTeaser */}
+          {i === 5 && <BusnelCapsuleTeaser />}
           {i === 7 && <QuizTeaser />}
         </Fragment>
       ))}

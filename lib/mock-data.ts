@@ -952,7 +952,7 @@ export const MOODS: {
   blurb: string;
   cover: string;
 }[] = [
-  { key: "romance",           label: "Romance",             emoji: "💋", blurb: "Passions, jalousies, trahisons", cover: "from-rose-300 via-pink-400 to-red-500" },
+  { key: "romance",           label: "Romance",             emoji: "❤️", blurb: "Passions, jalousies, trahisons", cover: "from-rose-300 via-pink-400 to-red-500" },
   { key: "aventure",          label: "Aventure",            emoji: "🗺️", blurb: "Du souffle et des kilomètres", cover: "from-amber-300 via-orange-400 to-red-500" },
   { key: "histoire",          label: "Histoire",            emoji: "📜", blurb: "Révolutions, guerres, sociétés", cover: "from-stone-400 via-stone-600 to-neutral-800" },
   { key: "psychologique",     label: "Psychologique",       emoji: "🧠", blurb: "Les mécaniques intimes", cover: "from-indigo-300 via-purple-500 to-violet-700" },

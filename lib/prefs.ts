@@ -16,6 +16,12 @@ export type IncipitPrefs = {
   lastSeenAt: string;
   /** Prénom saisi à l'onboarding (peut être vide si passé) */
   firstName: string;
+  /** Pseudo / handle saisi sur la page profil (vide par défaut) */
+  handle: string;
+  /** Bio courte saisie sur la page profil (vide par défaut) */
+  bio: string;
+  /** Avatar emoji choisi sur la page profil (vide → on affiche un défaut neutre) */
+  avatar: string;
   /** Genres sélectionnés à l'onboarding */
   genres: Genre[];
   /** Ton narratif choisi */
@@ -56,6 +62,9 @@ export const DEFAULT_PREFS: IncipitPrefs = {
   onboardedAt: "",
   lastSeenAt: "",
   firstName: "",
+  handle: "",
+  bio: "",
+  avatar: "",
   genres: [],
   tone: "boloss",
   visits: 0,

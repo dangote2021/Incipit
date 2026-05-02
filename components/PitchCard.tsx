@@ -21,7 +21,7 @@ export default function PitchCard({ book }: { book: Book }) {
         }}
       />
       {/* Dégradé sombre pour lisibilité */}
-      <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/70 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-ink/95 via-ink/35 to-transparent" />
 
       <div className="relative flex-1 flex flex-col justify-between px-6 py-8 text-paper">
         {/* Header — meta */}
