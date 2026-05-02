@@ -135,6 +135,17 @@ export default function RootLayout({
     >
       <head>
         <ThemePreScript />
+        {/* Détection du Service Worker par les auditeurs PWA (PWABuilder,
+            Lighthouse). Le composant <ServiceWorkerRegister /> dans le body
+            l'enregistre côté client après hydratation, mais certains
+            auditeurs cherchent un script inline statique dans le HTML
+            servi. Ce snippet est idempotent (register retourne le SW
+            existant si déjà enregistré) et silencieux. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js',{scope:'/'}).catch(function(){})})}`,
+          }}
+        />
       </head>
       <body className="min-h-screen paper-texture">
         {/* Skip-link global — premier focus au tab depuis l'URL bar.

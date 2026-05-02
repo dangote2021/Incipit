@@ -1,4 +1,5 @@
 {
+  "id": "/",
   "name": "Incipit — Les classiques qui donnent envie de lire",
   "short_name": "Incipit",
   "description": "Les grands classiques français racontés sans pompe. Incipits du jour, quiz littéraires, punchlines de rap analysées, bibliothèque du domaine public.",
@@ -12,6 +13,14 @@
   "lang": "fr",
   "dir": "ltr",
   "categories": ["books", "education", "lifestyle"],
+  "prefer_related_applications": false,
+  "related_applications": [
+    {
+      "platform": "play",
+      "url": "https://play.google.com/store/apps/details?id=app.incipit.reader",
+      "id": "app.incipit.reader"
+    }
+  ],
   "icons": [
     {
       "src": "/icon-192.png",
@@ -36,18 +45,29 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/home-1080x1920.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Incipit du jour — un classique par jour, sans pompe"
     },
     {
-      "src": "/icon-192.svg",
-      "sizes": "192x192",
-      "type": "image/svg+xml",
-      "purpose": "any"
+      "src": "/screenshots/book-1080x1920.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Fiche livre — pitch boloss + 3 capsules vidéo La P'tite Librairie"
     },
     {
-      "src": "/icon-512.svg",
-      "sizes": "512x512",
-      "type": "image/svg+xml",
-      "purpose": "any"
+      "src": "/screenshots/quiz-1080x1920.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Quiz littérature — 5 questions pour passer pour agrégé"
     }
   ],
   "shortcuts": [
