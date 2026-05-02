@@ -5,5 +5,11 @@
       "path": "/api/cron/daily-push",
       "schedule": "0 7 * * *"
     }
+  ],
+  "rewrites": [
+    {
+      "source": "/.well-known/assetlinks.json",
+      "destination": "/api/assetlinks"
+    }
   ]
 }
