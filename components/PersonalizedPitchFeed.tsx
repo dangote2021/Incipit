@@ -6,6 +6,7 @@ import RapLitTeaser from "./RapLitTeaser";
 import QuizTeaser from "./QuizTeaser";
 import DailyQuizCard from "./DailyQuizCard";
 import BusnelCapsuleTeaser from "./BusnelCapsuleTeaser";
+import WeeklyAuthorCard from "./WeeklyAuthorCard";
 import { getPrefs, updatePrefs, GENRES_COOKIE_NAME } from "@/lib/prefs";
 import type { Book, Genre } from "@/lib/types";
 
@@ -68,6 +69,9 @@ export default function PersonalizedPitchFeed({ books }: { books: Book[] }) {
           <PitchCard book={b} />
           {i === 1 && <DailyQuizCard />}
           {i === 3 && <RapLitTeaser />}
+          {/* Semaine de l'auteur (Kundera/Tesson/Kessel…) — pochette
+              surprise quotidienne, vidéo YouTube le dimanche */}
+          {i === 4 && <WeeklyAuthorCard />}
           {/* Capsule Busnel — levier rétention #1 (panel test Android).
               Position 5 = milieu du feed, après RapLit et avant QuizTeaser */}
           {i === 5 && <BusnelCapsuleTeaser />}
