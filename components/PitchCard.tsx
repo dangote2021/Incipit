@@ -8,7 +8,7 @@ import type { Book } from "@/lib/types";
 // PitchCard — version 'carrousel insta' v2 (panel test Android, mai 2026).
 //
 // Structure demandée :
-//   Notre pitch
+//   Le pitch
 //     [hook brut, sans guillemets]
 //
 //   La citation qui claque
@@ -21,7 +21,7 @@ import type { Book } from "@/lib/types";
 //     texte
 //   - Les citations brutes (extraites de l'œuvre originale) : toujours entre
 //     guillemets typographiques « … »
-//   - L'overline 'Notre pitch' / 'La citation qui claque' introduit chaque
+//   - L'overline 'Le pitch' / 'La citation qui claque' introduit chaque
 //     bloc et lui donne sa fonction éditoriale
 //
 // Visuel :
@@ -130,10 +130,10 @@ export default function PitchCard({ book }: { book: Book }) {
         {/* Spacer flexible — pousse le contenu vers le bas */}
         <div className="flex-1 min-h-[8vh]" />
 
-        {/* BLOC 1 — Notre pitch (commentaire direct, sans guillemets) */}
+        {/* BLOC 1 — Le pitch (commentaire direct, sans guillemets) */}
         <div className="animate-fade-up">
           <div className="text-[10px] uppercase tracking-[0.3em] font-bold text-paper/60 mb-2">
-            Notre pitch
+            Le pitch
           </div>
           <p className="font-serif text-2xl sm:text-3xl font-medium text-paper leading-[1.18] tracking-tight">
             {book.hook}
