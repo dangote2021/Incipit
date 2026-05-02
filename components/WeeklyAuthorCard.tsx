@@ -173,4 +173,4 @@ export default function WeeklyAuthorCard() {
 
 // On évite l'import direct du tableau pour pas alourdir le bundle —
 // le compteur est déclaré ici.
-const WEEKLY_AUTHORS_COUNT = 3;
+const WEEKLY_AUTHORS_COUNT = 10;
