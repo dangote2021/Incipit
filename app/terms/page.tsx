@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default function TermsPage() {
-  const updated = "21 avril 2026";
+  const updated = "1ᵉʳ mai 2026";
   return (
     <div className="min-h-screen">
       <AppHeader title="Conditions" subtitle="Utilisation de l'app" back />
@@ -59,7 +59,7 @@ export default function TermsPage() {
           L'Application est mise à ta disposition pour un usage personnel et
           non-commercial. Tu t'engages à ne pas l'utiliser à des fins
           illicites, à ne pas tenter d'en contourner les limites techniques
-          (plafonds quotidiens du quiz, paywall Premium), et à ne pas extraire
+          (plafonds quotidiens du quiz), et à ne pas extraire
           massivement son contenu pour le rediffuser.
         </p>
 
@@ -88,14 +88,23 @@ export default function TermsPage() {
         </p>
 
         <h2 className="font-serif text-xl font-black text-ink mb-3">
-          6. Premium (essai démo)
+          6. Tarification — V1 gratuite
         </h2>
+        <p className="text-ink/75 leading-relaxed mb-3">
+          La version 1 d'Incipit est <strong>entièrement gratuite</strong>.
+          Aucune fonctionnalité n'est payante, aucun moyen de paiement n'est
+          collecté. Tu peux utiliser l'intégralité de l'application sans rien
+          débourser ni renseigner de carte bancaire.
+        </p>
         <p className="text-ink/75 leading-relaxed mb-6">
-          En v1, le bouton « Activer Premium » déclenche un essai mock de 7
-          jours, stocké uniquement sur ton appareil. Aucun paiement réel n'est
-          prélevé. Lorsque la monétisation sera activée, cette section sera
-          mise à jour et aucun abonnement ne sera souscrit sans ton accord
-          explicite dans l'interface de paiement du store concerné.
+          Une formule Premium par abonnement pourra être proposée
+          ultérieurement (sync cloud avancée, fonctionnalités enseignants,
+          mode hors ligne complet…). Si tel était le cas, tu en serais
+          informé·e par email et dans l'application au moins 30 jours avant
+          activation, et aucun prélèvement n'aurait lieu sans ton accord
+          explicite via l'interface de paiement (Stripe, Apple Pay, Google
+          Pay). Les utilisateurs inscrits avant le passage payant garderont
+          leur accès gratuit aux fonctionnalités déjà disponibles.
         </p>
 
         <h2 className="font-serif text-xl font-black text-ink mb-3">

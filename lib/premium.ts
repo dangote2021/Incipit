@@ -17,6 +17,20 @@ import { useEffect, useState, useCallback } from "react";
 
 const KEY = "incipit:premium:v1";
 
+// ─── V1 gratuite (mai 2026) ─────────────────────────────────────────────────
+// Tant que la monétisation Stripe n'est pas activée au launch, on déverrouille
+// toutes les features Premium pour tous les utilisateurs. Pilotable via env :
+//   NEXT_PUBLIC_PREMIUM_FREE_FOR_ALL=true  → toutes les features incluses
+//   NEXT_PUBLIC_PREMIUM_FREE_FOR_ALL=false → comportement historique (paywall)
+//
+// Le check se fait au runtime côté client. Le bouton 'S'abonner' sur /premium
+// devient un placeholder informationnel quand cette flag est active.
+// ────────────────────────────────────────────────────────────────────────────
+const FREE_FOR_ALL =
+  typeof process !== "undefined" &&
+  process.env.NEXT_PUBLIC_PREMIUM_FREE_FOR_ALL === "true";
+
+
 export type PremiumState = {
   /** `true` si l'utilisateur a activé le Premium (mock ou réel plus tard). */
   isPremium: boolean;
@@ -25,6 +39,8 @@ export type PremiumState = {
   /** Essai gratuit : ISO date de fin si en cours. */
   trialEndsAt: string | null;
 };
+
+export const PREMIUM_FREE_FOR_ALL = FREE_FOR_ALL;
 
 export const DEFAULT_PREMIUM: PremiumState = {
   isPremium: false,
@@ -82,6 +98,14 @@ export const FREE_QUOTAS = {
 
 function safeGet(): PremiumState {
   if (typeof window === "undefined") return DEFAULT_PREMIUM;
+  // V1 gratuite : court-circuit, toutes les features sont débloquées.
+  if (FREE_FOR_ALL) {
+    return {
+      isPremium: true,
+      activatedAt: "v1-free-for-all",
+      trialEndsAt: null,
+    };
+  }
   try {
     const raw = window.localStorage.getItem(KEY);
     if (!raw) return DEFAULT_PREMIUM;

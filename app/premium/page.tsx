@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import AppHeader from "@/components/AppHeader";
-import { usePremium, FEATURES, formatTrialRemaining } from "@/lib/premium";
+import { usePremium, FEATURES, formatTrialRemaining, PREMIUM_FREE_FOR_ALL } from "@/lib/premium";
 import { useAuth } from "@/lib/supabase/use-auth";
 import { track } from "@/lib/telemetry";
 import { pullAndMerge } from "@/lib/sync/engine";
@@ -130,6 +130,25 @@ function PremiumInner() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-paper via-cream to-dust">
       <AppHeader title="Premium" subtitle="Débloquer l'app au complet" back />
+
+      {PREMIUM_FREE_FOR_ALL && (
+        <div className="px-6 pt-6">
+          <div className="bg-sage/10 border border-sage/30 rounded-2xl p-5">
+            <div className="text-[10px] uppercase tracking-[0.3em] text-sage font-black mb-2">
+              V1 — Lancement
+            </div>
+            <h2 className="font-serif text-lg font-black text-ink leading-snug mb-2">
+              Toutes les features sont gratuites pendant la phase de lancement.
+            </h2>
+            <p className="text-sm text-ink/75 leading-relaxed">
+              Pas d'abonnement nécessaire pour l'instant — tout est accessible.
+              Les utilisateurs de la première heure garderont un tarif réduit
+              à vie quand le Premium sera activé.
+            </p>
+          </div>
+        </div>
+      )}
+
 
       {/* Bandeau retour Stripe — afficher feedback paiement. */}
       {stripeSuccess && (
