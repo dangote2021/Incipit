@@ -65,6 +65,13 @@ export type Book = {
   pitch: string;                 // pitch long
   hook: string;                  // 1 phrase punchline
   openingLines: string;          // premiers paragraphes (domaine public)
+  /**
+   * Citation iconique du livre, celle qu'on cite quand on parle de
+   * l'œuvre. PAS l'incipit (l'incipit vit dans la fiche livre — cohérent
+   * avec le nom de l'app). Affichée comme 'La citation qui claque'
+   * dans le PitchCard du feed. Si absente : pas de bloc citation affiché.
+   */
+  signatureQuote?: string;
   themes: string[];
   vibe: Vibe;
   moods: Mood[];                 // parcours thématiques transversaux

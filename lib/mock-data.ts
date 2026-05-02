@@ -44,6 +44,7 @@ export const BOOKS: Book[] = [
       "Meursault enterre sa mère sans verser une larme. Le lendemain il se baigne, drague, va voir une comédie avec Fernandel. Puis, sur une plage d'Alger écrasée de soleil, il flingue un Arabe. Cinq balles. Au procès, tout le monde s'en tape du meurtre — ce qui dérange, c'est son absence totale d'émotions. L'absurde selon Camus : la société te condamne pour ce que tu ne ressens pas, pas pour ce que tu fais.",
     openingLines:
       "Aujourd'hui, maman est morte. Ou peut-être hier, je ne sais pas. J'ai reçu un télégramme de l'asile : « Mère décédée. Enterrement demain. Sentiments distingués. » Cela ne veut rien dire. C'était peut-être hier.",
+    signatureQuote: "Que m'importaient la mort des autres, l'amour d'une mère, que m'importaient son Dieu, les vies qu'on choisit, les destins qu'on élit.",
     themes: ["absurde", "solitude", "procès", "soleil"],
     vibe: "absurd",
     moods: ["metaphysique", "noir"],
@@ -97,6 +98,7 @@ export const BOOKS: Book[] = [
       "Emma a épousé un médecin de campagne un peu mou. Elle s'ennuie à mourir. Alors elle se shoote aux romances bon marché, se tape un dandy, puis un clerc de notaire, s'endette en robes de soie et rideaux pompeux. Quand les créanciers débarquent, elle avale de l'arsenic devant son portrait. Flaubert a été traîné en justice pour immoralité. Aujourd'hui on dit juste : c'est Desperate Housewives avant l'heure.",
     openingLines:
       "Nous étions à l'étude, quand le Proviseur entra, suivi d'un nouveau habillé en bourgeois et d'un garçon de classe qui portait un grand pupitre. Ceux qui dormaient se réveillèrent, et chacun se leva comme surpris dans son travail.",
+    signatureQuote: "Elle confondait, dans son désir, les sensualités du luxe avec les joies du cœur, l'élégance des habitudes et les délicatesses du sentiment.",
     themes: ["adultère", "ennui", "province", "désir"],
     vibe: "romantic",
     moods: ["romance", "psychologique"],
@@ -151,6 +153,7 @@ export const BOOKS: Book[] = [
       "Étienne Lantier débarque dans le Nord, corons noirs, charbon partout, gamins qui crachent du poumon à 14 ans. Il lit Marx en cachette. Il allume la mèche : grève générale. La répression arrive, les fusils chantent, un gosse nommé Jeanlin égorge un soldat dans un couloir souterrain. À la fin tout a brûlé, les mineurs redescendent au fond — mais quelque chose a germé dans les têtes. Zola a écrit la lutte des classes en roman d'action.",
     openingLines:
       "Dans la plaine rase, sous la nuit sans étoiles, d'une obscurité et d'une épaisseur d'encre, un homme suivait seul la grande route de Marchiennes à Montsou, dix kilomètres de pavé coupant tout droit, à travers les champs de betteraves.",
+    signatureQuote: "Une armée noire, vengeresse, qui germait lentement dans les sillons, grandissant pour les récoltes du siècle futur.",
     themes: ["luttes sociales", "grève", "mines", "révolte"],
     vibe: "political",
     moods: ["histoire", "social"],
@@ -205,6 +208,7 @@ export const BOOKS: Book[] = [
       "La marquise de Merteuil et le vicomte de Valmont, ex-amants devenus complices, s'amusent à détruire des vies pour le sport. Pari : corrompre une ado sortie du couvent et une jeune mariée pieuse. Ça marche. Puis ça dérape. Valmont tombe amoureux de sa proie. Merteuil le trahit. Duel, scandale, vérole. Laclos a écrit le thriller psychologique ultime avec juste des lettres. Flex intellectuel absolu.",
     openingLines:
       "Vous voyez, ma chère amie, que je vous tiens parole et que les bonnets et les pompons ne prennent pas tout mon temps : il m'en restera toujours pour vous. J'ai pourtant vu plus de parure dans cette seule journée que dans les quatre années que nous avons passées ensemble.",
+    signatureQuote: "On s'ennuie de tout, mon ange, c'est une loi de la nature ; ce n'est pas ma faute.",
     themes: ["manipulation", "séduction", "vengeance", "épistolaire"],
     vibe: "dark",
     moods: ["romance", "psychologique"],
@@ -258,6 +262,7 @@ export const BOOKS: Book[] = [
       "Julien Sorel, gamin pauvre, dévore Rousseau et rêve Napoléon. Il entre comme précepteur chez les Rênal — il se tape la bourgeoise. Monte à Paris, devient secrétaire d'un marquis — il se tape la fille. Il a les deux femmes, il a tout. Et quand il lâche tout pour tirer sur l'une d'elles à l'église, il se condamne exprès. Stendhal dissèque la mécanique du parvenu sous la Restauration avec une froideur quasi chirurgicale.",
     openingLines:
       "La petite ville de Verrières peut passer pour l'une des plus jolies de la Franche-Comté. Ses maisons blanches avec leurs toits pointus de tuiles rouges s'étendent sur la pente d'une colline, dont des touffes de vigoureux châtaigniers marquent les moindres sinuosités.",
+    signatureQuote: "Jamais cette tête n'avait été aussi poétique qu'au moment où elle allait tomber.",
     themes: ["ambition", "amour", "ascension sociale", "hypocrisie"],
     vibe: "dark",
     moods: ["psychologique", "histoire"],
@@ -305,6 +310,7 @@ export const BOOKS: Book[] = [
       "Georges Duroy, ex-soldat d'Algérie fauché, débarque à Paris avec zéro talent sauf son sourire et ses moustaches. Il choppe un taf dans un journal grâce à un pote. Il sait qu'il n'écrit pas — alors il couche. Avec la femme de son collègue. Avec la femme de son patron. Avec la fille de son patron. À la fin il se marie en grande pompe à la Madeleine, politicien en devenir. Maupassant a écrit LinkedIn version XIXe.",
     openingLines:
       "Quand la caissière lui eut rendu la monnaie de sa pièce de cent sous, Georges Duroy sortit du restaurant. Comme il portait beau par nature et par pose d'ancien sous-officier, il cambra sa taille, frisa sa moustache d'un geste militaire et familier, et jeta sur les dîneurs attardés un regard rapide et circulaire, un de ces coups d'œil de joli garçon qui s'étendent comme des coups d'épervier.",
+    signatureQuote: "Il sentait monter en lui un besoin furieux d'être tout, partout, en haut, le plus haut, plus haut que les autres.",
     themes: ["ambition", "séduction", "presse", "arrivisme"],
     vibe: "wild",
     moods: ["social", "romance"],
@@ -351,6 +357,7 @@ export const BOOKS: Book[] = [
       "Quasimodo, sonneur bossu, moche de chez moche, aime silencieusement Esmeralda, danseuse gitane. Problème : Frollo, archidiacre, la veut aussi — version harceleur psychopathe. Comme il peut pas l'avoir, il la fait condamner pour sorcellerie. Pendue. Quasimodo balance Frollo du haut de la tour et va mourir couché sur le cadavre de sa bien-aimée. Hugo intercale 150 pages d'archi gothique juste parce qu'il peut.",
     openingLines:
       "Il y a aujourd'hui trois cent quarante-huit ans six mois et dix-neuf jours que les parisiens s'éveillèrent au bruit de toutes les cloches sonnant à grande volée dans la triple enceinte de la Cité, de l'Université et de la Ville.",
+    signatureQuote: "Ceci tuera cela. Le livre tuera l'édifice.",
     themes: ["amour impossible", "monstruosité", "médiéval", "fanatisme"],
     vibe: "epic",
     moods: ["aventure", "histoire", "romance"],
@@ -399,6 +406,7 @@ export const BOOKS: Book[] = [
       "Bardamu, anti-héros total, s'engage par connerie en 14-18, voit la boucherie des tranchées. Fuit en Afrique coloniale — pourri, moite, corrompu. Fuit à Detroit — les usines Ford, Molly la prostituée qu'il trahit. Rentre à Paris, devient médecin de banlieue, confronté à la misère ordinaire. Céline explose la langue : argot, trois points, colères hallucinées. L'homme derrière est odieux. Le roman, lui, est un monument.",
     openingLines:
       "Ça a débuté comme ça. Moi, j'avais jamais rien dit. Rien. C'est Arthur Ganate qui m'a fait parler. Arthur, un étudiant, un carabin lui aussi, un camarade.",
+    signatureQuote: "Tout ce qui est intéressant se passe dans l'ombre, décidément. On ne sait rien de la véritable histoire des hommes.",
     themes: ["guerre", "désillusion", "errance", "argot"],
     vibe: "dark",
     moods: ["voyage-initiatique", "noir"],
@@ -452,6 +460,7 @@ export const BOOKS: Book[] = [
       "Candide, naïf absolu, est élevé par le prof Pangloss qui lui répète que 'tout est pour le mieux dans le meilleur des mondes possibles'. Puis il se fait virer du château, embarque dans une guerre, survit au tremblement de terre de Lisbonne, croise l'Inquisition, atterrit en Eldorado, perd tout, retrouve sa Cunégonde devenue moche. Conclusion : 'il faut cultiver notre jardin'. Voltaire a écrit un middle finger de 150 pages à Leibniz. Lisible en un aprem.",
     openingLines:
       "Il y avait en Westphalie, dans le château de monsieur le baron de Thunder-ten-tronckh, un jeune garçon à qui la nature avait donné les mœurs les plus douces. Sa physionomie annonçait son âme.",
+    signatureQuote: "Il faut cultiver notre jardin.",
     themes: ["optimisme", "satire", "philosophie", "voyage"],
     vibe: "absurd",
     moods: ["voyage-initiatique", "aventure"],
@@ -500,6 +509,7 @@ export const BOOKS: Book[] = [
       "Pension Vauquer, Paris 1819, un ramassis de losers. Parmi eux, Rastignac, étudiant ambitieux. Et Goriot, vieux vermicellier qui se dépouille pour ses deux filles mariées riches — elles viennent lui pomper le cash, même pas à son enterrement. Vautrin, le bandit, explique à Rastignac la vraie loi de Paris : prédateur ou proie. À la fin, Rastignac fixe la ville depuis le Père-Lachaise et balance : 'À nous deux maintenant.' Balzac pose le code triche de la société moderne.",
     openingLines:
       "Madame Vauquer, née de Conflans, est une vieille femme qui, depuis quarante ans, tient à Paris une pension bourgeoise établie rue Neuve-Sainte-Geneviève, entre le quartier latin et le faubourg Saint-Marceau.",
+    signatureQuote: "À nous deux maintenant !",
     themes: ["Paris", "ambition", "famille", "argent"],
     vibe: "epic",
     moods: ["psychologique", "social"],
@@ -546,6 +556,7 @@ export const BOOKS: Book[] = [
       "Baudelaire prend le romantisme et le plonge dans l'absinthe. Il chante les prostituées, les chambres sales, le spleen qui te tue à petit feu, l'idéal inaccessible, la femme vampire. 'Anywhere out of the world.' Le recueil est condamné en 1857 pour outrage aux bonnes mœurs — six poèmes interdits jusqu'en 1949. Aujourd'hui Baudelaire c'est le grand-père de tout ce qui s'appelle 'dark' dans la culture : du black metal à Lana Del Rey. Lis-en trois, tu comprends.",
     openingLines:
       "La sottise, l'erreur, le péché, la lésine,\nOccupent nos esprits et travaillent nos corps,\nEt nous alimentons nos aimables remords,\nComme les mendiants nourrissent leur vermine.",
+    signatureQuote: "Hypocrite lecteur, — mon semblable, — mon frère !",
     themes: ["spleen", "idéal", "érotisme", "modernité"],
     vibe: "dark",
     moods: ["metaphysique", "noir"],
@@ -599,6 +610,7 @@ export const BOOKS: Book[] = [
       "Le narrateur trempe une madeleine dans du thé — et d'un coup son enfance à Combray lui revient tout entière. Puis Proust raconte Swann, l'amour jaloux et maladif que ce snob a pour Odette, une demi-mondaine. La phrase proustienne s'étire, se déploie, te fait vivre une seule pensée qui dure quatre minutes. Proust invente la mémoire involontaire, la psychologie moderne, le roman-fleuve. Commence par la madeleine. Tu verras où ça te mène.",
     openingLines:
       "Longtemps, je me suis couché de bonne heure. Parfois, à peine ma bougie éteinte, mes yeux se fermaient si vite que je n'avais pas le temps de me dire : « Je m'endors. »",
+    signatureQuote: "Et tout d'un coup le souvenir m'est apparu. Ce goût, c'était celui du petit morceau de madeleine que le dimanche matin à Combray ma tante Léonie m'offrait.",
     themes: ["mémoire", "temps", "jalousie", "aristocratie"],
     vibe: "mystique",
     moods: ["romance", "psychologique"],

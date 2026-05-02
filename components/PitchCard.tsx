@@ -25,22 +25,14 @@ function lastName(fullName: string): string {
   return parts[parts.length - 1] || fullName;
 }
 
-function pickPunchQuote(opening: string, maxChars = 220): string {
-  if (!opening) return "";
-  const text = opening.replace(/\s+/g, " ").trim();
-  const m = text.match(/^.*?[.!?:](?=\s|$)/);
-  let candidate = (m ? m[0] : text).trim();
-  if (candidate.length > maxChars) {
-    const cut = candidate.lastIndexOf(",", maxChars);
-    candidate = candidate.slice(0, cut > 80 ? cut : maxChars).trim() + "…";
-  }
-  return candidate;
-}
-
 export default function PitchCard({ book }: { book: Book }) {
   const [saved, setSaved] = useState(false);
   const [liked, setLiked] = useState(false);
-  const punch = pickPunchQuote(book.openingLines);
+  // 'La citation qui claque' = vraie citation iconique du livre (PAS l'incipit).
+  // L'incipit vit sur la fiche /book/[id] — cohérent avec le nom de l'app.
+  // Si signatureQuote pas encore renseignée pour ce livre, on n'affiche
+  // simplement pas le bloc citation (mieux qu'une phrase lambda).
+  const punch = book.signatureQuote;
 
   return (
     <article className="snap-start relative min-h-[calc(100vh-6rem)] flex flex-col bg-paper overflow-hidden">
