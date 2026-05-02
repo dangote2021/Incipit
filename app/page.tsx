@@ -2,9 +2,9 @@ import Link from "next/link";
 import { cookies } from "next/headers";
 import { BOOKS } from "@/lib/mock-data";
 import DailyRitual from "@/components/DailyRitual";
-import ResumeCard from "@/components/ResumeCard";
 import WelcomeBanner from "@/components/WelcomeBanner";
 import PersonalizedPitchFeed from "@/components/PersonalizedPitchFeed";
+import WeeklyAuthorCard from "@/components/WeeklyAuthorCard";
 import NextSuggestion from "@/components/NextSuggestion";
 import ReEngagementBanner from "@/components/ReEngagementBanner";
 import NotifOptIn from "@/components/NotifOptIn";
@@ -94,20 +94,13 @@ export default function HomePage() {
               mardi citation, mercredi punchline, jeudi quiz, vendredi carte,
               samedi passage clé, dimanche classique de la semaine. Même
               squelette visuel, contenu différent → reconnaissance + variété. */}
-        {isProbablyNewVisitor ? (
-          <>
-            <WelcomeBanner />
-            <DailyRitual />
-          </>
-        ) : (
-          <>
-            <DailyRitual />
-            <WelcomeBanner />
-          </>
-        )}
+        {/* OUVERTURE du feed — Semaine de l'auteur avec pochette surprise.
+            Levier rétention quotidien #1 (panel test in-app). On veut que
+            ce soit ce que l'user voit en premier au lancement. */}
+        <WeeklyAuthorCard />
 
-        {/* "Je reprends" — uniquement si un livre est en cours */}
-        <ResumeCard />
+        {/* Welcome banner — pour les nouveaux uniquement, après la pochette */}
+        {isProbablyNewVisitor && <WelcomeBanner />}
 
         {/* Parcours de lecture — suggestion "après X, lis Y" (v8 #6).
             Se monte uniquement si l'utilisateur a marqué ≥1 livre comme lu,
@@ -128,7 +121,7 @@ export default function HomePage() {
             recolle en cas de changement tardif. Les interludes (Quiz du
             jour, Rap & Lit, Quiz full) restent à des positions fixes dans
             le flow. */}
-        <PersonalizedPitchFeed books={ordered} />
+        <PersonalizedPitchFeed books={ordered} dailyRitualSlot={<DailyRitual />} />
 
         {/* Fin de feed */}
         <section className="snap-start min-h-[calc(100vh-6rem)] flex flex-col items-center justify-center bg-cream text-ink px-8 text-center">

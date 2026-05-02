@@ -39,7 +39,7 @@ export const BOOKS: Book[] = [
     genre: "classique",
     pages: 186,
     cover: "from-amber-100 via-orange-200 to-yellow-300",
-    hook: "Il a tué un mec. On le juge pour ne pas avoir pleuré.",
+    hook: "Il a tué quelqu'un. On le juge pour ne pas avoir pleuré.",
     pitch:
       "Meursault enterre sa mère sans verser une larme. Le lendemain il se baigne, drague, va voir une comédie avec Fernandel. Puis, sur une plage d'Alger écrasée de soleil, il flingue un Arabe. Cinq balles. Au procès, tout le monde s'en tape du meurtre — ce qui dérange, c'est son absence totale d'émotions. L'absurde selon Camus : la société te condamne pour ce que tu ne ressens pas, pas pour ce que tu fais.",
     openingLines:

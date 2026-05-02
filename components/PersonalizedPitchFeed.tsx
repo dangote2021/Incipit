@@ -6,7 +6,6 @@ import RapLitTeaser from "./RapLitTeaser";
 import QuizTeaser from "./QuizTeaser";
 import DailyQuizCard from "./DailyQuizCard";
 import BusnelCapsuleTeaser from "./BusnelCapsuleTeaser";
-import WeeklyAuthorCard from "./WeeklyAuthorCard";
 import { getPrefs, updatePrefs, GENRES_COOKIE_NAME } from "@/lib/prefs";
 import type { Book, Genre } from "@/lib/types";
 
@@ -32,7 +31,16 @@ function hasGenresCookie(): boolean {
   );
 }
 
-export default function PersonalizedPitchFeed({ books }: { books: Book[] }) {
+export default function PersonalizedPitchFeed({
+  books,
+  dailyRitualSlot,
+}: {
+  books: Book[];
+  /** Slot Server Component (DailyRitual) injecté à un index élevé du feed.
+      Voir app/page.tsx — DailyRitual a été déplacé hors de l'ouverture
+      pour mettre WeeklyAuthorCard en premier (panel test in-app). */
+  dailyRitualSlot?: React.ReactNode;
+}) {
   const [localGenres, setLocalGenres] = useState<Genre[] | null>(null);
 
   useEffect(() => {
@@ -69,13 +77,14 @@ export default function PersonalizedPitchFeed({ books }: { books: Book[] }) {
           <PitchCard book={b} />
           {i === 1 && <DailyQuizCard />}
           {i === 3 && <RapLitTeaser />}
-          {/* Semaine de l'auteur (Kundera/Tesson/Kessel…) — pochette
-              surprise quotidienne, vidéo YouTube le dimanche */}
-          {i === 4 && <WeeklyAuthorCard />}
-          {/* Capsule Busnel — levier rétention #1 (panel test Android).
-              Position 5 = milieu du feed, après RapLit et avant QuizTeaser */}
+          {/* Capsule Busnel — levier rétention #1 (panel test Android) */}
           {i === 5 && <BusnelCapsuleTeaser />}
           {i === 7 && <QuizTeaser />}
+          {/* DailyRitual (incipit/citation/punchline/passage clé samedi…)
+              déplacé ICI plutôt qu'en ouverture — l'user voulait que le
+              passage clé du samedi notamment arrive bien plus loin dans
+              le feed, après plusieurs pitches (panel test in-app). */}
+          {i === 10 && dailyRitualSlot}
         </Fragment>
       ))}
     </>
