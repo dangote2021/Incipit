@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import AppHeader from "@/components/AppHeader";
 import BookCover from "@/components/BookCover";
 import QuoteStoryCard from "@/components/QuoteStoryCard";
@@ -13,19 +14,50 @@ import {
   KEY_PASSAGES,
   getBook,
 } from "@/lib/mock-data";
+import {
+  VIDEO_FEATURES,
+  youtubeUrl,
+  youtubeThumb,
+  presenterLabel,
+  sourceLabel,
+  type VideoFeature,
+} from "@/lib/video-features";
 import type { Mood } from "@/lib/types";
 
-type Tab = "themes" | "quotes" | "passages" | "challenges";
+type Tab = "themes" | "quotes" | "passages" | "capsules" | "challenges";
 
 const TABS: { key: Tab; label: string; emoji: string }[] = [
   { key: "themes", label: "Thèmes", emoji: "🧭" },
   { key: "quotes", label: "Citations", emoji: "✦" },
   { key: "passages", label: "Passages clés", emoji: "📖" },
+  // Capsules vidéo La P'tite Librairie de Busnel — levier de rétention
+  // (panel test Android). Onglet dédié pour qu'on puisse explorer les 31
+  // capsules d'un coup, en plus de la 'Capsule du jour' du feed pitches.
+  { key: "capsules", label: "Capsules", emoji: "▶" },
   { key: "challenges", label: "Défis", emoji: "🏆" },
 ];
 
 export default function ExplorePage() {
-  const [tab, setTab] = useState<Tab>("themes");
+  return (
+    <Suspense fallback={null}>
+      <ExploreInner />
+    </Suspense>
+  );
+}
+
+function ExploreInner() {
+  const params = useSearchParams();
+  const initial = (params.get("tab") as Tab) || "themes";
+  const [tab, setTab] = useState<Tab>(
+    TABS.some((t) => t.key === initial) ? initial : "themes"
+  );
+
+  // Si l'URL ?tab=… change pendant la session (back/forward, lien interne),
+  // on resync le state pour que l'utilisateur voie le bon onglet.
+  useEffect(() => {
+    const next = (params.get("tab") as Tab) || "themes";
+    if (TABS.some((t) => t.key === next)) setTab(next);
+  }, [params]);
 
   return (
     <>
@@ -58,6 +90,7 @@ export default function ExplorePage() {
         {tab === "themes" && <ThemesTab />}
         {tab === "quotes" && <QuotesTab />}
         {tab === "passages" && <PassagesTab />}
+        {tab === "capsules" && <CapsulesTab />}
         {tab === "challenges" && <ChallengesTab />}
       </main>
     </>
@@ -541,6 +574,194 @@ function ChallengesTab() {
           </li>
         ))}
       </ul>
+    </section>
+  );
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
+// CAPSULES — toutes les capsules vidéo La P'tite Librairie groupées par auteur
+// ──────────────────────────────────────────────────────────────────────────────
+
+type CapsuleEntry = {
+  bookId: string;
+  capsule: VideoFeature;
+};
+
+function flattenCapsules(): CapsuleEntry[] {
+  const out: CapsuleEntry[] = [];
+  for (const [bookId, list] of Object.entries(VIDEO_FEATURES)) {
+    for (const cap of list) {
+      out.push({ bookId, capsule: cap });
+    }
+  }
+  return out;
+}
+
+function authorFromTitle(t: string): string {
+  // Titres P'tite Librairie : 'AUTEUR / ŒUVRE / LA P'TITE LIBRAIRIE'.
+  // On extrait le premier segment.
+  const parts = t.split("/").map((s) => s.trim());
+  return parts[0] || t;
+}
+
+function workFromTitle(t: string): string {
+  const parts = t.split("/").map((s) => s.trim());
+  // Si seulement 2 parties : auteur / œuvre. Sinon auteur / œuvre / source.
+  return parts.length >= 2 ? parts[1].replace(/L[''’]/g, "L'") : t;
+}
+
+function CapsulesTab() {
+  const all = useMemo(() => flattenCapsules(), []);
+  const [filter, setFilter] = useState<"all" | "busnel" | "trapenard">("all");
+
+  const filtered = useMemo(() => {
+    if (filter === "all") return all;
+    return all.filter((e) => e.capsule.presenter === filter);
+  }, [all, filter]);
+
+  // Group par auteur (extrait du titre) pour une présentation lisible.
+  const grouped = useMemo(() => {
+    const map = new Map<string, CapsuleEntry[]>();
+    for (const e of filtered) {
+      const author = authorFromTitle(e.capsule.title);
+      const arr = map.get(author) ?? [];
+      arr.push(e);
+      map.set(author, arr);
+    }
+    return Array.from(map.entries()).sort((a, b) => a[0].localeCompare(b[0]));
+  }, [filtered]);
+
+  return (
+    <section>
+      {/* Hero présentation source */}
+      <div className="bg-gradient-to-br from-bordeaux to-ink text-paper rounded-2xl p-5 mb-5">
+        <div className="text-[10px] uppercase tracking-widest text-paper/70 font-bold mb-1">
+          ▶ La P'tite Librairie
+        </div>
+        <h3 className="font-serif text-xl font-bold leading-tight mb-2">
+          {all.length} capsules vidéo de François Busnel
+        </h3>
+        <p className="text-sm text-paper/85 leading-relaxed">
+          Trois minutes par livre. Le ton Busnel, l'œuvre racontée comme à
+          la table d'un dîner. Toutes les capsules pointent vers la chaîne
+          officielle La Grande Librairie sur YouTube.
+        </p>
+      </div>
+
+      {/* Filter chips (présentateur) — utile quand le catalogue grossira */}
+      <div className="flex gap-2 mb-5 overflow-x-auto no-scrollbar">
+        {[
+          { key: "all" as const, label: "Toutes" },
+          { key: "busnel" as const, label: "François Busnel" },
+          { key: "trapenard" as const, label: "Augustin Trapenard" },
+        ].map((f) => (
+          <button
+            key={f.key}
+            type="button"
+            onClick={() => setFilter(f.key)}
+            aria-pressed={filter === f.key}
+            className={`shrink-0 text-[11px] uppercase tracking-widest font-bold min-h-[36px] px-3 py-1.5 rounded-full transition ${
+              filter === f.key
+                ? "bg-bordeaux text-paper"
+                : "bg-ink/5 text-ink/65 hover:bg-ink/10"
+            }`}
+          >
+            {f.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Liste groupée par auteur */}
+      <div className="space-y-7">
+        {grouped.map(([author, entries]) => (
+          <div key={author}>
+            <h4 className="font-serif text-lg font-black text-ink mb-3 flex items-baseline gap-2">
+              {author}
+              <span className="text-[10px] uppercase tracking-widest text-ink/40 font-bold">
+                {entries.length} capsule{entries.length > 1 ? "s" : ""}
+              </span>
+            </h4>
+            <div className="grid grid-cols-1 gap-3">
+              {entries.map(({ bookId, capsule }) => {
+                const book = BOOKS.find((b) => b.id === bookId);
+                const work = workFromTitle(capsule.title);
+                return (
+                  <article
+                    key={capsule.youtubeId}
+                    className="bg-paper border border-ink/10 rounded-2xl overflow-hidden flex hover:border-ink/25 transition"
+                  >
+                    <a
+                      href={youtubeUrl(capsule)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="relative shrink-0 w-32 sm:w-40 aspect-video bg-ink/5 group"
+                      aria-label={`Voir la capsule sur YouTube : ${capsule.title}`}
+                    >
+                      <img
+                        src={youtubeThumb(capsule)}
+                        alt=""
+                        loading="lazy"
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-ink/60 to-transparent" />
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="w-8 h-8 rounded-full bg-paper/90 flex items-center justify-center group-hover:scale-110 transition">
+                          <span className="text-bordeaux text-sm ml-0.5">▶</span>
+                        </div>
+                      </div>
+                      {capsule.durationMin && (
+                        <div className="absolute bottom-1 right-1 px-1.5 py-0.5 rounded bg-ink/85 text-paper text-[9px] font-bold">
+                          {capsule.durationMin} min
+                        </div>
+                      )}
+                    </a>
+
+                    <div className="flex-1 p-3 sm:p-4 flex flex-col justify-between min-w-0">
+                      <div>
+                        <div className="text-[9px] uppercase tracking-[0.2em] text-bordeaux font-black mb-1">
+                          {sourceLabel(capsule.source)} · {presenterLabel(capsule.presenter)}
+                        </div>
+                        <h5 className="font-serif text-base font-black text-ink leading-snug truncate">
+                          {work}
+                        </h5>
+                        {capsule.relationNote && (
+                          <p className="mt-1 text-[11px] text-ink/55 italic leading-snug line-clamp-2">
+                            {capsule.relationNote}
+                          </p>
+                        )}
+                      </div>
+                      <div className="mt-2 flex items-center gap-2">
+                        <a
+                          href={youtubeUrl(capsule)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[10px] uppercase tracking-widest font-bold text-bordeaux hover:underline"
+                        >
+                          Voir →
+                        </a>
+                        {book && (
+                          <Link
+                            href={`/book/${book.id}`}
+                            className="text-[10px] uppercase tracking-widest font-bold text-ink/55 hover:text-ink"
+                          >
+                            · Fiche
+                          </Link>
+                        )}
+                      </div>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          </div>
+        ))}
+
+        {grouped.length === 0 && (
+          <p className="text-sm text-ink/50 italic text-center py-8">
+            Aucune capsule pour ce filtre.
+          </p>
+        )}
+      </div>
     </section>
   );
 }

@@ -159,8 +159,13 @@ export default function BusnelCapsuleTeaser() {
           )}
         </div>
 
-        <div className="mt-3 text-center text-[10px] uppercase tracking-widest text-ink/50 font-bold">
-          31 capsules · nouvelle chaque jour
+        <div className="mt-4 text-center">
+          <Link
+            href="/explore?tab=capsules"
+            className="text-[10px] uppercase tracking-widest text-ink/55 hover:text-bordeaux font-bold transition"
+          >
+            Voir les 31 capsules →
+          </Link>
         </div>
       </div>
     </section>
