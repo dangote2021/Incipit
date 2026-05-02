@@ -16,11 +16,34 @@ import StreakBadge from "@/components/StreakBadge";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // DailyRitual — écran d'ouverture qui change selon le jour de la semaine.
-// Remplace l'ancien DailyIncipit toujours identique (retour panel v8).
 //
-// Server Component pour que le crawler voie le bon contenu (SEO + partage).
-// Chaque variante a le même "squelette" visuel (fond, overline, CTA) pour
-// maintenir la reconnaissance — on varie le CONTENU, pas la grammaire.
+// Refonte radicale (panel test in-app, mai 2026) : trop de polices, trop
+// de niveaux de hiérarchie. Toutes les variantes (incipit, citation,
+// punchline, mini-quiz, carte, passage, weekbook) suivent maintenant
+// EXACTEMENT le même layout :
+//
+//   [Overline horizontal : kind · date]                     ← sans, xs, opacity
+//
+//   [Le pitch / La pensée / Le passage…]                    ← overline bordeaux
+//   Commentaire éditorial direct, sans guillemets.          ← serif, sans italique
+//
+//   [La citation qui claque]                                ← overline bordeaux
+//   « extrait de l'œuvre, entre guillemets typo »           ← serif italique
+//
+//   Titre, Auteur                                           ← serif petit
+//   [CTA]                                                   ← bouton ink
+//
+// Règles :
+//   1. Une seule famille serif (Playfair) pour tout le contenu éditorial.
+//      Une seule famille sans (Inter) pour overlines + signature + meta.
+//   2. Max 3 tailles texte : overline xs / contenu lg-2xl / signature sm.
+//   3. Pas de gros guillemets décoratifs (style « " »). Les vraies citations
+//      sont marquées par les chevrons typo « … » uniquement.
+//   4. Pas de chip catégorie supplémentaire au-dessus du contenu.
+//   5. Le "pitch" est notre commentaire éditorial direct (pas de guillemets).
+//      La "citation" est l'extrait brut de l'œuvre (entre guillemets).
+//
+// Server Component → SEO + cache CDN cohérent. Variantes server par défaut.
 // ─────────────────────────────────────────────────────────────────────────────
 
 export default function DailyRitual() {
@@ -30,15 +53,12 @@ export default function DailyRitual() {
     <section className="snap-start h-screen flex flex-col justify-between px-6 pt-20 pb-28 bg-gradient-to-b from-paper via-cream to-dust relative overflow-hidden">
       <div className="absolute top-24 right-6 w-40 h-40 rounded-full bg-bordeaux/10 blur-3xl pointer-events-none" />
 
-      {/* Streak en top — se monte après hydrate, slot stable pour ne pas jump */}
+      {/* Streak en top — slot stable pour ne pas jump à l'hydratation */}
       <div className="relative">
         <StreakBadge />
       </div>
 
-      {/* Contenu principal — pattern partagé : overline + hero + CTA */}
-      <div className="relative">
-        {renderVariant(kind)}
-      </div>
+      <div className="relative">{renderVariant(kind)}</div>
 
       <div className="relative text-center text-ink/40 text-xs animate-bounce">
         ↓
@@ -68,80 +88,149 @@ function renderVariant(kind: string) {
   }
 }
 
-// ── Overline réutilisable ──────────────────────────────────────────────────
-// Un "share bookId" optionnel permet d'ajouter un raccourci "⬇ carte" sur
-// toutes les variantes qui ont un livre associé, pas juste le vendredi
-// (retour panel v8, Chloé et Inès : la carte story est un driver de
-// rétention fort, elle doit être à 1 tap TOUS les jours).
-function Overline({
+// ─── Helpers de signature ──────────────────────────────────────────────────
+function lastName(fullName: string): string {
+  const parts = fullName.trim().split(/\s+/);
+  return parts[parts.length - 1] || fullName;
+}
+
+function truncate(text: string, max = 220): string {
+  const t = text.replace(/\s+/g, " ").trim();
+  if (t.length <= max) return t;
+  const cut = t.lastIndexOf(",", max);
+  return (cut > 80 ? t.slice(0, cut) : t.slice(0, max)).trim() + "…";
+}
+
+// ─── Layout unifié — toutes les variantes passent par là ───────────────────
+function DailyLayout({
   kindLabel,
   date,
+  pitchLabel,
+  pitchText,
+  quoteLabel,
+  quoteText,
+  signature,
+  cta,
   shareBookId,
 }: {
   kindLabel: string;
   date: Date;
+  /** Overline du commentaire éditorial (ex: 'Le pitch', 'La pensée du jour', 'Le passage') */
+  pitchLabel?: string;
+  /** Commentaire éditorial direct, sans guillemets */
+  pitchText?: string;
+  /** Overline de la citation brute (ex: 'La citation qui claque', "L'incipit") */
+  quoteLabel?: string;
+  /** Texte de la citation, sera affiché entre guillemets « ... » */
+  quoteText?: string;
+  /** Signature : '{title}, {lastName(author)}' (peut être vide pour quiz) */
+  signature?: string;
+  /** Bouton CTA bas */
+  cta: { href: string; label: string; external?: boolean };
+  /** Si présent : ajoute le bouton "⬇ Carte" dans la rangée chips */
   shareBookId?: string;
 }) {
   return (
-    <div className="flex items-start justify-between mb-6 gap-2">
-      <div>
-        <div className="text-[10px] uppercase tracking-[0.3em] text-bordeaux font-bold">
-          {kindLabel}
+    <>
+      {/* Overline horizontal compact : kind · date · chips droite */}
+      <div className="flex items-center justify-between gap-3 mb-8">
+        <div className="text-[10px] uppercase tracking-[0.3em] font-bold text-ink/55">
+          {kindLabel} · <span className="text-ink/40 normal-case font-medium tracking-wide italic">{formatDate(date)}</span>
         </div>
-        <div className="text-xs text-ink/50 mt-1 italic first-letter:uppercase">
-          {formatDate(date)}
+        <div className="flex items-center gap-1.5 shrink-0">
+          {shareBookId && (
+            <a
+              href={`/api/incipit-card/${shareBookId}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[10px] uppercase tracking-[0.2em] text-ink/55 font-bold border border-ink/15 px-3 py-1.5 rounded-full hover:text-bordeaux hover:border-bordeaux/40 transition"
+              aria-label="Télécharger la carte à partager"
+            >
+              ⬇ Carte
+            </a>
+          )}
+          <Link
+            href="/incipit-du-jour"
+            className="text-[10px] uppercase tracking-[0.2em] text-ink/55 font-bold border border-ink/15 px-3 py-1.5 rounded-full hover:text-bordeaux hover:border-bordeaux/40 transition"
+          >
+            Archive →
+          </Link>
         </div>
       </div>
-      <div className="flex items-center gap-1.5 shrink-0">
-        {shareBookId && (
+
+      <div className="max-w-md mx-auto">
+        {/* BLOC 1 — Le pitch (commentaire éditorial, sans guillemets) */}
+        {pitchLabel && pitchText && (
+          <>
+            <div className="text-[10px] uppercase tracking-[0.3em] text-bordeaux font-bold mb-2">
+              {pitchLabel}
+            </div>
+            <p className="font-serif text-2xl text-ink leading-[1.2] tracking-tight">
+              {pitchText}
+            </p>
+          </>
+        )}
+
+        {/* BLOC 2 — La citation qui claque (extrait œuvre, entre guillemets) */}
+        {quoteLabel && quoteText && (
+          <div className={pitchText ? "mt-6" : ""}>
+            <div className="text-[10px] uppercase tracking-[0.3em] text-bordeaux font-bold mb-2">
+              {quoteLabel}
+            </div>
+            <p className="font-serif text-base italic text-ink/85 leading-snug">
+              « {quoteText} »
+            </p>
+          </div>
+        )}
+
+        {/* BLOC 3 — Signature */}
+        {signature && (
+          <p className="mt-6 font-serif text-sm font-bold text-ink/80 tracking-wide">
+            {signature}
+          </p>
+        )}
+      </div>
+
+      {/* CTA en pied */}
+      <div className="mt-8 max-w-sm mx-auto w-full">
+        {cta.external ? (
           <a
-            href={`/api/incipit-card/${shareBookId}`}
+            href={cta.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[10px] uppercase tracking-[0.25em] text-ink/60 font-bold bg-paper/80 backdrop-blur-md border border-ink/10 px-3 py-2 rounded-full hover:text-bordeaux transition"
-            aria-label="Télécharger la carte à partager"
+            className="block w-full text-center bg-ink text-paper py-4 rounded-full text-xs uppercase tracking-widest font-bold shadow-lg hover:bg-bordeaux transition"
           >
-            ⬇ Carte
+            {cta.label}
           </a>
+        ) : (
+          <Link
+            href={cta.href}
+            className="block w-full text-center bg-ink text-paper py-4 rounded-full text-xs uppercase tracking-widest font-bold shadow-lg hover:bg-bordeaux transition"
+          >
+            {cta.label}
+          </Link>
         )}
-        <Link
-          href="/incipit-du-jour"
-          className="text-[10px] uppercase tracking-[0.25em] text-ink/60 font-bold bg-paper/80 backdrop-blur-md border border-ink/10 px-3 py-2 rounded-full hover:text-bordeaux transition"
-        >
-          Archive →
-        </Link>
       </div>
-    </div>
+    </>
   );
 }
 
 // ── LUNDI — Incipit ────────────────────────────────────────────────────────
 function IncipitVariant() {
   const { book, date } = getDailyIncipit(0);
-  const teaser = incipitTeaser(book, 200);
+  const teaser = truncate(incipitTeaser(book, 220), 220);
   return (
-    <>
-      <Overline kindLabel={ritualLabel("incipit")} date={date} shareBookId={book.id} />
-      <div className="max-w-md mx-auto text-center">
-        <div className="font-serif text-7xl text-bordeaux/30 leading-none mb-2">
-          “
-        </div>
-        <blockquote className="font-serif text-[24px] leading-[1.3] text-ink italic">
-          {teaser}
-        </blockquote>
-        <div className="mt-6 text-[11px] uppercase tracking-widest text-ink/60 font-bold">
-          {book.title} · {book.author} · {book.year}
-        </div>
-      </div>
-      <div className="mt-8 max-w-sm mx-auto w-full">
-        <Link
-          href={`/book/${book.id}`}
-          className="block w-full text-center bg-ink text-paper py-4 rounded-full text-xs uppercase tracking-widest font-bold shadow-lg hover:bg-bordeaux transition"
-        >
-          Ouvrir {book.title}
-        </Link>
-      </div>
-    </>
+    <DailyLayout
+      kindLabel={ritualLabel("incipit")}
+      date={date}
+      pitchLabel="Le pitch"
+      pitchText={book.hook}
+      quoteLabel="La citation qui claque"
+      quoteText={teaser}
+      signature={`${book.title}, ${lastName(book.author)}`}
+      cta={{ href: `/book/${book.id}`, label: `Ouvrir ${book.title}` }}
+      shareBookId={book.id}
+    />
   );
 }
 
@@ -149,34 +238,17 @@ function IncipitVariant() {
 function QuoteVariant() {
   const quote = pickOfTheDay(QUOTES);
   const book = BOOKS.find((b) => b.id === quote.bookId) ?? BOOKS[0];
+  // Pour la citation, on saute le pitch (la citation EST le contenu central).
   return (
-    <>
-      <Overline kindLabel={ritualLabel("quote")} date={new Date()} shareBookId={book.id} />
-      <div className="max-w-md mx-auto text-center">
-        <div className="font-serif text-7xl text-gold/60 leading-none mb-2">
-          “
-        </div>
-        <blockquote className="font-serif text-[26px] leading-[1.3] text-ink italic">
-          {quote.text}
-        </blockquote>
-        {quote.context && (
-          <div className="mt-3 text-[12px] text-ink/50 italic">
-            — {quote.context}
-          </div>
-        )}
-        <div className="mt-6 text-[11px] uppercase tracking-widest text-ink/60 font-bold">
-          {book.title} · {book.author}
-        </div>
-      </div>
-      <div className="mt-8 max-w-sm mx-auto w-full">
-        <Link
-          href={`/book/${book.id}`}
-          className="block w-full text-center bg-ink text-paper py-4 rounded-full text-xs uppercase tracking-widest font-bold shadow-lg hover:bg-bordeaux transition"
-        >
-          Découvrir le livre
-        </Link>
-      </div>
-    </>
+    <DailyLayout
+      kindLabel={ritualLabel("quote")}
+      date={new Date()}
+      quoteLabel="La citation qui claque"
+      quoteText={truncate(quote.text, 280)}
+      signature={`${book.title}, ${lastName(book.author)}`}
+      cta={{ href: `/book/${book.id}`, label: "Découvrir le livre" }}
+      shareBookId={book.id}
+    />
   );
 }
 
@@ -184,73 +256,41 @@ function QuoteVariant() {
 function PunchlineVariant() {
   const p = pickOfTheDay(RAP_PUNCHLINES);
   const parallel = p.literaryParallel;
+  const sig = parallel
+    ? `${parallel.workTitle}, ${lastName(parallel.author)}`
+    : `${p.song}, ${p.artist}`;
   return (
-    <>
-      <Overline kindLabel={ritualLabel("punchline")} date={new Date()} />
-      <div className="max-w-md mx-auto text-center">
-        <div className="text-[10px] uppercase tracking-[0.3em] text-gold font-bold mb-3">
-          {p.artist} · {p.song} · {p.year}
-        </div>
-        <blockquote className="font-serif text-[20px] leading-[1.35] text-ink italic px-2">
-          {p.punchlineTheme}
-        </blockquote>
-        {parallel && (
-          <div className="mt-5 text-[12px] text-ink/70 leading-relaxed italic">
-            Écho&nbsp;:{" "}
-            <span className="font-semibold text-ink">
-              {parallel.author} · {parallel.workTitle}
-            </span>
-          </div>
-        )}
-      </div>
-      <div className="mt-8 max-w-sm mx-auto w-full">
-        <Link
-          href="/punchlines"
-          className="block w-full text-center bg-ink text-gold py-4 rounded-full text-xs uppercase tracking-widest font-bold shadow-lg hover:bg-bordeaux hover:text-paper transition"
-        >
-          Lire l'analyse complète →
-        </Link>
-      </div>
-    </>
+    <DailyLayout
+      kindLabel={ritualLabel("punchline")}
+      date={new Date()}
+      pitchLabel="L'écho littéraire"
+      pitchText={
+        parallel
+          ? `${p.artist} dit la même chose que ${parallel.author}, en dix mots.`
+          : `${p.artist}, ${p.song} — la punchline du jour.`
+      }
+      quoteLabel="La punchline qui claque"
+      quoteText={truncate(p.punchlineTheme, 220)}
+      signature={sig}
+      cta={{ href: "/punchlines", label: "Lire l'analyse complète →" }}
+    />
   );
 }
 
 // ── JEUDI — Mini-quiz 1 question teaser ────────────────────────────────────
 function MiniQuizVariant() {
   const q = pickOfTheDay(LIT_QUESTIONS);
-  const opts = buildOptions(q);
   const cat = CATEGORY_LABELS[q.category];
   return (
-    <>
-      <Overline kindLabel={ritualLabel("miniquiz")} date={new Date()} />
-      <div className="max-w-md mx-auto">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-ink/5 border border-ink/10 text-[9px] uppercase tracking-[0.2em] font-black text-ink/70 mb-4">
-          <span className="font-serif text-base leading-none">{cat.emoji}</span>
-          {cat.title}
-        </div>
-        <blockquote className="font-serif text-xl font-black text-ink italic leading-snug mb-5 text-center">
-          {q.prompt}
-        </blockquote>
-        <div className="space-y-2 mb-4">
-          {opts.slice(0, 4).map((opt) => (
-            <div
-              key={opt}
-              className="rounded-xl border border-ink/15 bg-cream/60 px-4 py-2.5 text-ink/80 font-serif text-sm text-center"
-            >
-              {opt}
-            </div>
-          ))}
-        </div>
-      </div>
-      <div className="mt-2 max-w-sm mx-auto w-full">
-        <Link
-          href="/quiz/daily"
-          className="block w-full text-center bg-ink text-paper py-4 rounded-full text-xs uppercase tracking-widest font-bold shadow-lg hover:bg-bordeaux transition"
-        >
-          Jouer le mini-quiz (3 questions) →
-        </Link>
-      </div>
-    </>
+    <DailyLayout
+      kindLabel={ritualLabel("miniquiz")}
+      date={new Date()}
+      pitchLabel="Le quiz du jour"
+      pitchText={`${cat.title} — 3 questions pour passer pour agrégé en 90 secondes.`}
+      quoteLabel="La question qui pique"
+      quoteText={q.prompt}
+      cta={{ href: "/quiz/daily", label: "Jouer (3 questions) →" }}
+    />
   );
 }
 
@@ -259,34 +299,20 @@ function CardVariant() {
   const quote = pickOfTheDay(QUOTES);
   const book = BOOKS.find((b) => b.id === quote.bookId) ?? BOOKS[0];
   return (
-    <>
-      <Overline kindLabel={ritualLabel("card")} date={new Date()} />
-      <div className="max-w-md mx-auto text-center">
-        <div className="text-[10px] uppercase tracking-[0.3em] text-bordeaux font-bold mb-3">
-          Ta story de vendredi
-        </div>
-        <blockquote className="font-serif text-[22px] leading-[1.3] text-ink italic">
-          « {quote.text} »
-        </blockquote>
-        <div className="mt-5 text-[11px] uppercase tracking-widest text-ink/60 font-bold">
-          {book.author} · {book.title}
-        </div>
-        <p className="mt-6 text-sm text-ink/65 italic max-w-xs mx-auto leading-relaxed">
-          Génère la carte format story en un tap. Format 1080×1920, prêt pour
-          Instagram, TikTok, WhatsApp.
-        </p>
-      </div>
-      <div className="mt-8 max-w-sm mx-auto w-full">
-        <a
-          href={`/api/incipit-card/${book.id}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="block w-full text-center bg-ink text-paper py-4 rounded-full text-xs uppercase tracking-widest font-bold shadow-lg hover:bg-bordeaux transition"
-        >
-          Télécharger la carte ↓
-        </a>
-      </div>
-    </>
+    <DailyLayout
+      kindLabel={ritualLabel("card")}
+      date={new Date()}
+      pitchLabel="Ta story de vendredi"
+      pitchText="Génère la carte format story en un tap. Format 1080×1920, prêt pour Instagram, TikTok, WhatsApp."
+      quoteLabel="La citation qui claque"
+      quoteText={truncate(quote.text, 220)}
+      signature={`${book.title}, ${lastName(book.author)}`}
+      cta={{
+        href: `/api/incipit-card/${book.id}`,
+        label: "Télécharger la carte ↓",
+        external: true,
+      }}
+    />
   );
 }
 
@@ -296,75 +322,49 @@ function PassageVariant() {
   const book = passage
     ? BOOKS.find((b) => b.id === passage.bookId) ?? BOOKS[0]
     : BOOKS[0];
+
+  if (!passage) {
+    return (
+      <DailyLayout
+        kindLabel={ritualLabel("passage")}
+        date={new Date()}
+        pitchLabel="Le passage"
+        pitchText="Passage en préparation."
+        cta={{ href: `/book/${book.id}`, label: "Lire le livre →" }}
+      />
+    );
+  }
+
   return (
-    <>
-      <Overline kindLabel={ritualLabel("passage")} date={new Date()} shareBookId={book.id} />
-      <div className="max-w-md mx-auto text-center">
-        {passage ? (
-          <>
-            <div className="text-[10px] uppercase tracking-[0.3em] text-bordeaux font-bold mb-2">
-              {passage.title}
-            </div>
-            <p className="text-sm text-ink/75 leading-relaxed italic mb-4">
-              {passage.context}
-            </p>
-            <blockquote className="font-serif text-[20px] leading-[1.35] text-ink italic">
-              {passage.excerpt.length > 220
-                ? `${passage.excerpt.slice(0, 220)}…`
-                : passage.excerpt}
-            </blockquote>
-            <div className="mt-5 text-[11px] uppercase tracking-widest text-ink/60 font-bold">
-              {book.title} · {book.author}
-            </div>
-          </>
-        ) : (
-          <div className="text-ink/60 text-sm italic">
-            Passage en préparation.
-          </div>
-        )}
-      </div>
-      <div className="mt-8 max-w-sm mx-auto w-full">
-        <Link
-          href={`/book/${book.id}`}
-          className="block w-full text-center bg-ink text-paper py-4 rounded-full text-xs uppercase tracking-widest font-bold shadow-lg hover:bg-bordeaux transition"
-        >
-          Lire tout le livre →
-        </Link>
-      </div>
-    </>
+    <DailyLayout
+      kindLabel={ritualLabel("passage")}
+      date={new Date()}
+      pitchLabel="Le passage"
+      pitchText={passage.context}
+      quoteLabel="La citation qui claque"
+      quoteText={truncate(passage.excerpt, 240)}
+      signature={`${book.title}, ${lastName(book.author)}`}
+      cta={{ href: `/book/${book.id}`, label: "Lire le livre →" }}
+      shareBookId={book.id}
+    />
   );
 }
 
 // ── DIMANCHE — Classique de la semaine ─────────────────────────────────────
 function WeekBookVariant() {
-  // Un livre "phare" par semaine, rotation déterministe sur tout le corpus.
   const book = pickOfTheDay(BOOKS);
-  const teaser = incipitTeaser(book, 180);
+  const teaser = truncate(incipitTeaser(book, 200), 200);
   return (
-    <>
-      <Overline kindLabel={ritualLabel("weekbook")} date={new Date()} shareBookId={book.id} />
-      <div className="max-w-md mx-auto text-center">
-        <div className="text-[10px] uppercase tracking-[0.3em] text-bordeaux font-bold mb-3">
-          Cette semaine on lit
-        </div>
-        <h2 className="font-serif text-3xl font-black text-ink leading-tight">
-          {book.title}
-        </h2>
-        <div className="mt-1 text-[12px] uppercase tracking-widest text-ink/60 font-bold">
-          {book.author} · {book.year}
-        </div>
-        <blockquote className="mt-5 font-serif text-[18px] leading-[1.35] text-ink/80 italic">
-          « {teaser} »
-        </blockquote>
-      </div>
-      <div className="mt-8 max-w-sm mx-auto w-full">
-        <Link
-          href={`/book/${book.id}`}
-          className="block w-full text-center bg-ink text-paper py-4 rounded-full text-xs uppercase tracking-widest font-bold shadow-lg hover:bg-bordeaux transition"
-        >
-          Commencer {book.title} →
-        </Link>
-      </div>
-    </>
+    <DailyLayout
+      kindLabel={ritualLabel("weekbook")}
+      date={new Date()}
+      pitchLabel="Cette semaine on lit"
+      pitchText={book.hook}
+      quoteLabel="La citation qui claque"
+      quoteText={teaser}
+      signature={`${book.title}, ${lastName(book.author)}`}
+      cta={{ href: `/book/${book.id}`, label: `Commencer ${book.title} →` }}
+      shareBookId={book.id}
+    />
   );
 }
