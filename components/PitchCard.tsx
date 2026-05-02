@@ -40,7 +40,7 @@ export default function PitchCard({ book }: { book: Book }) {
           Gradient cover du livre + grain papier + actions. Pas de texte ici,
           on garde la zone visuelle propre et reconnaissable. */}
       <div
-        className={`relative h-[38vh] min-h-[280px] bg-gradient-to-br ${book.cover} overflow-hidden`}
+        className={`relative h-[22vh] min-h-[160px] bg-gradient-to-br ${book.cover} overflow-hidden`}
       >
         {/* Grain léger */}
         <div
@@ -83,39 +83,42 @@ export default function PitchCard({ book }: { book: Book }) {
 
         {/* Fade vers le bas pour transition douce avec la zone texte */}
         <div
-          className="absolute bottom-0 left-0 right-0 h-16 pointer-events-none"
+          className="absolute bottom-0 left-0 right-0 h-10 pointer-events-none"
           style={{
             background:
-              "linear-gradient(to bottom, rgba(250,247,240,0) 0%, rgba(250,247,240,0.6) 60%, rgba(250,247,240,1) 100%)",
+              "linear-gradient(to bottom, rgba(250,247,240,0) 0%, rgba(250,247,240,0.7) 50%, rgba(250,247,240,1) 100%)",
           }}
         />
       </div>
 
       {/* ─── ZONE 2 : éditorial sur paper (bas, prend le reste) ────────────
-          Fond paper, texte ink. Lisibilité garantie. */}
-      <div className="flex-1 px-6 pt-6 pb-8 bg-paper text-ink">
-        {/* BLOC 1 — Le pitch */}
-        <div className="text-[10px] uppercase tracking-[0.3em] font-bold text-bordeaux mb-2">
+          Fond paper, texte ink. Lisibilité garantie. Espace mieux occupé
+          (panel test : 'espace vide en haut, déplacer le pitch en haut') :
+          le pitch démarre dès le début du panneau, taille hero plus grosse,
+          la citation qui claque est rehaussée juste sous le pitch. */}
+      <div className="flex-1 px-6 pt-7 pb-8 bg-paper text-ink flex flex-col">
+        {/* BLOC 1 — Le pitch (hero, taille augmentée pour remplir l'écran) */}
+        <div className="text-[10px] uppercase tracking-[0.3em] font-bold text-bordeaux mb-3">
           Le pitch
         </div>
-        <p className="font-serif text-2xl sm:text-[26px] font-medium text-ink leading-[1.2] tracking-tight">
+        <p className="font-serif text-[28px] sm:text-[32px] font-medium text-ink leading-[1.18] tracking-tight">
           {book.hook}
         </p>
 
-        {/* BLOC 2 — La citation qui claque */}
+        {/* BLOC 2 — La citation qui claque (rehaussée, plus près du pitch) */}
         {punch && (
-          <div className="mt-6">
+          <div className="mt-7">
             <div className="text-[10px] uppercase tracking-[0.3em] font-bold text-bordeaux mb-2">
               La citation qui claque
             </div>
-            <p className="font-serif text-base italic text-ink/80 leading-snug">
+            <p className="font-serif text-[17px] sm:text-lg italic text-ink/80 leading-snug">
               « {punch} »
             </p>
           </div>
         )}
 
-        {/* BLOC 3 — Signature */}
-        <p className="mt-6 font-serif text-sm font-bold text-ink/90 tracking-wide">
+        {/* BLOC 3 — Signature (poussée en bas via mt-auto) */}
+        <p className="mt-auto pt-7 font-serif text-sm font-bold text-ink/90 tracking-wide">
           <span className="italic">{book.title}</span>, {lastName(book.author)}
         </p>
 
