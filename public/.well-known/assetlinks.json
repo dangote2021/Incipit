@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "app.incipit.reader",
+      "sha256_cert_fingerprints": [
+        "7A:18:2B:B3:27:F4:0D:33:15:80:3A:CD:1F:E5:D5:46:EB:75:1F:D4:2A:91:93:C5:FD:F4:19:9C:01:C2:A8:4A"
+      ]
+    }
+  }
+]
