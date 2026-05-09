@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import AppHeader from "@/components/AppHeader";
 import BookCover from "@/components/BookCover";
+import EmptyAuthState from "@/components/EmptyAuthState";
 import { BOOKS, MY_LIBRARY, ME } from "@/lib/mock-data";
 import type { ReadingStatus } from "@/lib/types";
 
@@ -31,9 +32,13 @@ export default function LibraryPage() {
     <>
       <AppHeader
         title="Ma bibliothèque"
-        subtitle={`${ME.booksRead} livres traversés`}
+        subtitle="Ce que tu lis, ce que tu veux lire"
       />
-
+      <EmptyAuthState
+        title="Ta bibliothèque"
+        pitch="Marque les livres lus, en cours, à lire. Souligne tes passages préférés. Tout est synchronisé entre tes appareils — connecte-toi pour démarrer."
+        loginNext="/library"
+      >
       <main className="px-5 pt-4">
         {/* Scan CTA */}
         <Link
@@ -119,6 +124,7 @@ export default function LibraryPage() {
           </ul>
         )}
       </main>
+      </EmptyAuthState>
     </>
   );
 }

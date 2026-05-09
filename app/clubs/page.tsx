@@ -1,6 +1,7 @@
 import Link from "next/link";
 import AppHeader from "@/components/AppHeader";
 import BookCover from "@/components/BookCover";
+import EmptyAuthState from "@/components/EmptyAuthState";
 import { CLUBS, getBook, ME } from "@/lib/mock-data";
 
 export default function ClubsPage() {
@@ -13,7 +14,11 @@ export default function ClubsPage() {
         title="Book clubs"
         subtitle="Lire ensemble, c'est mieux"
       />
-
+      <EmptyAuthState
+        title="Les book clubs"
+        pitch="Lire à plusieurs, sans pression et sans concours. Connecte-toi pour rejoindre un club existant ou en créer un autour d'un livre."
+        loginNext="/clubs"
+      >
       <main className="px-5 pt-4 space-y-8">
         {myClubs.length > 0 && (
           <section>
@@ -39,6 +44,7 @@ export default function ClubsPage() {
           </ul>
         </section>
       </main>
+      </EmptyAuthState>
     </>
   );
 }

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import AppHeader from "@/components/AppHeader";
 import BookCover from "@/components/BookCover";
+import EmptyAuthState from "@/components/EmptyAuthState";
 import {
   FEED,
   getBook,
@@ -16,7 +17,11 @@ export default function FeedPage() {
         title="Le feed"
         subtitle="Ce que lit la communauté"
       />
-
+      <EmptyAuthState
+        title="Le feed de la communauté"
+        pitch="Lecteurs, notes, citations partagées : retrouve ici ce que les autres lisent. Connecte-toi pour suivre la communauté Incipit et publier tes propres notes."
+        loginNext="/feed"
+      >
       <main className="px-5 pt-4">
         <ul className="space-y-3">
           {FEED.map((item) => {
@@ -94,6 +99,7 @@ export default function FeedPage() {
           })}
         </ul>
       </main>
+      </EmptyAuthState>
     </>
   );
 }

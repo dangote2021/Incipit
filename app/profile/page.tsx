@@ -11,6 +11,7 @@ import HideStreakToggle from "@/components/HideStreakToggle";
 import IOSInstallCard from "@/components/IOSInstallCard";
 import AccountSection from "@/components/AccountSection";
 import ProfileEditor from "@/components/ProfileEditor";
+import { useAuth } from "@/lib/supabase/use-auth";
 import { getPrefs } from "@/lib/prefs";
 import {
   ME,
@@ -38,6 +39,10 @@ export default function ProfilePage() {
     avatar: string;
   } | null>(null);
   const [editing, setEditing] = useState(false);
+  // Auth user — quand non connecté, on masque les stats mockées (panel
+  // test virtuel : 'le profil affiche 4 livres traversés alors que je
+  // viens d'ouvrir l'app pour la 1ère fois').
+  const { user, ready: authReady } = useAuth();
   useEffect(() => {
     const p = getPrefs();
     setProfile({
@@ -134,9 +139,9 @@ export default function ProfilePage() {
             </div>
 
             <div className="relative mt-5 grid grid-cols-3 gap-2">
-              <Stat value={read.length} label="Lus" />
-              <Stat value={myNotes.length} label="Notes" />
-              <Stat value={earnedBadges.length} label="Badges" />
+              <Stat value={user ? read.length : 0} label="Lus" />
+              <Stat value={user ? myNotes.length : 0} label="Notes" />
+              <Stat value={user ? earnedBadges.length : 0} label="Badges" />
             </div>
           </div>
         )}
