@@ -38,8 +38,13 @@ export default function LegalPage() {
 
         <h2 className="font-serif text-xl font-black text-ink mb-3">Éditeur</h2>
         <p className="text-ink/75 leading-relaxed mb-3">
-          Incipit est édité par Guillaume Coulon, 7 rue de la République, 75011
-          Paris, France.
+          Incipit est édité par <strong>Guillaume Coulon</strong>, personne
+          physique, domicilié en France. En application de l'article 6 III 2°
+          de la LCEN (loi pour la confiance dans l'économie numérique du
+          21 juin 2004), l'éditeur non-professionnel n'est pas tenu de
+          publier ses coordonnées personnelles. Pour toute notification
+          légale ou demande d'ayants droit, contactez le mail ci-dessous —
+          nous répondons sous 7 jours ouvrés.
         </p>
         <p className="text-ink/75 leading-relaxed mb-3">
           Contact :{" "}

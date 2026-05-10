@@ -157,6 +157,17 @@ export default function HomePage() {
           >
             Pas sûr par où commencer ? Parcours débutant →
           </Link>
+
+          {/* Mode prof — cheval de Troie B2B (Le Robert, Lelivrescolaire,
+              Hatier). Discret en pied, mais existant : un prof de français
+              qui découvre l'app y trouve quoi imprimer pour sa classe en
+              30 secondes. */}
+          <Link
+            href="/prof"
+            className="mt-2 inline-flex items-center gap-2 text-[11px] uppercase tracking-widest font-bold text-sage hover:text-bordeaux transition"
+          >
+            Tu enseignes ? Quiz littéraire imprimable (CC BY-NC) →
+          </Link>
         </section>
       </main>
     </div>

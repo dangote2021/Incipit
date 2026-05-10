@@ -197,6 +197,24 @@ export default function AboutPage() {
           </Link>
         </div>
 
+        {/* Cheval de Troie B2B — mode prof CC BY-NC */}
+        <div className="mt-10 pt-6 border-t border-ink/10 text-center">
+          <p className="text-[10px] uppercase tracking-[0.3em] text-bordeaux font-bold mb-2">
+            Tu enseignes ?
+          </p>
+          <p className="text-sm text-ink/75 leading-relaxed mb-3 italic">
+            Tous les contenus pédagogiques (quiz imprimables, fiches livres,
+            corpus) sont publiés sous licence Creative Commons BY-NC 4.0,
+            gratuitement utilisables en classe.
+          </p>
+          <a
+            href="/prof"
+            className="inline-flex items-center gap-2 text-[11px] uppercase tracking-widest font-bold text-sage hover:text-bordeaux transition"
+          >
+            Découvrir le mode prof →
+          </a>
+        </div>
+
         <p className="text-[10px] uppercase tracking-[0.3em] text-ink/40 text-center mt-10">
           Incipit · v1 · {new Date().getFullYear()}
         </p>
