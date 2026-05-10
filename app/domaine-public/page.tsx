@@ -5,7 +5,7 @@ import { BOOKS } from "@/lib/mock-data";
 import { buildConnectors } from "@/lib/connectors";
 
 export const metadata = {
-  title: "Domaine public · Incipit",
+  title: "Domaine public",
   description:
     "Des chefs-d'œuvre tombés dans le domaine public, accessibles gratuitement et légalement. Flaubert, Zola, Hugo, Baudelaire, Proust, Balzac et d'autres, en ligne.",
 };

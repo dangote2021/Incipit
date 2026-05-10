@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 // l'occasion de poser des metadata SEO ciblées sur la requête « quiz
 // littérature à imprimer ».
 export const metadata: Metadata = {
-  title: "Mode prof · Quiz littéraire imprimable · Incipit",
+  title: "Mode prof — Quiz littéraire imprimable",
   description:
     "Génère un quiz littéraire à imprimer pour ta classe en 2 minutes. 6 catégories, 4 époques, jusqu'à 20 questions. Licence Creative Commons BY-NC 4.0, libre de réutilisation pédagogique.",
   openGraph: {

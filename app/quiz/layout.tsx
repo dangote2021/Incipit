@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Devine l'incipit · Quiz Incipit",
+  title: "Devine l'incipit · Quiz",
   description:
     "8 premières lignes, 4 choix, un verdict. Testes-tu tes classiques ? Flaubert, Camus, Zola, Baudelaire et les autres t'attendent.",
   openGraph: {
-    title: "Devine l'incipit — le quiz Incipit",
+    title: "Devine l'incipit — le quiz",
     description:
       "8 incipits tirés des 12 classiques. 4 options. Ton score en version Wordle.",
     url: "/quiz",

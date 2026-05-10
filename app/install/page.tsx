@@ -17,12 +17,12 @@ import Link from "next/link";
 import AppHeader from "@/components/AppHeader";
 
 export const metadata: Metadata = {
-  title: "Installer Incipit",
+  title: "Installer",
   description:
     "Installe Incipit sur ton iPhone, ton Android ou ton ordinateur en 30 secondes. PWA Safari, Google Play, Chrome desktop.",
   alternates: { canonical: "/install" },
   openGraph: {
-    title: "Installer Incipit",
+    title: "Installer",
     description:
       "Mets Incipit sur ton écran d'accueil — comme une vraie app, sans store sur Apple.",
     type: "article",

@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Page introuvable · Incipit",
+  title: "Page introuvable",
 };
 
 export default function NotFound() {

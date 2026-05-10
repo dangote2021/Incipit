@@ -42,7 +42,7 @@ export default function ProfilePage() {
   // Auth user — quand non connecté, on masque les stats mockées (panel
   // test virtuel : 'le profil affiche 4 livres traversés alors que je
   // viens d'ouvrir l'app pour la 1ère fois').
-  const { user, ready: authReady } = useAuth();
+  const { user } = useAuth();
   useEffect(() => {
     const p = getPrefs();
     setProfile({
@@ -57,25 +57,27 @@ export default function ProfilePage() {
   const displayBio = profile?.bio || "Présente-toi en une phrase…";
   const displayAvatar = profile?.avatar || "📖";
   const isEmpty = !!profile && !profile.name && !profile.handle && !profile.bio;
-  const read = MY_LIBRARY.filter((e) => e.status === "read");
-  const reading = MY_LIBRARY.filter((e) => e.status === "reading");
-  const myNotes = getNotesByUser(ME.id);
-  const myAnnotations = getAnnotationsByUser(ME.id);
-  const myClubs = CLUBS.filter((c) => ME.joinedClubs.includes(c.id));
-  const earnedBadges = BADGES.filter((b) => b.earned);
-  const lockedBadges = BADGES.filter((b) => !b.earned);
+  // Tous les arrays mock sont vidés quand pas connecté — empêche le
+  // 'Truman Show' où un nouvel user voit 4 livres lus, 3 notes, 5 badges
+  // sans avoir rien fait (panel test V2). Quand connecté + Supabase
+  // câblé, ces arrays seront alimentés par les vraies données user.
+  const read = user ? MY_LIBRARY.filter((e) => e.status === "read") : [];
+  const reading = user ? MY_LIBRARY.filter((e) => e.status === "reading") : [];
+  const myNotes = user ? getNotesByUser(ME.id) : [];
+  const myAnnotations = user ? getAnnotationsByUser(ME.id) : [];
+  const myClubs = user ? CLUBS.filter((c) => ME.joinedClubs.includes(c.id)) : [];
+  const earnedBadges = user ? BADGES.filter((b) => b.earned) : [];
+  const lockedBadges = user ? BADGES.filter((b) => !b.earned) : [];
 
   // Stats lecture
-  const totalMinutes = READING_SESSIONS.reduce((s, r) => s + r.minutes, 0);
-  const avgPerDay = Math.round(totalMinutes / READING_SESSIONS.length);
-  const longestSession = READING_SESSIONS.reduce(
+  const sessions = user ? READING_SESSIONS : [];
+  const totalMinutes = sessions.reduce((s, r) => s + r.minutes, 0);
+  const avgPerDay = sessions.length > 0 ? Math.round(totalMinutes / sessions.length) : 0;
+  const longestSession = sessions.reduce(
     (max, r) => (r.minutes > max ? r.minutes : max),
     0
   );
-  const maxMin = READING_SESSIONS.reduce(
-    (max, r) => (r.minutes > max ? r.minutes : max),
-    0
-  );
+  const maxMin = longestSession;
 
   return (
     <>
@@ -180,7 +182,7 @@ export default function ProfilePage() {
             {/* Chart en barres minimaliste */}
             <div className="mt-2">
               <div className="flex items-end gap-[3px] h-24">
-                {READING_SESSIONS.map((s) => (
+                {sessions.map((s) => (
                   <div
                     key={s.date}
                     className="flex-1 bg-bordeaux/80 rounded-t hover:bg-bordeaux transition"
@@ -194,14 +196,16 @@ export default function ProfilePage() {
                   />
                 ))}
               </div>
-              <div className="flex justify-between text-[10px] uppercase tracking-widest text-ink/40 font-bold mt-2">
-                <span>{formatDateShort(READING_SESSIONS[0].date)}</span>
-                <span>
-                  {formatDateShort(
-                    READING_SESSIONS[READING_SESSIONS.length - 1].date
-                  )}
-                </span>
-              </div>
+              {sessions.length > 0 && (
+                <div className="flex justify-between text-[10px] uppercase tracking-widest text-ink/40 font-bold mt-2">
+                  <span>{formatDateShort(sessions[0].date)}</span>
+                  <span>
+                    {formatDateShort(
+                      sessions[sessions.length - 1].date
+                    )}
+                  </span>
+                </div>
+              )}
             </div>
             <p className="text-[11px] italic text-ink/50 mt-3 leading-relaxed">
               Pas de streak. Pas de classement. Juste un temps qui t'appartient.

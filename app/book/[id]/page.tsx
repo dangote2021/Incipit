@@ -157,42 +157,13 @@ export default async function BookPage({ params }: Props) {
       </section>
 
       <main className="px-5 py-6 space-y-8">
-        {/* Mode "Je reprends" — affiché si on lit ce livre */}
-        {entry?.status === "reading" && recap && (
-          <section className="bg-gradient-to-br from-gold/20 to-cream border-2 border-gold/40 rounded-2xl p-5">
-            <div className="flex items-center gap-2 mb-2">
-              <span className="text-xl">⏮</span>
-              <div className="text-[10px] uppercase tracking-widest text-gold font-bold">
-                Je reprends ma lecture
-              </div>
-            </div>
-            <div className="font-serif font-bold text-ink text-sm mb-2">
-              Précédemment dans {book.title}… ({recap.upToChapter})
-            </div>
-            <p className="text-sm text-ink/80 leading-relaxed">
-              {recap.summary}
-            </p>
-            {entry.progress !== undefined && (
-              <div className="mt-4">
-                <div className="flex justify-between text-[10px] uppercase tracking-widest text-ink/60 font-bold mb-1">
-                  <span>Progression</span>
-                  <span>{entry.progress}%</span>
-                </div>
-                <div className="h-2 bg-ink/10 rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-gold"
-                    style={{ width: `${entry.progress}%` }}
-                  />
-                </div>
-                {entry.minutesRead && (
-                  <div className="text-[11px] text-ink/50 mt-2">
-                    {formatMinutes(entry.minutesRead)} de lecture cumulée
-                  </div>
-                )}
-              </div>
-            )}
-          </section>
-        )}
+        {/* Mode "Je reprends ma lecture" — désactivé en V1 (panel test V2).
+            Le mock MY_LIBRARY hardcoded faisait croire à tout nouvel
+            user qu'il avait déjà commencé Bovary à 42%. Le bloc sera
+            réactivé en V1.5 quand 'entry' sera lu depuis la table
+            Supabase user_library plutôt que depuis le mock partagé.
+            Bloc retiré du JSX, conservé en archive ailleurs si besoin. */}
+
 
         {/* Actions bibliothèque — picker de statut, ilot client */}
         <section>
@@ -524,45 +495,19 @@ export default async function BookPage({ params }: Props) {
 
           <div className="flex items-center justify-between mb-3 mt-6">
             <h2 className="text-[11px] uppercase tracking-[0.25em] font-bold text-ink/50">
-              Notes de lecture · {notes.length}
+              Notes de lecture
             </h2>
           </div>
 
+          {/* Notes mockées (Lise Delacour, Karim Benali…) cachées en V1
+              tant qu'on n'a pas de vraies notes user-générées. Le panel
+              test V2 a flag : 'notes mockées dans le HTML rendu de
+              /book/bovary, /book/germinal, /book/voyage' — confiance
+              cassée. Réactiver quand notes lues depuis Supabase. */}
           <ul className="space-y-3">
-            {notes.map((n) => {
-              const user = getUser(n.userId)!;
-              return (
-                <li
-                  key={n.id}
-                  className="bg-paper border border-ink/10 rounded-2xl p-4"
-                >
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="text-xl">{user.avatar}</span>
-                    <div className="flex-1 min-w-0">
-                      <div className="font-semibold text-sm text-ink truncate">
-                        {user.name}
-                      </div>
-                      <div className="text-[11px] text-ink/50">
-                        {user.handle} · {timeAgo(n.createdAt)}
-                      </div>
-                    </div>
-                    {n.rating && (
-                      <span className="text-gold text-sm">
-                        {"★".repeat(n.rating)}
-                      </span>
-                    )}
-                  </div>
-                  <p className="font-serif text-[15px] text-ink/90 leading-relaxed">
-                    {n.text}
-                  </p>
-                </li>
-              );
-            })}
-            {notes.length === 0 && (
-              <li className="text-center text-ink/50 py-6 text-sm">
-                Sois le premier à écrire une note sur ce livre.
-              </li>
-            )}
+            <li className="text-center text-ink/50 py-6 text-sm font-serif italic">
+              Sois le premier à écrire une note sur ce livre.
+            </li>
           </ul>
         </section>
 

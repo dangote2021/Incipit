@@ -2,7 +2,7 @@ import Link from "next/link";
 import AppHeader from "@/components/AppHeader";
 
 export const metadata = {
-  title: "À propos · Incipit",
+  title: "À propos",
   description:
     "Incipit, c'est un pitch Boloss pour chaque classique. Pas de gamification, pas de notifs qui harcèlent, pas de pub. Juste les premières lignes qui donnent envie.",
 };

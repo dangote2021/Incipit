@@ -10,7 +10,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const club = getClub(id);
 
   if (!club) {
-    return { title: "Club introuvable · Incipit" };
+    return { title: "Club introuvable" };
   }
 
   const currentBook = getBook(club.currentBookId);

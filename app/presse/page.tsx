@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     follow: true,
   },
   openGraph: {
-    title: "Presse · Incipit",
+    title: "Presse",
     description:
       "Media kit Incipit — logos HD, descriptions courtes et longues, palette, contact.",
     type: "website",
