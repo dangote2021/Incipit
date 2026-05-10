@@ -300,42 +300,9 @@ export default async function BookPage({ params }: Props) {
           </div>
         </section>
 
-        {/* Reading buddy — SSR */}
-        {buddy && (
-          <section className="bg-sage/10 border border-sage/30 rounded-2xl p-5">
-            <div className="flex items-center gap-2 mb-2">
-              <span className="text-xl">👯</span>
-              <div className="text-[10px] uppercase tracking-widest text-sage font-bold">
-                Reading buddy en cours
-              </div>
-            </div>
-            <div className="font-serif font-bold text-ink mb-3">
-              {buddy.participants.length} lecteurs avancent ensemble sur ce
-              livre.
-            </div>
-            <div className="flex -space-x-2 mb-3">
-              {buddy.participants.map((p) => {
-                const u = getUser(p.userId);
-                if (!u) return null;
-                return (
-                  <div
-                    key={p.userId}
-                    title={`${u.name} · ${p.progress}%`}
-                    className="w-9 h-9 rounded-full bg-paper border-2 border-sage flex items-center justify-center text-lg"
-                  >
-                    {u.avatar}
-                  </div>
-                );
-              })}
-            </div>
-            <Link
-              href={`/buddy/${book.id}`}
-              className="inline-block bg-sage text-paper text-xs uppercase tracking-widest font-bold px-4 py-2 rounded-full hover:bg-sage/90 transition"
-            >
-              Rejoindre la lecture partagée →
-            </Link>
-          </section>
-        )}
+        {/* Reading buddy — désactivé en V1 (mock data Karim/Lise faisaient
+            croire à des lectures partagées inexistantes). Bloc retiré du
+            JSX. Réactiver V1.5 avec vraies sessions buddy depuis Supabase. */}
 
         {/* Actions — ilot client pour modals AI + libraires + personnages */}
         <section>
@@ -417,8 +384,9 @@ export default async function BookPage({ params }: Props) {
             Le composant retourne null si pas de capsule pour ce livre. */}
         <VideoFeatures bookId={book.id} />
 
-        {/* Annotations publiques — SSR, crawlables */}
-        {annotations.length > 0 && (
+        {/* Annotations publiques — désactivées en V1 (signées par fake
+            users mockés). Réactiver V1.5 avec vraies annotations user) */}
+        {false && annotations.length > 0 && (
           <section>
             <h2 className="text-[11px] uppercase tracking-[0.25em] font-bold text-ink/50 mb-3">
               Ce que les lecteurs soulignent · {annotations.length}
