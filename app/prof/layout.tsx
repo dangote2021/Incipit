@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Mode prof Incipit",
+    title: "Mode prof",
     description: "Quiz littéraire imprimable pour la classe — CC BY-NC 4.0",
   },
 };

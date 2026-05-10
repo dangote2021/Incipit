@@ -12,7 +12,7 @@ import { getBook } from "@/lib/mock-data";
 // "lire les grands auteurs quand on débute" — intention forte, peu
 // servie correctement sur le web francophone.
 export const metadata: Metadata = {
-  title: "Mode débutant · 10 classiques en 30 jours · Incipit",
+  title: "Mode débutant · 10 classiques en 30 jours",
   description:
     "Une feuille de route pour apprivoiser dix grands classiques en trente jours — du plus accessible au plus exigeant. Pas de pression, pas de punition : un ordre raisonné, des raisons claires.",
   alternates: {

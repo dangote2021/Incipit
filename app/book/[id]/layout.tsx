@@ -11,7 +11,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!book) {
     return {
-      title: "Livre introuvable · Incipit",
+      title: "Livre introuvable",
     };
   }
 
