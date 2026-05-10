@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
   }
 
-  const title = `${book.title} — ${book.author} · Incipit`;
+  const title = `${book.title} — ${book.author}`;
   const description = book.hook;
   const canonicalPath = `/book/${book.id}`;
 
