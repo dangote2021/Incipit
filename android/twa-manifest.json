@@ -1,0 +1,52 @@
+{
+  "packageId": "app.incipit.reader",
+  "host": "incipit-navy.vercel.app",
+  "name": "Incipit",
+  "launcherName": "Incipit",
+  "display": "standalone",
+  "themeColor": "#1A1A2E",
+  "navigationColor": "#1A1A2E",
+  "navigationColorDark": "#0F0F1A",
+  "navigationDividerColor": "#FAF7F0",
+  "navigationDividerColorDark": "#0F0F1A",
+  "backgroundColor": "#FAF7F0",
+  "enableNotifications": true,
+  "startUrl": "/",
+  "iconUrl": "https://incipit-navy.vercel.app/icon-512.png",
+  "maskableIconUrl": "https://incipit-navy.vercel.app/icon-maskable-512.png",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "path": "./android-keystore.jks",
+    "alias": "incipit"
+  },
+  "appVersionName": "1.0.0",
+  "appVersionCode": 1,
+  "shortcuts": [
+    {
+      "name": "Quiz du jour",
+      "shortName": "Quiz",
+      "url": "/quiz",
+      "chosenIconUrl": "https://incipit-navy.vercel.app/icon-192.png"
+    },
+    {
+      "name": "Incipit du jour",
+      "shortName": "Incipit",
+      "url": "/incipit-du-jour",
+      "chosenIconUrl": "https://incipit-navy.vercel.app/icon-192.png"
+    }
+  ],
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "https://incipit-navy.vercel.app/manifest.json",
+  "fallbackType": "customtabs",
+  "features": {
+    "locationDelegation": { "enabled": false },
+    "playBilling": { "enabled": false }
+  },
+  "alphaDependencies": { "enabled": false },
+  "enableSiteSettingsShortcut": true,
+  "isChromeOSOnly": false,
+  "isMetaQuest": false,
+  "fullScopeUrl": "https://incipit-navy.vercel.app/",
+  "minSdkVersion": 23,
+  "orientation": "portrait"
+}
